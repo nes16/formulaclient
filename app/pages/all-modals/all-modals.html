@@ -1,0 +1,96 @@
+<ion-content>
+    <ion-toolbar>
+        <ion-title>Login</ion-title>
+        <ion-buttons right>
+            <button royal (click)="dismiss()">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+    <div [ngSwitch]="option">
+        <template [ngSwitchWhen]="'login'">
+            <form [ngFormModel]="login" (submit)="doLogin($event, login.value)">
+                <ion-list>
+                    <ion-item>
+                        <ion-label stacked>Emailid</ion-label>
+                        <ion-input type="text" ngControl="emailId"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label stacked>Password</ion-label>
+                        <ion-input type="password" ngControl="pwd"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <button type="submit" [disabled]="!login.valid">Login</button>
+                        <button (click)="option='forgot'">Forgot Password</button>
+                    </ion-item>
+                </ion-list>
+            </form>
+            <ion-list>
+                <ion-item>
+                    <button class="button button-block button-positive" (click)="option ='register'">Register</button>
+                </ion-item>
+                <ion-item>
+                    <button class="button button-block button-positive" (click)="oauthlogin('facebook')">Facebook Login</button>
+                </ion-item>
+                <ion-item>
+                    <button class="button button-block button-assertive" (click)="oauthlogin('google')">Google Login</button>
+                </ion-item>
+            </ion-list>
+        </template>
+        <template [ngSwitchWhen]="'register'">
+            <form [ngFormModel]="register" (submit)="doRegister($event, register.value)">
+                <ion-item>
+                    <ion-label stacked>Emailid</ion-label>
+                    <ion-input type="text" ngControl="emailId"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label stacked>Password</ion-label>
+                    <ion-input type="password" ngControl="pwd"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button block type="submit" [disabled]="!register.valid">Register</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchWhen]="'forgot'">
+            <form [ngFormModel]="forgot" (submit)="doForgot($event, forgot.value)">
+                <ion-item>
+                    <ion-label stacked>Emailid</ion-label>
+                    <ion-input type="text" ngControl="emailId"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button block type="submit" [disabled]="!forgot.valid">Submit</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchWhen]="'chpwd'">
+            <form [ngFormModel]="chpwd" (submit)="doChpwd($event, chpwd.value)">
+                <ion-item>
+                    <ion-label stacked>Password</ion-label>
+                    <ion-input type="password" ngControl="pwd"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button block type="submit" [disabled]="!chpwd.valid">Submit</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchWhen]="'settings'">
+            <form [ngFormModel]="settings" (submit)="doSettings($event, settings.value)">
+                <ion-item>
+                    <ion-label stacked>Default System</ion-label>
+                    <ion-input type="text" ngControl="system"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button block type="submit" [disabled]="!settings.valid">Submit</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchWhen]="'about'">
+            <ion-card>
+                <p>
+                    TestLab is an application for create, edit, browse standard and custom formulas with units. The formulas can be input with values to find the result.
+                </p>
+            </ion-card>
+        </template>
+    </div>
+</ion-content>

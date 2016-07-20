@@ -1,0 +1,11 @@
+<div class="item item-icon-right">
+    <ion-buttons right>
+        <a (click)="onExpand($event)"><ion-icon royal [class.fl-hidden]="expand" name="arrow-down"></ion-icon></a>
+        <a (click)="onExpand($event)"><ion-icon  royal [class.fl-hidden]="!expand" name="arrow-up"></ion-icon></a>
+    </ion-buttons>
+    <div>
+        <h3>{{name}}</h3>
+    </div>
+</div>
+<fl-category *ngFor="let c of categories" *ngIf="c.parent_id == id" (expand)="expand($event)" [resource]="c"></fl-category>
+<fl-formula *ngFor="let f of formulas" *ngIf="f.category_id == id" [resource]="f"></fl-formula>

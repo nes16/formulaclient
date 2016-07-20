@@ -1,0 +1,4 @@
+import 'jquery';
+
+window.jQuery = $;
+

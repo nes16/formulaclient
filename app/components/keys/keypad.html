@@ -1,0 +1,74 @@
+<!-- <ion-content>
+    <ion-toolbar>
+        <ion-title>Login</ion-title>
+        <ion-buttons right>
+            <button royal>
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-list>
+        <ion-item>
+            <ion-label stacked>Emailid</ion-label>
+            <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label stacked>Password</ion-label>
+            <ion-input type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+            <button type="submit">Login</button>
+            <button (click)="option='forgot'">Forgot Password</button>
+        </ion-item>
+    </ion-list>
+</ion-content> -->
+<div [class.fl-hidden]="!mq.showKeyboard" style="height:180px">
+<ion-content >
+<div class='fl-keypad'  (mousedown)="mousedown($event)">
+    <div class='fl-keys-container'>
+        <div class='fl-keys-background fl-do-not-blur'>
+            <div class='fl-keys'>
+                <div class='fl-functions-popover fl-popover fl-left' [class.fl-hidden]="!functionsOpen">
+                    <div class='fl-popover-interior'>
+                        <div class='fl-popover-header'>
+                            <table>
+                                <tr>
+                                    <td *ngFor="let tab of const.tabs">
+                                        <span [attr.key]="const.popups.functionsPopup[tab].tab.id" class="fl-heading fl-tappable fl-btn fl-btn-gray" [class.fl-selected]="tab == curTab" [innerHTML]="const.popups.functionsPopup[tab].tab.html" (click)="curTab = tab">
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <table *ngFor="let tab of const.tabs" class='fl-interior-buttons' [attr.section]="tab" [class.fl-hidden]="tab != curTab">
+                            <tr *ngIf="(tab == 'trig')" class='fl-section-headings'>
+                                <td>trig</td>
+                                <td>inverse</td>
+                                <td>hyperb</td>
+                            </tr>
+                            <tr *ngFor="let frow  of const.popups.functionsPopup[tab].funcs">
+                                <td *ngFor="let func of frow">
+                                    <span [attr.key]="func.id" class="fl-option fl-btn fl-tappable fl-key fl-tappable mq-math-mode fl-sinh-key" [innerHTML]="func.html">
+                                  </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class='fl-arrow'></div>
+                </div>
+                <div *ngFor="let group of const.groups" [class.fl-hidden]="setLayout(group)" [ngClass]="const.keyGroupClasses[group]">
+                    <div *ngFor="let row of const.buttons[group]" class="fl-row">
+                        <div *ngFor="let key of row.keys" [ngClass]="const.keyClasses[key.id]">
+                            <a *ngIf="key.html" [ngClass]="const.keyLinkClasses[key.id]" [attr.key]="key.id" [innerHTML]="key.html">
+                            </a>
+                        </div>
+                        <div style='clear:both'></div>
+                    </div>
+                </div>
+                <div style='clear:both'></div>
+            </div>
+        </div>
+    </div>
+</div>
+</ion-content>
+</div>

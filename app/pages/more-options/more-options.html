@@ -1,0 +1,26 @@
+<ion-content>
+    <ion-list>
+        <template [ngIf]="authenticated">
+            <ion-item (click)="dismiss('profile')">
+                {{userName}}
+            </ion-item>
+            <ion-item (click)="dismiss('logout')">
+                Logout
+            </ion-item>
+            <ion-item (click)="dismiss('setPwd')">
+                Set Password
+            </ion-item>
+        </template>
+        <template [ngIf]="!authenticated">
+            <ion-item (click)="dismiss('login')">
+                Login/Register
+            </ion-item>
+        </template>
+        <ion-item (click)="dismiss('settings')">
+            Settings
+        </ion-item>
+        <ion-item (click)="dismiss('about')">
+            About
+        </ion-item>
+    </ion-list>
+</ion-content>

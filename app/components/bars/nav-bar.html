@@ -1,0 +1,44 @@
+<ion-navbar *navbar>
+    <ion-toolbar>
+        <ion-buttons start>
+            <button *ngIf="menuButton" menuToggle>
+                <ion-icon name="menu"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-buttons left>
+            <button royal [class.fl-hidden]="!switchButton" (click)="switchState($event)">
+                <ion-icon [name]="Online ? 'arrow-up' : 'arrow-down'"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title>{{title}}</ion-title>
+        <ion-buttons right>
+            <button royal [class.fl-hidden]="!addButton" (click)="add($event)">
+                <ion-icon name="add"></ion-icon>
+            </button>
+            <button royal [class.fl-hidden]="!searchButton" (click)="search($event)">
+                <ion-icon name="search"></ion-icon>
+            </button>
+            <button royal [class.fl-hidden]="!moreButton"  (click)="more($event)">
+                <ion-icon name="more"></ion-icon>
+            </button>
+            <button royal (click)="refresh()">
+                <ion-icon name="refresh"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-navbar>
+<ion-searchbar *ngIf="searchBar" (input)="onInput($event)" (onCancel)="onCancel()" [(ngModel)]="searchQuery" [debounce]="searchDelay" [hideCancelButton]=true>
+</ion-searchbar>
+<ion-toolbar [attr.primary]="isAndroid ? '' : null" >
+  <ion-segment [(ngModel)]="viewType" [attr.light]="isAndroid ? '' : null">
+    <ion-segment-button value="All">
+      All
+    </ion-segment-button>
+    <ion-segment-button value="Favourites">
+      Favourites
+    </ion-segment-button>
+    <ion-segment-button value="Recent">
+      Recent
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
