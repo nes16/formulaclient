@@ -1,0 +1,7 @@
+{
+    "name": "Formula book Ionic to Heroku Example",
+    "description": "A simple Ionic app for Heroku",
+    "repository": "https://github.com/nes16/formulaclient",
+    "logo": "http://pathToYourLogo.png",
+    "keywords": ["ionic", "formulabook", "engineering"]
+}

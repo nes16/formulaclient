@@ -1,5 +1,5 @@
 import {Component, ElementRef, Renderer, Input, Output, EventEmitter} from '@angular/core';
-import {IONIC_DIRECTIVES, Modal, IonicApp, ViewController, NavController} from 'ionic-angular';
+import {IONIC_DIRECTIVES, Modal, ViewController, NavController} from 'ionic-angular';
 import {MathKeypad} from '../keys/keypad'
 import {AllModals} from '../../pages/all-modals/all-modals'
 import {MQService} from '../../services/mq-service'

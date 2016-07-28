@@ -35,9 +35,7 @@ export class ResourceCollection<T extends BaseResource>{
                           .concatAll()
                           .do(new LogHandler('Init DB'))
                           .subscribe(res=>{
-                              console.log('next' + res);
                           },err=>{
-                              console.log('error' + err);
                           },() => {
                                 or.next(this.resources);
                            })
@@ -76,8 +74,6 @@ export class ResourceCollection<T extends BaseResource>{
             this.resources.splice(this.resources.indexOf(r), 1)
             if(!child && !syncronizing)
                 this.offlineData.addResource(r1)
-            if(this.or)
-                this.or.next(this.resources);
         }
     }
 
@@ -917,7 +913,10 @@ export class LogHandler{
 
     handleSqlResult(res){
       if(!res || !res.res)
+      {
+        console.log("INFO: Next result " + JSON.stringify(res))
         return;
+      }
       res = res.res;
       if(res.stmt)
         console.log(res.stmt);
@@ -926,8 +925,10 @@ export class LogHandler{
     }
 
     handleSqlError(err){
-      if(!err || !err.err)
-        return;
+      if(!err || !err.err){
+         console.log('ERROR: '+ JSON.stringify(err));
+         return;
+      }
       err = err.err;
       if(err.stmt)
         console.log(err.stmt)

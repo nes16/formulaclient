@@ -26,24 +26,40 @@ export class SqlService {
 	}
 
 	init(drop:number): Observable<any> {
-		this.storage = new Storage(SqlStorage);
+		
+		if (this.initComplete)
+			return Observable.empty();
 		
 		if(localStorage.getItem("dbInit") == "1")
-			return Observable.empty();
-		localStorage.setItem("dbInit", "1")
+			return this.initSql();
+		
 
-		if (this.initComplete)
-			return Observable.create(or => or.complete());
-		if(drop){
-				var k = [this.dropTables(), this.createTables()];
-				return Observable.from(k)
+		if(drop)
+			return Observable.from([this.initSql(), this.dropTables(), this.createTables(), this.saveInitState()])
 							 .map(i => i)
 							 .concatAll()
-			}
-			else{
-				return this.createTables().concatAll();
-				
-			}
+		else
+			return Observable.from([this.initSql(), this.createTables(), this.saveInitState()])
+								 .map(i => i)
+								 .concatAll();
+	}
+
+	initSql(){
+		return Observable.create(or => {
+			Observable.fromPromise(this.platform.ready())
+					  .subscribe(res=>res, err=>err, ()=>{
+							this.storage = new Storage(SqlStorage);
+							or.complete();
+						})
+					})
+	}
+
+	saveInitState(){
+		return Observable.create(or => {
+			localStorage.setItem("dbInit", "1");
+			or.complete();
+		})
+
 	}
 
 	dropTables():Observable<any>{
@@ -63,14 +79,12 @@ export class SqlService {
 	//	this.storage = new Storage(SqlStorage);
 		return Observable.from(this.createTableStmts)
 						 .flatMap((t, i) => { 
-												return [
-													  this.initQuery(t)
-													 , this.initQuery(this.getAlterStatement(this.tables[i]))
-												]
-			})
-			.startWith(Observable.fromPromise(this.platform.ready()))
-			//.concat([Observable.create(or => { this.initComplete = true; or.complete();})])
-			.concatAll()
+							return [
+								  this.initQuery(t)
+								 , this.initQuery(this.getAlterStatement(this.tables[i]))
+							]
+						})
+						.concatAll()
 	}
 	
 	

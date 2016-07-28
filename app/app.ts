@@ -1,5 +1,7 @@
-import {App, Platform, IonicApp, MenuController, Events, NavController } from 'ionic-angular';
+import { Platform,  MenuController, ionicBootstrap, App, Events, NavController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
 import {StatusBar} from 'ionic-native';
+
 import {ResourceListPage} from './pages/resource-list';
 import {DetailPage} from './pages/detail/detail';
 import {BaseService} from './services/base-service';
@@ -11,18 +13,19 @@ import {MQService} from './services/mq-service';
 import {RemoteService} from './services/remote-service';
 import {SqlService} from './services/sql-service';
 
-@App({
+@Component({
   templateUrl: 'build/app.html',
-  config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
   providers: [ MyTokenAuth, JwtHttp, MQService, BaseService,DataService,RemoteService, SqlService,UIStateService]
-
 })
+
 export class MyApp {
   pages: any[];
    rootPage: any = ResourceListPage;
    //rootPage: any = DetailPage;
 
-   constructor(public app: IonicApp
+   @ViewChild('nav') nav;
+
+   constructor(public app: App
                , public platform: Platform
                , public uiStateService: UIStateService
                , public menu: MenuController) {
@@ -54,6 +57,10 @@ export class MyApp {
      });
    }
 
+   ngAfterViewInit() {
+       
+   }
+
    initializeApp() {
        this.platform.ready().then(() => {
        // Okay, so the platform is ready and our plugins are available.
@@ -65,8 +72,11 @@ export class MyApp {
    openPage(page, params) {
        // close the menu when clicking a link from the menu
        // navigate to the new page if it is not the current page
-       var nav = this.app.getRootNav() as NavController
-       nav.setRoot(page.component, page.params)
+       this.nav.setRoot(page.component, page.params)
        this.menu.close();
    }
 }
+
+
+
+ionicBootstrap(MyApp);

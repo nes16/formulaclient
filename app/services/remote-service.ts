@@ -56,7 +56,13 @@ export class RemoteService {
 
     //Syncronize the servers
     sync(obj:any){
-        return this.base.query('put', '/sync', {data:obj})
+        if(null){
+            return Observable.create(or => {
+                
+            })
+        }
+        else
+            return this.base.query('put', '/sync', {data:obj})
     }
     get OnLine(){
         return true;

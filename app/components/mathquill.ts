@@ -1,6 +1,6 @@
 import { Component, ElementRef, Renderer, Input, Output, EventEmitter, ViewChild, QueryList } from '@angular/core';
 import { Keys } from './keys';
-import { IONIC_DIRECTIVES, Modal, IonicApp, ViewController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, Modal, NavController } from 'ionic-angular';
 import { MQService } from '../services/mq-service';
 import { UIStateService } from '../services/ui-state-service';
 import { Unit } from '../types/standard';
@@ -16,14 +16,12 @@ import { Unit } from '../types/standard';
 export class MathQ {
 	mathelem: any;
 	listeners: Array<any> = [];
-	container: any;
 	writing: boolean = false;
 	latex: string = "";
 	constructor( public el:ElementRef,
 				 private renderer: Renderer,
 				 private mqService:MQService,
-				 public app: IonicApp,
-				 public viewCtrl:ViewController,
+				 private nav: NavController,
 				 public uiStateService:UIStateService){
 	}
 
@@ -38,12 +36,16 @@ export class MathQ {
 	//select factor from units where id=489
 	ngAfterViewInit(){
 		var _self = this;
-		this.container = this.app.getActiveNav().getNativeElement().querySelectorAll('.nav-content')[0];
 		var MQ = this.mqService.getInterface();
 		
 		if(this.editable){
 			this.mathelem = MQ.MathField(this.spanElem.nativeElement, {
 			   spaceBehavesLikeTab: true,
+			   substituteTextarea:function() {
+			   			var elem = document.createElement('span');
+			   			elem.setAttribute("tabindex", "0");
+    					return elem;
+    				},
 			   handlers: {
 				   edit: function(mq) {
 					   if(!_self.writing)

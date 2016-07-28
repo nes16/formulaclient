@@ -1,4 +1,4 @@
-import { IonicApp, Page, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angular';
+import { Page, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angular';
 import { Property, Unit, Formula } from '../../types/standard';
 import { forwardRef, ViewChild } from '@angular/core';
 import { DataService } from '../../services/data-service';
@@ -25,7 +25,7 @@ export class DetailPage {
     type: string;
     title:string;
     master: any;
-    constructor(public app: IonicApp, public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService) {
+    constructor(public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService) {
         this.currResource = navParams.get('currResource');
         if(this.currResource)
             this.type = this.currResource.getTable();

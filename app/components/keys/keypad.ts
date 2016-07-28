@@ -1,6 +1,6 @@
 import {mathkeys} from './keypad_keys';
 import { Component,  ElementRef, Input, Output, EventEmitter} from '@angular/core';
-import {IONIC_DIRECTIVES, Modal, Page,IonicApp, ViewController} from 'ionic-angular';
+import {IONIC_DIRECTIVES, Modal, Page, ViewController} from 'ionic-angular';
 import {MQService} from '../../services/mq-service'
 
 @Component({

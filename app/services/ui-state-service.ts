@@ -28,6 +28,8 @@ export class UIStateService {
     checkNetwork() {
         this.platform.ready().then(() => {
             var networkState = navigator.connection.type;
+            document.addEventListener("online", this.onOnline.bind(this), false);
+            document.addEventListener("offline", this.onOffline.bind(this), false);
  
             var states = {};
             states[Connection.UNKNOWN]  = 'Unknown connection';
@@ -40,9 +42,17 @@ export class UIStateService {
         });
     }
 
+    onOnline(){
+        console.log('=================Online=================');
+    }
+
+    onOffline(){
+        console.log('=================offline=================')
+    }
+
     get IsOnline() {
-        return this.online;
-		//return navigator.onLine;
+        //return this.online;
+		return navigator.onLine;
     }
 
 

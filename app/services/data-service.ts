@@ -78,7 +78,7 @@ export class DataService {
                   .concat([this.sync(list)])
                   .concatAll()
                   //Log the stream events
-                  .do(this.logHandler)
+                  //.do(this.logHandler)
                   .finally(() => {
                     console.log('Info:Initializing lists...')
                     lists.forEach(li => {
@@ -126,31 +126,47 @@ export class DataService {
       })
     }
 
+    setDeletedItems(li: ResourceCollection<BaseResource>):Observable<any> {
+        var table = this.getTable(li);
+        return Observable.create(or => {
+            this.setKV('deletedItems_'+table,li.offlineData.deletedItems)
+                .subscribe(res => {
+                    or.next(res);
+                }, err => or.error(err), ()=>or.complete())
+        })
+    }
+
+    setLastSync(li:ResourceCollection<BaseResource>):Observable<any>{
+      return Observable.create(or => {
+        this.setKV('lastSync_'+this.getTable(li), li.offlineData.lastSync).subscribe(res =>{
+          or.next(res);
+        }, err=> or.error(err), ()=>or.complete())
+      })
+    }
+
 
     sync(li):Observable<any> {
       var lists = this.getDepentent(li);
       return Observable.create(or => {
           var offLineData = new OfflineData(lists);
           //Handle response for sync opertaion
+          var syncResponse;
           this.remoteService
               .sync({syncInfo: offLineData.asJson()})
               .subscribe(od => {
                 or.next(od);
-                this.handleSyncResponse(od)
-                    .subscribe(res => or.next(res), err=>or.error(err), ()=> or.complete())
-              }, err=>or.erro(err), ()=>or.complete())
+                syncResponse = od;
+              }, err=>or.erro(err), ()=>{
+                  var innerObs = this.handleSyncResponse(syncResponse);
+                  innerObs.subscribe(res => or.next(res), err=>or.error(err), ()=> or.complete())
+              })
       })
     }
 
-    handleSyncResponseForTable(tod:TableOfflineData):Observable<any>{
+    memSync(tod:TableOfflineData):Observable<any>{
       var li =  this[tod.name] as ResourceCollection<BaseResource>;
-      var firstSync = false;
-      if(li.offlineData.lastSync == "" || li.offlineData.lastSync == null)
-        firstSync = true;
-      var offlineResourcesCount = li.offlineData.resources.length;
-      if(!firstSync)
-        var sameLastSync = (li.offlineData.lastSync.replace(new RegExp("\"",'g'), '') == tod.lastSync.replace(new RegExp("\"",'g'), '')) 
-      var memOle = Observable.create(or => {
+      
+      return Observable.create(or => {
           //set remote bit for offline data
           //and remove resouces from offline data 
           //set the new lastsync time for this table
@@ -185,36 +201,25 @@ export class DataService {
              else
                 lobj.loadState(i)
              
+             
              tod.resources.push(obj);
           })
           or.complete()
       })
+    }
 
 
-    return Observable.from([memOle 
-                       , this.setKV('deletedItems_'+ tod.name, this[tod.name].offlineData.deletedItems)
+    handleSyncResponseForTable(tod:TableOfflineData):Observable<any>{
+
+      return Observable.from([this.memSync(tod)
+                       , this.setDeletedItems(this[tod.name])
                        , this.lupdateIdsSync(tod)
                        , this.lsaveResourcesSync(tod)
-                       , this.setKV('lastSync_'+tod.name, tod.lastSync)
+                       , this.setLastSync(this[tod.name])
                        , this.lclearSyncState(tod.name)
                        ])
                      .map((item, i) => {
-                       //Some of the steps in 
-                       //sync response handling is not required
-                       //in the cases.
-                       //for example, the updateIdsSync
-                       //clear sync state are not required when you are 
-                       //fetching item first time.
-                       if(firstSync)//Fetching rows first time
-                         if(i == 1 || i==2 || i==5)
-                           return Observable.empty();
-                       if(offlineResourcesCount == 0 && i == 5)//There is no local update
-                           return Observable.empty();
-                       if(i == 1 && this[tod.name].offlineData.deletedItems.length == 0)
-                           return Observable.empty();
-                       if(i == 4 && sameLastSync)
-                           return Observable.empty();  
-                       return item;
+                        return item;
 
                      })
                      .concatAll()
@@ -254,25 +259,19 @@ export class DataService {
 
 
     lupdateIdsSync(tod:TableOfflineData):Observable<any>{
-        return Observable.create(or =>  {
-            var resources = tod.resources.filter(k => k.oldId !=null);  
-            Observable.interval(200)
-                  .take(resources.length)
-                  .flatMap(i =>  this.lupdateIdItemSync(resources[i]))
+            return Observable.from([tod])
+                  .flatMap(i => i.resources)
+                  .filter(i => i.oldId != null && i.oldId != i.id)
+                  .flatMap(i =>  this.lupdateIdItemSync(i))
                   .concatAll()
-                  .subscribe(res=>or.next(res), err=>or.error(err),()=>or.complete())
-          })
     }
 
     lsaveResourcesSync(tod:TableOfflineData):Observable<any>{
-        return Observable.create(or =>  {
-            var resources = tod.resources.filter(k => k.oldId == null)
-            Observable.interval(200)
-                  .take(resources.length)
-                  .flatMap(i =>  this.lsaveItemSync(resources[i]))
+            return Observable.from([tod])
+                  .flatMap(i => i.resources)
+                  .filter(i => i.oldId == null)
+                  .flatMap(i => this.lsaveItemSync(i))
                   .concatAll()
-                  .subscribe(res=>or.next(res), err=>or.error(err),()=>or.complete())
-        })
     }
 
     
@@ -280,10 +279,7 @@ export class DataService {
 
     lupdateIdItemSync(i:BaseResource):Observable<any>[]{
         var li = this[i.getTable()] as ResourceCollection<BaseResource>;
-        if(i.oldId == i.id)
-          return [Observable.empty()]
-        else
-          return this.doOpForAllLists(li, i.oldId, i.id, this.lupdateIds.bind(this), this.emptyObservable()) 
+        return this.doOpForAllLists(li, i.oldId, i.id, this.lupdateIds.bind(this), this.emptyObservable()) 
     }
 
 

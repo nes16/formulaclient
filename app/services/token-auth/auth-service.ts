@@ -1,6 +1,5 @@
 import { Injectable} from '@angular/core';
 import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response } from '@angular/http';
-import { Router, ROUTER_DIRECTIVES,  ROUTER_PROVIDERS } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
@@ -83,7 +82,7 @@ export class MyTokenAuth {
         }
       }
 
-  constructor(public http: JwtHttp, public router: Router) {
+  constructor(public http: JwtHttp) {
     this.http.setAuth(this);
     this.initializeListeners();
     this.observable = Observable.create(observer => { 

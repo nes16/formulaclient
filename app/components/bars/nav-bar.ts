@@ -1,26 +1,9 @@
 import {Component, ElementRef, Input, Output, EventEmitter} from '@angular/core';
-import {IONIC_DIRECTIVES, Modal, NavController, IonicApp} from 'ionic-angular';
+import {IONIC_DIRECTIVES, Modal, NavController, App} from 'ionic-angular';
 import {MoreOptions} from '../../pages/more-options/more-options';
 import {AllModals} from '../../pages/all-modals/all-modals';
 import {UIStateService} from '../../services/ui-state-service';
-/*
- *nav bar
- *Mode:
- *Normal
- *Search
- *Edit
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
+
 @Component({
 	selector: 'fl-nav-bar',
 	templateUrl: 'build/components/bars/nav-bar.html',
@@ -32,7 +15,7 @@ export class FlNavBar {
 	searchDelay: number = 2000;
 	viewType:string = 'All'
 	constructor(public el: ElementRef
-				, public app: IonicApp
+				, public nav: NavController
 				, public uiStateService:UIStateService) {
 
 	}
@@ -67,22 +50,20 @@ export class FlNavBar {
 
 	more(evt){
 	    let moreOptions = Modal.create(MoreOptions, { 'authenticated': this.uiStateService.authenticated });
-	    let nav = this.app.getComponent('nav');
 
 	     moreOptions.onDismiss(data => {
 	       let modals = Modal.create(AllModals, data);
-	       nav.present(modals);
+	       this.nav.present(modals);
 	     });
-	     nav.present(moreOptions);
+	     this.nav.present(moreOptions);
 	  }
 
 	refresh(evt){
-		let nav = this.app.getComponent('nav');
-		let v = nav.getActive();
+		let v = this.nav.getActive();
 		let ct = v.componentType;
-		nav.pop();
+		this.nav.pop();
 		//this._templateCompiler.clearCache();
-		nav.push(ct);
+		this.nav.push(ct);
 	}
 
 	add(evt){
