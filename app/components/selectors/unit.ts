@@ -1,5 +1,6 @@
 import {Component, ElementRef, Renderer, Input, Output, EventEmitter} from '@angular/core';
 import {IONIC_DIRECTIVES, Modal, ViewController, NavController} from 'ionic-angular';
+
 import {MathKeypad} from '../keys/keypad'
 import {AllModals} from '../../pages/all-modals/all-modals'
 import {MQService} from '../../services/mq-service'
@@ -77,8 +78,9 @@ export class UnitSelector {
 	}
 
 	select() {
+		var type = UIStateService.event_types.resource_selected;
 		var subscribtion = this.uiStateService.ole.subscribe(sel => {
-			if(sel.type == "select")
+			if(sel.type == type)
 			{
 				if(sel.status == 'success'){
 					var measure = new Measure(sel.resource)

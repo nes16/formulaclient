@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Platform, Content} from 'ionic-angular';
+import {Platform, Content, App} from 'ionic-angular';
 import { Observer } from 'rxjs/Observer';
 import { ConnectableObservable } from 'rxjs';
+import { Modal } from 'ionic-angular';
+import { AllModals } from '../pages/all-modals/all-modals';
 
 @Injectable()
 export class UIStateService {
@@ -9,13 +11,19 @@ export class UIStateService {
     online:boolean = true;
     content:Content;
 
+    static event_types = {
+        resource_save_complete:1,   //Successful save of an resource
+        service_error_occurred:2, //Publishing errors from services
+        resource_selected:3
+    }
+
     //Used for communicate async operation
     //state
     ole:ConnectableObservable<any>
     or:Observer<any>;
 
     inSelectMode:boolean;
-    constructor(private platform: Platform) {
+    constructor(public app:App, private platform: Platform) {
         this.ole = ConnectableObservable.create(or => {
             this.or = or;
         }).publish();
@@ -40,6 +48,12 @@ export class UIStateService {
             states[Connection.CELL_4G]  = 'Cell 4G connection';
             states[Connection.NONE]     = 'No network connection';
         });
+    }
+
+    showErrorModal(nav, errorInfo){
+        var data = {option:"error", errorInfo:errorInfo}
+        let modals = new Modal(this.app, AllModals, data);
+        nav.popup(modals);
     }
 
     onOnline(){

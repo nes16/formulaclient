@@ -1,14 +1,15 @@
+<ion-header>
 <fl-nav-bar [title]="Title" [switchButton]="true" [addButton]="true" [menuButton]="true" [searchButton]="true" [moreButton]="true" (onCancel)="onFilterCancel($event)" (onAdd)="onNewCmd($event)" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
-
+</ion-header>
 <ion-content>
 	<div [ngSwitch]="resourceType">
-		<template [ngSwitchWhen]="'properties'">
+		<template [ngSwitchCase]="'properties'">
 	    	<fl-property *ngFor="let prop of dataService.properties.ole | async"  [resource]="prop" ></fl-property>
 	    </template>
-		<template [ngSwitchWhen]="'globals'">
+		<template [ngSwitchCase]="'globals'">
 	    	<fl-global *ngFor="let global of dataService.globals.ole | async"  [resource]="global"></fl-global>
 	    </template>
-	    <template [ngSwitchWhen]="'formulas'">
+	    <template [ngSwitchCase]="'formulas'">
 	    	<fl-formula  *ngFor="let formula of dataService.formulas.ole | async"  [resource]="formula" ></fl-formula>
 	    </template>
     </div>

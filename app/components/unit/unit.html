@@ -4,6 +4,9 @@
                 <a (click)="onEditCmd($event)">
                     <ion-icon royal name="create"></ion-icon>
                 </a>
+                <a *ngIf="resource.error_code > 0" (click)="onErrorCmd($event)">
+                    <ion-icon assertive name="alert"></ion-icon>
+                </a>
             </ion-buttons>
             <fl-base [resource]="resource"></fl-base>
             <div>
@@ -26,57 +29,38 @@
         </ion-item>
     </template>
     <template [ngIf]="mode == 'edit'">
-        <form [ngFormModel]="form" (submit)="edit($event, form.value)">
+        <form [formGroup]="form" (submit)="edit($event, form.value)">
             <ion-list>
                 <ion-item>
                     <ion-label>Name</ion-label>
-                    <ion-input type="text" ngControl="name" [(ngModel)]="resource.name"></ion-input>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label>Description</ion-label>
-                    <ion-input type="text" ngControl="description" [(ngModel)]="resource.description"></ion-input>
+                    <ion-input type="text" formControlName="description" [(ngModel)]="resource.description"></ion-input>
                 </ion-item>
-                <div class="item item-input item-select">
-                    <div class="item-inner">
-                        <ion-label>System</ion-label>
-                        <select ngControl="system" [(ngModel)]="resource.system">
-                            <option value="SI" selected="">SI unit</option>
-                            <option value="cgs unit">CGS</option>
-                            <option value="_">Others</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="item fl-math">
-                    <div class="item-inner">
-                        <label>Symbol</label>
-                        <div>
-                            <div>
-                                <mathq [(ngModel)]="resource.Latex"></mathq>
-                            </div>
-                            <div>
-                                <input class="text-input" type="text" ngControl="symbol" [(ngModel)]="resource.Symbol">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <ion-item>
-                    <ion-label>Definition</ion-label>
-                    <ion-input type="text" ngControl="definition" [(ngModel)]="resource.definition"></ion-input>
+                    <ion-label>System</ion-label>
+                    <ion-select  [(ngModel)]="resource.system" [ngModelOptions]="{standalone: true}" required.>
+                        <ion-option *ngFor="let p of systems" [value]="p">{{p}}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Symbol</ion-label>
+                    <ion-input type="text" formControlName="symbol" [(ngModel)]="resource.Symbol"></ion-input>
                 </ion-item>
                 <template [ngIf]="!resource.IsDefaultUnit">
-                    <div class="item">
-                        <div class="item-inner">
-                            <ion-label>Conversion</ion-label>
-                            <div>
-                                <span>x  <mathq [(ngModel)]="resource.Latex"></mathq> = <mathq [editable]="true" ngControl="factor" [(ngModel)]="resource.factor"></mathq><mathq [(ngModel)]="resource.Property.DefaultUnit.Latex"></mathq></span>
-                            </div>
-                        </div>
-                    </div>
-                    <ion-item>
-                        <ion-label>Approximate</ion-label>
-                        <ion-checkbox dark ngControl="approx" [(ngModel)]="resource.approx"></ion-checkbox>
+                    <ion-item class="item-input">
+                        <ion-label>Factor</ion-label>
+                        <mathq  item-right [editable]="true" formControlName="factor" [(ngModel)]="resource.factor"></mathq>
+                    </ion-item>
+                    <ion-item input>
+                        <ion-label> Approximate</ion-label>
+                        <ion-checkbox item-right formControlName="approx" [(ngModel)]="resource.approx"></ion-checkbox>
                     </ion-item>
                 </template>
+                
                 <ion-item *ngIf="updateButton">
                     <button type="button" name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid">{{submitButtonName}}</button>
                 </ion-item>

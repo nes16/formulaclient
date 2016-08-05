@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators} from '@angular/common';
+import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
 import { Property, Unit } from '../../types/standard';
 import { DataService } from '../../services/data-service';
@@ -11,6 +11,7 @@ import { MathQValueAccessor } from '../mathquill-accessor';
 import { UnitSelector } from '../selectors/unit';
 import { UnitValueAccessor } from '../selectors/unit-accessor';
 import { DetailPage } from '../../pages/detail/detail';
+import { symbolValidator, numberValidator, createMeasureValidator } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-global',
@@ -20,10 +21,11 @@ import { DetailPage } from '../../pages/detail/detail';
 export class GlobalComponent extends BaseComponent {
 	detailPage: any;
 
+	form:FormGroup;
+
 	constructor(dataService: DataService,
 	  nav: NavController,
 	  private el: ElementRef, 
-	  public fb: FormBuilder,
 	  public uiStateService: UIStateService
 	  ) {
 		super(dataService, nav, uiStateService);
@@ -35,11 +37,16 @@ export class GlobalComponent extends BaseComponent {
 	
 	ngOnInit() {
 		super.ngOnInit();
-		this.form = this.fb.group({
-			name: [this.resource.name, Validators.required],
-			value: [this.resource.value, Validators.required],
-			symbol: [this.resource.symbol, Validators.required],
-			measure: [this.resource.Measure]
+		this.form = new FormGroup({
+			name: new FormControl(this.resource.name, [Validators.required
+										, Validators.minLength(5)
+										, Validators.maxLength(30)]),
+			value: new FormControl(this.resource.value, [Validators.required
+										, numberValidator]),
+			symbol: new FormControl(this.resource.symbol, [Validators.required
+										, symbolValidator]),
+			measure: new FormControl(this.resource.measure, [Validators.required
+										, createMeasureValidator(false, true)]),
 		})
 	}
 

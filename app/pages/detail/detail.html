@@ -1,5 +1,6 @@
+<ion-header>
 <fl-nav-bar [title]="type" [menuButton]="false" [searchButton]="false" [moreButton]="false" (onCancel)="onFilterCancel()" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
-
+</ion-header>l
 <ion-content id="detail-page">
     <ion-list *ngIf="type == 'properties'">
         <fl-property [mode]="'edit'" [resource]="currResource"></fl-property>
@@ -17,4 +18,6 @@
         <fl-var  [mode]="'edit'" [resource]="currResource"></fl-var>
     </ion-list>
 </ion-content>
+<ion-footer>
 <keypad></keypad>
+</ion-footer>

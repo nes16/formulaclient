@@ -1,5 +1,5 @@
-import { Platform,  MenuController, ionicBootstrap, App, Events, NavController } from 'ionic-angular';
-import { Component, ViewChild } from '@angular/core';
+import { Platform, Nav,  MenuController, ionicBootstrap, App, Events, NavController } from 'ionic-angular';
+import { Component, ViewChild, enableProdMode } from '@angular/core';
 import {StatusBar} from 'ionic-native';
 
 import {ResourceListPage} from './pages/resource-list';
@@ -12,10 +12,12 @@ import {DataService} from './services/data-service';
 import {MQService} from './services/mq-service';
 import {RemoteService} from './services/remote-service';
 import {SqlService} from './services/sql-service';
+import {PLATFORM_DIRECTIVES} from '@angular/core';
+import {disableDeprecatedForms, provideForms, REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
 
 @Component({
   templateUrl: 'build/app.html',
-  providers: [ MyTokenAuth, JwtHttp, MQService, BaseService,DataService,RemoteService, SqlService,UIStateService]
+  providers: [  MyTokenAuth, JwtHttp, MQService, BaseService, DataService,RemoteService, SqlService,UIStateService]
 })
 
 export class MyApp {
@@ -23,7 +25,7 @@ export class MyApp {
    rootPage: any = ResourceListPage;
    //rootPage: any = DetailPage;
 
-   @ViewChild('nav') nav;
+   @ViewChild(Nav) private nav: Nav;
 
    constructor(public app: App
                , public platform: Platform
@@ -31,7 +33,6 @@ export class MyApp {
                , public menu: MenuController) {
      // set up our app
      this.initializeApp();
-
      // set our app's pages
      this.pages = [
          {title: 'Units and Properties', component: ResourceListPage, params:{type:"properties"} },
@@ -58,7 +59,7 @@ export class MyApp {
    }
 
    ngAfterViewInit() {
-       
+
    }
 
    initializeApp() {
@@ -77,6 +78,18 @@ export class MyApp {
    }
 }
 
+enableProdMode(),
 
 
-ionicBootstrap(MyApp);
+ionicBootstrap(MyApp, [
+  disableDeprecatedForms(),
+  provideForms(),
+  {
+        provide: PLATFORM_DIRECTIVES,
+        useValue: [REACTIVE_FORM_DIRECTIVES],
+        multi: true
+  } ,
+  MyTokenAuth, JwtHttp, MQService, BaseService, DataService
+  ])
+ 
+

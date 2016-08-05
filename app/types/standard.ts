@@ -103,23 +103,60 @@ export class ResourceCollection<T extends BaseResource>{
     get length():number{
         return this.resources.length;
     }
+
+    hasErrorInfo(){
+        var errorItems = this.offlineData.deletedItems.filter(i => i.error_code > 0);
+        return errorItems.length > 0;
+    }
+
+    getDeletedItemErrorInfo():any{
+       var errorItems = this.offlineData.deletedItems.filter(i => i.error_code > 0);
+       if(!errorItems.length){
+           return null;
+       }
+       else{
+           var errorInfo:any = {};
+           errorInfo.message="One or more item deletion has some error"
+           errorInfo.fieldErrors = errorItems.map(i => {
+               "Id:"+i.id +"= Failure:"+BaseResource.errors_messages[i.error_code];
+           })
+           return errorInfo;
+        }
+    }
 }
 
 export class BaseResource {
     id: number;
     name: string;
+    lock_version:number;
+    static errors_messages:any = {
+        0:"Success",
+        1:"Validation error",
+        2:"This item was not found in server",
+        3:"Your change not syncronized since the new version was already in server.",
+        100:"Unknown error"
+    }
 
+    static errors_codes:any= {
+        success:0,
+        validation_error:1,
+        item_not_found:2,
+        stale_object:3,
+        unknown_error:100
+    }
 
     //Internal
-    oldId: number;
+    tempId: number;
     deleted:string;
     syncState: number = 0;
     oldState:any;
+    error_code:number;
+    error_messages:any;
     constructor(state){
         this.loadState(state);
     }
 
-    init(obj:any =null) {
+    init(obj:any = null) {
 
     }
 
@@ -128,12 +165,15 @@ export class BaseResource {
         this.name = state.name;
         this.syncState = state.syncState;
         this.deleted = state.deleted;
+        this.lock_version = state.lock_version;
         if(this.syncState == null)
             this.syncState = 0;
+        if(!state.lock_version)
+            state.lock_version = 0;
     }
 
     getState(){
-        return { id: this.id, name: this.name, syncState: this.syncState };
+        return { id: this.id, name: this.name, syncState: this.syncState, lock_version:this.lock_version };
     }
 
 
@@ -203,21 +243,31 @@ export class BaseResource {
     isDeletePending():boolean{
         return ((ItemSyncState.DELETE & this.syncState) != 0)
     }
+
+    getErrorInfo(){
+        var errorInfo:any = {};
+        errorInfo.message = BaseResource.errors_messages[this.error_code];
+        if(this.error_messages){
+            errorInfo.fieldErrors = Object.keys(this.error_messages).map(i => {
+                var str = i+":";
+                this.error_messages[i].forEach(k => str=str+k+"\n")
+                return str;
+            })
+        }
+        errorInfo.fieldErrors = [];
+
+        return errorInfo;
+    }
 }
     
 export class Unit extends BaseResource {
     static table: string = 'units';
     
     system: string;
-    baseunit: boolean;
     symbol: string;
-    prefix: any;
-    extend: any;
-    definition: string;
     description: string;
     approx: boolean;
     factor: string;
-    repeat: any;
     property_id: number;
     
 
@@ -249,15 +299,10 @@ export class Unit extends BaseResource {
           this.property_id = this.Property.id;
         return Object.assign(super.getState(), { 
           system: this.system,
-          baseunit: this.baseunit,
           symbol: this.symbol,
-          prefix: this.prefix,
-          extend: this.extend,
-          definition: this.definition,
           description: this.description,
           approx: this.approx,
           factor: this.factor,
-          repeat: this.repeat,
           property_id: this.property_id
         });
     }
@@ -265,15 +310,10 @@ export class Unit extends BaseResource {
     loadState(state){
         super.loadState(state);
         this.system = state.system;
-        this.baseunit = state.baseunit;
         this.symbol = state.symbol;
-        this.prefix = state.prefix;
-        this.extend = state.extend;
-        this.definition = state.definition;
         this.description = state.description;
         this.approx = state.approx;
         this.factor = state.factor;
-        this.repeat = state.repeat;
         this.property_id = state.property_id;
     }
 
@@ -846,6 +886,21 @@ export class TableOfflineData {
             this.resources.push(res);
     }
 
+    removeResource(res:BaseResource){
+        var item = this.deletedItems.find(i => i.id == res.id)
+        var item_index;
+        if(item)
+            this.deletedItems.splice(this.deletedItems.indexOf(item), 1)
+        else{
+            item = this.resources.find((i, index) => {
+                            item_index=index; 
+                            return i.id == res.id;
+                            })
+            if(item){
+               this.resources.splice(item_index, 1);
+            }
+        }
+    }
     //Called after getting successful
     //sync response
     clearResources(lastSync:string){

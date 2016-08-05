@@ -26,10 +26,12 @@ export class JwtHttp {
         this._auth = auth;
     }
 
+    
     request(url, options) {
         if (url instanceof Request) {
             url.headers = url.headers || new Headers();
             url.headers.set('Content-Type', 'application/json');
+            var _ref = this._auth.config.tokenFormat;
             options = {};
             if(this._auth.userIsAuthenticated() && url.url.match(this._auth.getApiUrl()))
                 this.setHeaders(url.headers);

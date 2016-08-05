@@ -43,6 +43,7 @@ export class DataService {
         
         
 
+
     }
 
     init():Observable<any> {
@@ -129,7 +130,10 @@ export class DataService {
     setDeletedItems(li: ResourceCollection<BaseResource>):Observable<any> {
         var table = this.getTable(li);
         return Observable.create(or => {
-            this.setKV('deletedItems_'+table,li.offlineData.deletedItems)
+            //Ignore error codes in storage
+            var deletedItems = li.offlineData.deletedItems.map(i => ({id: i.id}))
+            
+            this.setKV('deletedItems_'+table, deletedItems)
                 .subscribe(res => {
                     or.next(res);
                 }, err => or.error(err), ()=>or.complete())
@@ -163,6 +167,73 @@ export class DataService {
       })
     }
 
+
+
+    handleSyncResponse(offlineData:OfflineData): Observable<any>{
+        //Update in memory objects in
+        //Resource lists of each table
+        return Observable.from(offlineData.tables)
+                         .map(tod => this.handleSyncResponseForTable(tod))
+                         .concatAll()
+    }
+    
+    handleSyncResponseForTable(tod:TableOfflineData):Observable<any>{
+
+      return Observable.from([this.handleSyncErrors(tod)
+                       , this.memSync(tod)
+                       , this.setDeletedItems(this[tod.name])
+                       , this.lupdateIdsSync(tod)
+                       , this.lsaveResourcesSync(tod)
+                       , this.setLastSync(this[tod.name])
+                       , this.lclearSyncState(tod.name)
+                       ])
+                     .map((item, i) => {
+                        return item;
+
+                     })
+                     .concatAll()
+                   
+    }
+
+    handleSyncErrors(tod:TableOfflineData):Observable<any>{
+      var li =  this[tod.name] as ResourceCollection<BaseResource>;
+      
+      return Observable.create(or => {
+        var jsonResources = tod.resources;
+        jsonResources.forEach(i => {
+            if(i.error_code != null){
+               var lobj  = li.getItem("id", i.id)
+               if(i.error_code > 0){
+                 lobj.error_code = i.error_code;
+                 lobj.error_messages = i.error_messages;
+               }
+               else
+                 li.offlineData.removeResource(lobj);
+            }
+        })
+        tod.resources = jsonResources.filter(i => (i.error_code == null || i.tempId != null))
+        var deletedItems = tod.deletedItems;
+        deletedItems.forEach(i => {
+          if(i.error_code != null){
+            if(i.error_code > 0){
+              var item = li.offlineData.deletedItems.find(l => l.id == i.id );
+              if(item){
+                item.error_code = i.error_code;
+              }
+            }
+            else{
+              li.offlineData.removeResource(item);
+            }
+          }
+        })
+        if(li.hasErrorInfo())
+          this.uiService.or.next({type:UIStateService.event_types.service_error_occurred, list:li})
+
+        tod.deletedItems = tod.deletedItems.filter(i => i.error_code == null)
+        or.complete();
+      })
+    }
+
     memSync(tod:TableOfflineData):Observable<any>{
       var li =  this[tod.name] as ResourceCollection<BaseResource>;
       
@@ -179,76 +250,64 @@ export class DataService {
           var jsonResources = tod.resources;
           tod.resources = new Array<BaseResource>();
           jsonResources.forEach(i => {
-              if(i.oldId){
-                 var lobj  = li.getItem("id", i.oldId)
-                 lobj.oldId = i.oldId;
-                 if(i.oldId != i.id)
-                   this.changedIdsRegressive(li, i.oldId, i.id);
+              if(i.tempId){
+                 var lobj  = li.getItem("id", i.id)
+                 if(i.id != i.tempId){
+                   lobj.tempId = i.id;
+                   lobj.id = i.tempId;
+                   this.changedIdsRegressive(li, i.id, i.tempId);
+                 }
                  tod.resources.push(lobj);
               }
           })
-          //Remove json item from list
-          jsonResources = jsonResources.filter(i => i.oldId == null)
+
+          //Filter only updated  json item from list
+          jsonResources = jsonResources.filter(i => i.tempId == null)
           jsonResources.forEach(i => {
-             var obj = new li.type(i) as BaseResource;
-             var lobj = li.getItem("id", obj.id)
-             if(i.deleted){
-                 if(lobj)
-                   li.remove(obj, false, true);
-             }
-             else if(lobj == null)
+             var obj;
+             var lobj = li.getItem("id", i.id);
+             if(lobj == null){
+               obj = new li.type(i) as BaseResource;
                li.add(obj, true);
-             else
-                lobj.loadState(i)
+             }
+             else{
+                lobj.loadState(i);
+             }
              
-             
-             tod.resources.push(obj);
+             tod.resources.push(lobj?lobj:obj);
+          })
+
+          //Deleted items
+          var deletedItems = tod.deletedItems;
+          deletedItems.forEach(i => {
+            var lobj = li.getItem("id", i.id) as BaseResource;
+            if(lobj){
+              li.remove(lobj, false, true);
+              tod.resources.push(lobj);
+              lobj.deleted = "true";
+            }
           })
           or.complete()
       })
     }
 
-
-    handleSyncResponseForTable(tod:TableOfflineData):Observable<any>{
-
-      return Observable.from([this.memSync(tod)
-                       , this.setDeletedItems(this[tod.name])
-                       , this.lupdateIdsSync(tod)
-                       , this.lsaveResourcesSync(tod)
-                       , this.setLastSync(this[tod.name])
-                       , this.lclearSyncState(tod.name)
-                       ])
-                     .map((item, i) => {
-                        return item;
-
-                     })
-                     .concatAll()
-                   
-    }
     
     //If the incoming ids are greater than old id
     //reverse the order of updating id to avoid collision
     orderResources(resources:BaseResource[]){
       var newResources = new Array<BaseResource> ()
-      var news = resources.filter(r => r.oldId != null);
+      var news = resources.filter(r => r.tempId != null);
       var isNewResFound:boolean = (news.length >= 2)
       if(!isNewResFound)
          return resources;
        
-       var newIdGreater:number = news.filter(r => r.id > r.oldId).length;
+       var newIdGreater:number = news.filter(r => r.id > r.tempId).length;
        if(newIdGreater > 0)
          return resources.reverse();
        else
          return resources;
     }
 
-    handleSyncResponse(offlineData:OfflineData): Observable<any>{
-        //Update in memory objects in
-        //Resource lists of each table
-        return Observable.from(offlineData.tables)
-                         .map(tod => this.handleSyncResponseForTable(tod))
-                         .concatAll()
-    }
     
     //Update forign key ids of particular table
     lclearSyncState(table):Observable<any>{
@@ -261,7 +320,7 @@ export class DataService {
     lupdateIdsSync(tod:TableOfflineData):Observable<any>{
             return Observable.from([tod])
                   .flatMap(i => i.resources)
-                  .filter(i => i.oldId != null && i.oldId != i.id)
+                  .filter(i => i.tempId != null && i.tempId != i.id)
                   .flatMap(i =>  this.lupdateIdItemSync(i))
                   .concatAll()
     }
@@ -269,7 +328,7 @@ export class DataService {
     lsaveResourcesSync(tod:TableOfflineData):Observable<any>{
             return Observable.from([tod])
                   .flatMap(i => i.resources)
-                  .filter(i => i.oldId == null)
+                  .filter(i => i.tempId == null)
                   .flatMap(i => this.lsaveItemSync(i))
                   .concatAll()
     }
@@ -279,7 +338,7 @@ export class DataService {
 
     lupdateIdItemSync(i:BaseResource):Observable<any>[]{
         var li = this[i.getTable()] as ResourceCollection<BaseResource>;
-        return this.doOpForAllLists(li, i.oldId, i.id, this.lupdateIds.bind(this), this.emptyObservable()) 
+        return this.doOpForAllLists(li, i.tempId, i.id, this.lupdateIds.bind(this), this.emptyObservable()) 
     }
 
 

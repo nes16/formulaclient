@@ -3,7 +3,8 @@ import { MathQ } from './mathquill';
 import { DataService } from '../services/data-service'
 import { UIStateService } from '../services/ui-state-service'
 import { Unit, States } from '../types/standard';
-import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, Modal, NavController } from 'ionic-angular';
+import { AllModals } from '../pages/all-modals/all-modals';
 
 export class BaseComponent {
 	submitButtonName: string;
@@ -14,7 +15,10 @@ export class BaseComponent {
 	constructor(public dataService:DataService
 				, public nav:NavController
 				,public uiStateService:UIStateService = null) {
+
 	}
+
+
 
 	@Input() resource;
 	//@ViewChildren(UnitComponent) unitForm: QueryList<UnitComponent>
@@ -22,6 +26,7 @@ export class BaseComponent {
 	@Input() query;
 	@Input() units;
 	@Input() onlyProp = false;
+
 
 	ngOnInit() {
 		if(this.resource)
@@ -45,6 +50,12 @@ export class BaseComponent {
 		this.nav.push(this.detailPage, {  'currResource': this.resource })
 		evt.stopPropagation();
     	evt.preventDefault();
+	}
+
+	onErrorCmd(evt){
+		//Save 
+		var errorInfo = this.resource.getErrorInfo();
+		this.uiStateService.showErrorModal(this.nav, errorInfo);
 	}
 
 	onRemoveCmd(evt){
@@ -79,14 +90,16 @@ export class BaseComponent {
 
 	onSelect(evt){
 	    if(this.uiStateService.inSelectMode){
-	        this.uiStateService.or.next({status:'success', type:'select', resource:this.resource})
+	    	var type = UIStateService.event_types.resource_selected; 
+	        this.uiStateService.or.next({status:'success', type:type, resource:this.resource})
 	        this.nav.pop();
 	    	this.uiStateService.inSelectMode = false;
 	    }
 	}
 
 	emit(){
-		this.uiStateService.or.next({status:'success', type:'edit', resource: this.resource});
+	    var type = UIStateService.event_types.resource_save_complete; 
+		this.uiStateService.or.next({status:'success', type:type, resource: this.resource});
 		this.nav.pop();
 	}
 
@@ -94,8 +107,7 @@ export class BaseComponent {
 		this.dataService
 			.saveItemRecursive(this.resource)
 			.subscribe(res => {
-				this.uiStateService.or.next({status:'success', resource: this.resource});
-				//this.nav.pop();
+
 			},err => {
 
 			},()=>{

@@ -11,7 +11,7 @@ export class BaseService{
 //https://github.com/ronzeidman/ng2-ui-auth/blob/master/src/jwtHttp.ts
 	baseUrlRemote:string = "https://young-hollows-77540.herokuapp.com/api/v1" 
 	baseUrlLocal:string = "http://localhost/api/v1" 
-	baseUrl:string = this.baseUrlLocal;
+	baseUrl:string = this.baseUrlRemote;
 	http: any = null;
 
 	constructor(public auth:MyTokenAuth, public uiService:UIStateService){

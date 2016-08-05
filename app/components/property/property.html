@@ -1,5 +1,5 @@
 <div [ngSwitch]="mode">
-    <template [ngSwitchWhen]="'list'">
+    <template [ngSwitchCase]="'list'">
         <div *ngIf="!query" (click)="onSelect($event)" class="item item-icon-right">
             <fl-base [resource]="resource"></fl-base>
             {{resource.id}} - {{resource.name}}
@@ -7,23 +7,26 @@
             	<a (click)="onNewCmd($event)"><ion-icon royal name="add-circle" ></ion-icon></a>
                 <a (click)="onEditCmd($event)"><ion-icon royal name="create" ></ion-icon></a>
             	<a (click)="onRemoveCmd($event)"><ion-icon royal name="remove" ></ion-icon></a>
-
+                <a *ngIf="resource.error_code > 0" (click)="onErrorCmd($event)">
+                    <ion-icon danger name="alert"></ion-icon>
+                </a>
                 <a (click)="onExpandCmd($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
+                
             </ion-buttons>
             <p>
-                <span>Default Unit :{{resource.DefaultUnit.id}} - {{resource.DefaultUnit.name}}(</span><mathq [(ngModel)]="resource.DefaultUnit.Latex"></mathq><span>)</span>
+                <span>Default Unit :{{resource.DefaultUnit?.id}} - {{resource.DefaultUnit?.name}}(</span><mathq [(ngModel)]="resource.DefaultUnit.Latex"></mathq><span>)</span>
             </p>
         </div>
         <template [ngIf]="expand">
             <fl-unit  *ngFor="let u of resource.Units" [resource]="u"></fl-unit> 
         </template>
     </template>
-    <template [ngSwitchWhen]="'edit'">
-            <form [ngFormModel]="form" (submit)="edit($event, form.value)">
+    <template [ngSwitchCase]="'edit'">
+            <form [formGroup]="form" (submit)="edit($event, propertyForm.value)">
 	            <ion-list>
 	                <ion-item>
-	                    <ion-label stacked>Name</ion-label>
-	                    <ion-input type="text" ngControl="name" [(ngModel)]="resource.name"></ion-input>
+                        <ion-label>Name</ion-label>
+	                    <ion-input type="text" formControlName="name"></ion-input>
 	                </ion-item>
                     <ion-item divider>Default Unit</ion-item>
                     <ion-item>

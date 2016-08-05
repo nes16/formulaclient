@@ -24,7 +24,7 @@ export class MyTokenAuth {
   _hasLocalStorage:boolean = false;
 
   config:any = {
-        apiUrl: 'http://formulalab.net/api/v1',
+        apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
         signOutUrl: '/auth/sign_out.json',
         emailSignInPath: '/auth/sign_in.json',
         emailRegistrationPath: '/auth',
@@ -48,11 +48,11 @@ export class MyTokenAuth {
         storage: 'localStorage',
         forceValidateToken: false,
         tokenFormat: {
-          "access-token": "token",
-          "token-type": "Bearer",
-          client: "clientId",
-          expiry: "expiry",
-          uid: "uid"
+          "Access-Token": "token",
+          "Token-Type": "Bearer",
+          Client: "clientId",
+          Expiry: "expiry",
+          Uid: "uid"
         },
         cookieOps: {
           path: "/",
@@ -156,9 +156,10 @@ export class MyTokenAuth {
       opts = {};
     }
     successUrl = this.getResultOrValue(this.config.confirmationSuccessUrl);
-    Object.assign(params, {
+    var param1 = Object.assign(JSON.parse(params), {
       confirm_success_url: successUrl,
     });
+    params = JSON.stringify(param1);
     return this.http.post(this.config.apiUrl + this.config.emailRegistrationPath, params, null)
       .map(resp => {
         this.observer.next({
@@ -177,6 +178,8 @@ export class MyTokenAuth {
         var headers = {headers : new Headers({
           'Content-Type': 'application/json'
         })}
+
+
     return this.http.post(this.config.apiUrl + this.config.emailSignInPath, params, headers)
       .map(resp => {
         var authData;

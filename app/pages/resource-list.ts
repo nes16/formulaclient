@@ -1,5 +1,7 @@
 import { Page, NavParams, NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
 import { DataService } from '../services/data-service';
+import { UIStateService } from '../services/ui-state-service';
 import { PropertyComponent } from '../components/property/property';
 import { FormulaComponent } from '../components/formula/formula';
 import { GlobalComponent } from '../components/global/global';
@@ -8,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { DetailPage } from '../pages/detail/detail';
 import { Property, Formula, Global } from '../types/standard'
-@Page({
+@Component({
     templateUrl: 'build/pages/resource-list.html',
     directives:[FlNavBar, PropertyComponent, GlobalComponent, FormulaComponent]
 })
@@ -17,18 +19,30 @@ export class ResourceListPage {
 	resourceType:string;
     args:any;
 
-
     constructor(navParams: NavParams
               , public dataService:DataService
+              , public uiStateService:UIStateService
               , public nav: NavController) {
         this.resourceType = navParams.get("type") ? navParams.get("type") : "properties";
         this.args = navParams.get("args");
     }
 
     ngOnInit(){
+        this.uiStateService.ole.subscribe(res => {
+            if(res.type == UIStateService.event_types.service_error_occurred){
+                this.uiStateService.showErrorModal(this.nav, res.content)
+            }
+        })
 
+        this.onErrorCmd(null);
     }
 
+    onErrorCmd(evt){
+        //Save 
+        var errorInfo = this.dataService[this.resourceType].getDeletedItemErrorInfo();
+        if(errorInfo)
+            this.uiStateService.showErrorModal(this.nav, errorInfo)
+    }
 
     get Title(){
     	switch(this.resourceType){

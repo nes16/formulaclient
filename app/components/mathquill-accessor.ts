@@ -1,5 +1,5 @@
 import { Host, Directive, forwardRef, Provider } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { MathQ } from './mathquill';
 
 const CUSTOM_VALUE_ACCESSOR = new Provider(

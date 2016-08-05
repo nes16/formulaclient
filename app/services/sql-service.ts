@@ -11,10 +11,10 @@ import {ResourceCollection, Unit, Property/*, Category, Formula*/} from '../type
 export class SqlService {
 	createTableStmts: string[] = [
 		'CREATE TABLE IF NOT EXISTS "properties" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "dims" varchar, "user_id" integer, "shared" boolean, "lock_version" integer);',
-		'CREATE TABLE IF NOT EXISTS "units" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "property_id" integer, "name" varchar, "system" varchar, "baseunit" boolean, "symbol" varchar, "prefix" varchar, "extend" varchar, "definition" varchar, "description" varchar, "approx" boolean, "factor" varchar, "repeat" integer, "user_id" integer, "shared" boolean, "lock_version" integer);',
-		'CREATE TABLE IF NOT EXISTS "formulas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" integer, "user_id" integer, "shared" boolean, "category_id" integer, "lock_version" integer);',
+		'CREATE TABLE IF NOT EXISTS "units" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "property_id" integer, "name" varchar, "system" varchar,  "symbol" varchar,  "description" varchar, "approx" boolean, "factor" varchar,  "user_id" integer, "shared" boolean, "lock_version" integer);',
+		'CREATE TABLE IF NOT EXISTS "formulas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" integer, "user_id" integer, "shared" boolean,  "lock_version" integer);',
 		'CREATE TABLE IF NOT EXISTS "favorites" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "favoritable_id" integer, "favoritable_type" varchar, "lock_version" integer);',
-		'CREATE TABLE IF NOT EXISTS "globals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar, "name" varchar, "unit_id" integer, "value" varchar, "user_id" integer, "shared" boolean, "category_id" integer, "lock_version" integer);',
+		'CREATE TABLE IF NOT EXISTS "globals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar, "name" varchar, "unit_id" integer, "value" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer);',
 		'CREATE TABLE IF NOT EXISTS "fgs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "formula_id" integer, "global_id" integer, "lock_version" integer);',
 		'CREATE TABLE IF NOT EXISTS "variables" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar, "name" varchar, "unit_id" integer, "formula_id" integer, "property_id" integer, "lock_version" integer);',
 		'CREATE TABLE IF NOT EXISTS "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "parent_id" integer, "lock_version" integer);',

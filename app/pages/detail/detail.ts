@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { Page, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angular';
 import { Property, Unit, Formula } from '../../types/standard';
 import { forwardRef, ViewChild } from '@angular/core';
@@ -12,7 +13,7 @@ import { MathKeypad } from '../../components/keys/keypad';
 import { FlNavBar } from '../../components/bars/nav-bar';
 import { Observer } from 'rxjs/Observer';
 
-@Page({
+@Component({
     //templateUrl: 'build/pages/unit/unit-test.html',
     templateUrl: 'build/pages/detail/detail.html',
     directives: [GlobalComponent, FormulaComponent

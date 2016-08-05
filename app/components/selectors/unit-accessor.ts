@@ -1,7 +1,8 @@
-import {Host,Component,Input,Output,OnInit,EventEmitter,ElementRef} from '@angular/core';
-import {NgClass,Control,NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/common';
-import {Directive,  Renderer, Self, forwardRef, Provider} from '@angular/core';
-import {UnitSelector} from './unit';
+import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NgClass,Control } from '@angular/common';
+import { Directive,  Renderer, Self, forwardRef, Provider } from '@angular/core';
+import { UnitSelector } from './unit';
 
 const UNIT_VALUE_ACCESSOR = new Provider(
     NG_VALUE_ACCESSOR, {useExisting: forwardRef(() => UnitValueAccessor), multi: true});

@@ -1,5 +1,4 @@
-<ion-navbar *navbar>
-    <ion-toolbar>
+    <ion-navbar no-border-bottom>
         <ion-buttons start>
             <button *ngIf="menuButton" menuToggle>
                 <ion-icon name="menu"></ion-icon>
@@ -18,27 +17,26 @@
             <button royal [class.fl-hidden]="!searchButton" (click)="search($event)">
                 <ion-icon name="search"></ion-icon>
             </button>
-            <button royal [class.fl-hidden]="!moreButton"  (click)="more($event)">
+            <button royal [class.fl-hidden]="!moreButton" (click)="more($event)">
                 <ion-icon name="more"></ion-icon>
             </button>
             <button royal (click)="refresh()">
                 <ion-icon name="refresh"></ion-icon>
             </button>
         </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar *ngIf="searchBar" (input)="onInput($event)" (onCancel)="onCancel()" [(ngModel)]="searchQuery" [debounce]="searchDelay" [hideCancelButton]=true>
+    </ion-searchbar>
+    <ion-toolbar no-border-top [attr.primary]="isAndroid ? '' : null">
+        <ion-segment [(ngModel)]="viewType" [attr.light]="isAndroid ? '' : null">
+            <ion-segment-button value="All">
+                All
+            </ion-segment-button>
+            <ion-segment-button value="Favourites">
+                Favourites
+            </ion-segment-button>
+            <ion-segment-button value="Recent">
+                Recent
+            </ion-segment-button>
+        </ion-segment>
     </ion-toolbar>
-</ion-navbar>
-<ion-searchbar *ngIf="searchBar" (input)="onInput($event)" (onCancel)="onCancel()" [(ngModel)]="searchQuery" [debounce]="searchDelay" [hideCancelButton]=true>
-</ion-searchbar>
-<ion-toolbar [attr.primary]="isAndroid ? '' : null" >
-  <ion-segment [(ngModel)]="viewType" [attr.light]="isAndroid ? '' : null">
-    <ion-segment-button value="All">
-      All
-    </ion-segment-button>
-    <ion-segment-button value="Favourites">
-      Favourites
-    </ion-segment-button>
-    <ion-segment-button value="Recent">
-      Recent
-    </ion-segment-button>
-  </ion-segment>
-</ion-toolbar>

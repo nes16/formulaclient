@@ -1,5 +1,5 @@
 <div [ngSwitch]="mode">
-    <template [ngSwitchWhen]="'list'">
+    <template [ngSwitchCase]="'list'">
         <div class="item item-icon-right">
             <ion-buttons right>
                 <a (click)="onEditCmd($event)"><ion-icon royal name="create" ></ion-icon></a>
@@ -14,7 +14,7 @@
             </div>
         </div>
     </template>
-    <template [ngSwitchWhen]="'row'">
+    <template [ngSwitchCase]="'row'">
         <ion-row >
                 <ion-col >
                     <span>{{resource.name}}</span>
@@ -38,29 +38,28 @@
                 </ion-col>
             </ion-row>
     </template>
-    <template [ngSwitchWhen]="'edit'">
-        <form [ngFormModel]="form" (submit)="edit($event, form.value)">
+    <template [ngSwitchCase]="'edit'">
+        <form [formGroup]="form" (submit)="edit($event, form.value)">
             <ion-list>
                 <ion-item>
-                    <ion-label stacked>Name</ion-label>
-                    <ion-input type="text" ngControl="name" [(ngModel)]="resource.name"></ion-input>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
                 </ion-item>
-                <div class="item">
-                    <div class="item-inner">
-                        <ion-label>Symbol</ion-label>
-                        <mathq [editable]="true" ngControl="symbol" [(ngModel)]="resource.symbol"></mathq>
-                    </div>
-                </div>
                 <ion-item>
-                    <ion-label stacked>Value</ion-label>
-                    <ion-input type="text" ngControl="value" [(ngModel)]="resource.value"></ion-input>
+                    <ion-label>Symbol</ion-label>
+                    <mathq [editable]="true"  item-right formControlName="symbol" [(ngModel)]="resource.symbol"></mathq>
                 </ion-item>
-                <div class="item">
-                    <div class="item-inner">
-                        <ion-label>Unit</ion-label>
-                        <fl-unit-sel  ngControl="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
-                    </div>
-                </div>
+                <ion-item>
+                    <ion-label>Value</ion-label>
+
+                    <ion-input type="text" formControlName="value" [(ngModel)]="resource.value"></ion-input>
+                </ion-item>
+                <ion-item>
+                        <ion-label>Measure</ion-label>
+                        
+                        <fl-unit-sel item-right  formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
+                        
+                </ion-item>
                 <ion-item>
                     <button type="button" name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid">{{submitButtonName}}</button>
                 </ion-item>

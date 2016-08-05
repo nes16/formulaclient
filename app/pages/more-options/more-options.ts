@@ -1,6 +1,7 @@
+import { Component } from '@angular/core';
 import {Page, Modal, NavController, NavParams, ViewController} from 'ionic-angular'
 
-@Page({
+@Component({
 	templateUrl: 'build/pages/more-options/more-options.html'
 })
 

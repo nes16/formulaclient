@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, Output, EventEmitter} from '@angular/core';
-import {IONIC_DIRECTIVES, Modal, NavController, App} from 'ionic-angular';
+import {IONIC_DIRECTIVES, Modal, ModalOptions, NavController, App} from 'ionic-angular';
 import {MoreOptions} from '../../pages/more-options/more-options';
 import {AllModals} from '../../pages/all-modals/all-modals';
 import {UIStateService} from '../../services/ui-state-service';
@@ -14,7 +14,9 @@ export class FlNavBar {
 	searchBar: boolean = false;
 	searchDelay: number = 2000;
 	viewType:string = 'All'
-	constructor(public el: ElementRef
+	a:ModalOptions;
+	constructor(public app: App
+			    , public el: ElementRef
 				, public nav: NavController
 				, public uiStateService:UIStateService) {
 
@@ -33,7 +35,7 @@ export class FlNavBar {
 
 	search(){
 		if (this.searchBar)
-			this.searchBar = false;
+		 	this.searchBar = false;
 		else
 			this.searchBar = true;
 	}
@@ -49,13 +51,13 @@ export class FlNavBar {
 
 
 	more(evt){
-	    let moreOptions = Modal.create(MoreOptions, { 'authenticated': this.uiStateService.authenticated });
+	    let moreOptions = new Modal(this.app, MoreOptions, { 'authenticated': this.uiStateService.authenticated }, this.a);
 
-	     moreOptions.onDismiss(data => {
-	       let modals = Modal.create(AllModals, data);
-	       this.nav.present(modals);
+	     moreOptions.onDidDismiss(data => {
+	       let modals = new Modal(this.app, AllModals, data, this.a);
+	       modals.present();
 	     });
-	     this.nav.present(moreOptions);
+	     moreOptions.present();
 	  }
 
 	refresh(evt){

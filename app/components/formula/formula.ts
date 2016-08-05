@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators} from '@angular/common';
+import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+
 import { Formula, Property, Unit, Variable, Global, Measure , FG} from '../../types/standard';
 import { DataService } from '../../services/data-service';
 import { UIStateService } from '../../services/ui-state-service';
@@ -15,7 +16,7 @@ import { UnitSelector } from '../selectors/unit';
 import { UnitValueAccessor } from '../selectors/unit-accessor';
 import { DetailPage } from '../../pages/detail/detail';
 import { Observable } from 'rxjs/Observable';
-
+import { symbolValidator, createMeasureValidator, createFormulaValidator } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-formula',
@@ -38,11 +39,12 @@ export class FormulaComponent extends BaseComponent {
 	timer: any;
 	value: any;
 	detailPage: any;
+	form:FormGroup;
+		
 
 	constructor(dataService: DataService,
 				 nav: NavController,
 				 public el: ElementRef,
-				 public fb: FormBuilder,
 				 private parser: LatexParserService,
 				 public uiStateService: UIStateService
 				 ) {
@@ -54,24 +56,19 @@ export class FormulaComponent extends BaseComponent {
 
 	ngOnInit() {
 		super.ngOnInit();
-		let controls = {
-			name: [this.resource.name, Validators.required],
-			symbol: [this.resource.symbol, Validators.required],
-			latex: [this.resource.latex, Validators.required],
-			measure:[this.resource.Measure, Validators.required]
-		}
-		
-		this.form = this.fb.group(controls)
-		this.form.controls['latex'].valueChanges
-			.subscribe(
-			(value: string) => {
-				this.value = value;
-				clearTimeout(this.timer);
-				this.timer = setTimeout(() => {
-					this.value = value;
-					this.updateVariables(this.value);
-				}, Math.round(2000));
-			    })
+		this.form = new FormGroup({
+			name: new FormControl(this.resource.name, [Validators.required
+										, Validators.minLength(5)
+										, Validators.maxLength(30)]),
+			symbol: new FormControl(this.resource.symbol, [Validators.required
+										,symbolValidator]),
+			latex: new FormControl(this.resource.latex, [Validators.required
+										,createFormulaValidator(this.resource)]),
+			measure: new FormControl(this.resource.measure, [Validators.required
+										,createMeasureValidator(false, false)])
+		})
+
+		this.form.controls[name]
 	}
 
 	moveToVariable(global:FG){
@@ -109,9 +106,10 @@ export class FormulaComponent extends BaseComponent {
 
 	createGlobal(state){
 		var g = new Global(state);
+		var type = UIStateService.event_types.resource_save_complete;
 		var subscribtion =
 		this.uiStateService.ole.subscribe(i => {
-						if(i.type == "edit"){
+						if(i.type == type){
 							if(i.status == 'success'){
 								var fg = new FG({});
 								[fg.Global, fg.Formula] = [i.resource, this.resource];

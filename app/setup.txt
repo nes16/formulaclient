@@ -32,11 +32,51 @@ f)change jquery.js  in node_modules/jquery/dist
 > 			factory( global, false ) :
 
 
-
+g)cordova android build
+=======================
+Graddle build files are downloaded each time. Change the distribution url to local
+path
+In 'myApp\platforms\android\cordova\lib\build.js'
+<                var distributionUrl = 'distributionUrl=http\\://services.gradle.org/distributions/gradle-2.2.1-all.zip';
+                var distributionUrl = 'distributionUrl=/opt/sdks/gradle-2.2.1-all.zip';
+>
 
 sublime project setup:
 ======================
 "folder_exclude_patterns": ["node_modules"]
+
+sublime text 3 theme setup
+==========================
+Prefrences=>BrowsePackage=>User=>
+paste the following into the file => 'Default.sublime-theme'
+If file not present create one.
+
+[
+    {
+        "class": "sidebar_label",
+        "color": [0, 0, 0],
+        "font.bold": false,
+        "font.size": 18
+    },
+	{
+    "class": "tabset_control",
+    "tab_height": 40,
+    "tab_min_width": 48
+	},
+	{
+    "class": "tab_label",
+    "font.size": 14,
+	},
+	{
+		"class":"tool_tip_label_control",
+		"font.size":20,
+	},
+	{
+		"class":"label_control",
+		"font.size":20,
+	},
+
+]
 
 sublime short-cut
 =================

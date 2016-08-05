@@ -1,5 +1,5 @@
 <div [ngSwitch]="mode">
-    <template [ngSwitchWhen]="'list'">
+    <template [ngSwitchCase]="'list'">
         <div class="item item-icon-right">
             <ion-buttons right>
                 <a (click)="onEditCmd($event)">
@@ -18,25 +18,21 @@
             </div>
         </div>
     </template>
-    <template [ngSwitchWhen]="'edit'">
-        <form [ngFormModel]="form" (submit)="edit($event, form.value)">
+    <template [ngSwitchCase]="'edit'">
+        <form [formGroup]="form" (submit)="edit($event, form.value)">
             <ion-list>
                 <ion-item>
-                    <ion-label stacked>Name</ion-label>
-                    <ion-input type="text" ngControl="name" [(ngModel)]="resource.name"></ion-input>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
                 </ion-item>
-                <div class="item">
-                    <div class="item-inner">
-                        <ion-label>Formula</ion-label>
-                        <span><mathq [editable]="true" ngControl="symbol" [(ngModel)]="resource.symbol"></mathq> = <mathq [editable]="true" ngControl="latex" [(ngModel)]="resource.latex"></mathq></span>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-inner">
-                        <ion-label>Property/Unit</ion-label>
-                        <fl-unit-sel  ngControl="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
-                    </div>
-                </div>
+                <ion-item>
+                    <ion-label>Formula</ion-label>
+                        <span item-right><mathq [editable]="true" formControlName="symbol" [(ngModel)]="resource.symbol"></mathq> = <mathq [editable]="true" formControlName="latex" (change)="updateVariables($event)" [(ngModel)]="resource.latex"></mathq></span>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Measure</ion-label>
+                        <fl-unit-sel item-right formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
+                </ion-item>
                 <ion-item-divider light>Variables</ion-item-divider>
                 <div>
                     <ion-row>
