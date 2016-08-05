@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, Output, EventEmitter, Query, ViewChildren, QueryList} from '@angular/core';
-import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
 import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { DataService } from '../../services/data-service'
@@ -25,11 +25,12 @@ export class VarComponent extends BaseComponent {
 	form:FormGroup;
 
 	constructor(dataService: DataService,
+		app:App,
 		nav: NavController,
 		public uiStateService: UIStateService
 
 	) {
-		super(dataService, nav, uiStateService);
+		super(app, dataService, nav, uiStateService);
 		this.detailPage = DetailPage;
 	}
 	@Input() resource;

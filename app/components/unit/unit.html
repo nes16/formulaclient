@@ -1,13 +1,5 @@
     <template [ngIf]="mode == 'list'">
-        <ion-item (click)="onSelect($event)">
-            <ion-buttons right>
-                <a (click)="onEditCmd($event)">
-                    <ion-icon royal name="create"></ion-icon>
-                </a>
-                <a *ngIf="resource.error_code > 0" (click)="onErrorCmd($event)">
-                    <ion-icon assertive name="alert"></ion-icon>
-                </a>
-            </ion-buttons>
+        <ion-item (click)="presentActionSheet($event)">
             <fl-base [resource]="resource"></fl-base>
             <div>
                 <span>{{resource.name}}</span><span>(

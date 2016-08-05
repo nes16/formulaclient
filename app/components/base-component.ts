@@ -3,7 +3,7 @@ import { MathQ } from './mathquill';
 import { DataService } from '../services/data-service'
 import { UIStateService } from '../services/ui-state-service'
 import { Unit, States } from '../types/standard';
-import { IONIC_DIRECTIVES, Modal, NavController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular';
 import { AllModals } from '../pages/all-modals/all-modals';
 
 export class BaseComponent {
@@ -12,7 +12,8 @@ export class BaseComponent {
 	errorMessage: string;
 	expand: boolean = false;
 	detailPage: any;
-	constructor(public dataService:DataService
+	constructor(public app:App,
+				public dataService:DataService
 				, public nav:NavController
 				,public uiStateService:UIStateService = null) {
 
@@ -48,10 +49,7 @@ export class BaseComponent {
 		
 		//Load the page
 		this.nav.push(this.detailPage, {  'currResource': this.resource })
-		evt.stopPropagation();
-    	evt.preventDefault();
 	}
-
 	onErrorCmd(evt){
 		//Save 
 		var errorInfo = this.resource.getErrorInfo();
@@ -62,8 +60,6 @@ export class BaseComponent {
 		this.dataService
 			.remove(this.resource)
 			.subscribe(res=>{},err=>{},()=>{});
-		evt.stopPropagation();
-    	evt.preventDefault();
 	}
 
 	onNewCmd(evt, resource){
@@ -113,5 +109,59 @@ export class BaseComponent {
 			},()=>{
 				this.emit();
 			});
+	}
+	
+	
+	presentActionSheet(evt) {
+	  var errorButton = {
+	      	text: 'Errors',
+	        role: 'destructive',
+	        handler: () => {
+				this.onErrorCmd(evt);          
+	        }	
+	  }
+	  var newButton = {
+	        text: 'New unit',
+	        handler: () => {
+	          var unit = this.resource.newUnit();
+	          this.onNewCmd(null, unit);
+	        }
+	      }
+
+	  var actionSheetItems = {
+	    title: 'Select item command',
+	    buttons: [
+	      {
+	        text: 'Edit',
+	        handler: () => {
+	          this.onEditCmd(evt);
+	        }
+	      },
+	      {
+	        text: 'Delete',
+	        role: 'destructive',
+	        handler: () => {
+				this.onRemoveCmd(evt);          
+	        }
+	      },
+	      {
+	        text: 'Cancel',
+	        role: 'cancel',
+	        handler: () => {
+	          console.log('Cancel clicked');
+	        }
+	      }
+	    ]
+	  };
+
+	  if(this.resource.error_code > 0)
+	  	actionSheetItems.buttons.splice(0, 0, errorButton);
+
+	  if(this.resource.getTable() == 'properties')
+	  	actionSheetItems.buttons.splice(1, 0, newButton) 
+
+	  let actionSheet = new ActionSheet(this.app, actionSheetItems);
+
+	  actionSheet.present();
 	}
 }

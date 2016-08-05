@@ -36,10 +36,7 @@ g)cordova android build
 =======================
 Graddle build files are downloaded each time. Change the distribution url to local
 path
-In 'myApp\platforms\android\cordova\lib\build.js'
-<                var distributionUrl = 'distributionUrl=http\\://services.gradle.org/distributions/gradle-2.2.1-all.zip';
-                var distributionUrl = 'distributionUrl=/opt/sdks/gradle-2.2.1-all.zip';
->
+export CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL=/opt/sdks/gradle-2.2.1-all.zip
 
 sublime project setup:
 ======================

@@ -7,9 +7,11 @@
   },
   "filesGlob": [
     "**/*.ts",
-    "!node_modules/**/*"
+    "!node_modules/**/*",
+    "!platforms/**/*"
   ],
   "exclude": [
+    "platforms",
     "node_modules",
     "typings/global",
     "typings/global.d.ts"

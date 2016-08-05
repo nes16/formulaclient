@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, ViewChildren, Query
 import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../services/data-service'
 import { UIStateService } from '../../services/ui-state-service'
-import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
 import { BaseResource } from '../base-resource'
 import { BaseComponent } from '../base-component'
 import { MathQ } from '../mathquill';
@@ -25,11 +25,12 @@ export class UnitComponent extends BaseComponent {
 
 	constructor(
 				 public el: ElementRef,
+				 app: App,
 				 dataService: DataService,
 				 nav: NavController,
 				 public uiStateService:UIStateService
 				 ) {
-		super(dataService, nav, uiStateService);
+		super(app, dataService, nav, uiStateService);
 		this.detailPage = DetailPage;
 	}
 	@Input() resource: Unit;

@@ -1,12 +1,6 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-        <div class="item item-icon-right">
-            <ion-buttons right>
-                <a (click)="onEditCmd($event)">
-                    <ion-icon royal name="create"></ion-icon>
-                </a>
-                <a (click)="onRemoveCmd($event)"><ion-icon royal name="remove" ></ion-icon></a>
-            </ion-buttons>
+        <ion-item (click)="presentActionSheet($event)">
             <div>
                 <h3>{{resource.name}}</h3>
                 <p>
@@ -16,7 +10,7 @@
                 <fl-unit-sel [(ngModel)]="resource.Measure" [mode]='list'></fl-unit-sel>
                 </p>
             </div>
-        </div>
+        </ion-item>
     </template>
     <template [ngSwitchCase]="'edit'">
         <form [formGroup]="form" (submit)="edit($event, form.value)">
@@ -45,9 +39,7 @@
                         <ion-col>
                             <span>Property/Unit</span>
                         </ion-col>
-                        <ion-col>
-                            <span>Action</span>
-                        </ion-col>
+                        
                     </ion-row>
                     <fl-var *ngFor="let v of undeleted(resource.Variables)" [resource]="v" [mode]="'list'" (moveToGlobal)="moveToGlobal($event)"></fl-var>
                 </div>
@@ -65,9 +57,6 @@
                         </ion-col>
                         <ion-col>
                             <span>Unit</span>
-                        </ion-col>
-                        <ion-col>
-                            <span>Action</span>
                         </ion-col>
                     </ion-row>
                     <fl-global *ngFor="let g of undeleted(resource.Globals)" [resource]="g.Global" [mode]="'row'" (editcmd)="enterEdit($event)" (moveToVar)="moveToVariable($event)"></fl-global>

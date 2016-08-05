@@ -1,6 +1,6 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-            <ion-row >
+            <ion-row (click)="presentActionSheet($event)">
                 <ion-col >
                     <span>{{resource.name}}</span>
                 </ion-col>
@@ -9,14 +9,6 @@
                 </ion-col>
                 <ion-col>
                     <fl-unit-sel [(ngModel)]="resource.Measure" [mode]="'list'"></fl-unit-sel>
-                </ion-col>
-                <ion-col>
-                    <a (click)="onEditCmd($event)">
-                        <ion-icon royal name="create"></ion-icon>
-                    </a>
-                    <a (click)="move($event)">
-                        <ion-icon royal name="arrow-down"></ion-icon>
-                    </a>
                 </ion-col>
             </ion-row>
     </template>

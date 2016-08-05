@@ -1,22 +1,15 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-        <div *ngIf="!query" (click)="onSelect($event)" class="item item-icon-right">
+        <ion-item *ngIf="!query" (click)="presentActionSheet($event)">
             <fl-base [resource]="resource"></fl-base>
-            {{resource.id}} - {{resource.name}}
+            {{resource.name}}
             <ion-buttons right>
-            	<a (click)="onNewCmd($event)"><ion-icon royal name="add-circle" ></ion-icon></a>
-                <a (click)="onEditCmd($event)"><ion-icon royal name="create" ></ion-icon></a>
-            	<a (click)="onRemoveCmd($event)"><ion-icon royal name="remove" ></ion-icon></a>
-                <a *ngIf="resource.error_code > 0" (click)="onErrorCmd($event)">
-                    <ion-icon danger name="alert"></ion-icon>
-                </a>
                 <a (click)="onExpandCmd($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
-                
             </ion-buttons>
             <p>
-                <span>Default Unit :{{resource.DefaultUnit?.id}} - {{resource.DefaultUnit?.name}}(</span><mathq [(ngModel)]="resource.DefaultUnit.Latex"></mathq><span>)</span>
+                <span>{{resource.DefaultUnit?.name}}</span> <mathq right [(ngModel)]="resource.DefaultUnit.Latex"></mathq>
             </p>
-        </div>
+        </ion-item>
         <template [ngIf]="expand">
             <fl-unit  *ngFor="let u of resource.Units" [resource]="u"></fl-unit> 
         </template>

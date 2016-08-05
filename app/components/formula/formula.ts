@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
 
 import { Formula, Property, Unit, Variable, Global, Measure , FG} from '../../types/standard';
 import { DataService } from '../../services/data-service';
@@ -43,12 +43,13 @@ export class FormulaComponent extends BaseComponent {
 		
 
 	constructor(dataService: DataService,
+			     app: App,
 				 nav: NavController,
 				 public el: ElementRef,
 				 private parser: LatexParserService,
 				 public uiStateService: UIStateService
 				 ) {
-		super(dataService, nav, uiStateService);
+		super(app, dataService, nav, uiStateService);
 		this.detailPage = DetailPage;
 	}
 

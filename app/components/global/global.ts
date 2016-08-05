@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
 import { Property, Unit } from '../../types/standard';
 import { DataService } from '../../services/data-service';
 import { UIStateService } from '../../services/ui-state-service';
@@ -24,11 +24,12 @@ export class GlobalComponent extends BaseComponent {
 	form:FormGroup;
 
 	constructor(dataService: DataService,
+	  app: App,
 	  nav: NavController,
 	  private el: ElementRef, 
 	  public uiStateService: UIStateService
 	  ) {
-		super(dataService, nav, uiStateService);
+		super(app, dataService, nav, uiStateService);
 		this.detailPage = DetailPage;
 	}
 	@Output('moveToVariable') moveToVariable = new EventEmitter();
