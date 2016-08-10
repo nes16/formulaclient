@@ -78,7 +78,7 @@ export class MyApp {
    }
 }
 
-enableProdMode(),
+//enableProdMode(),
 
 
 ionicBootstrap(MyApp, [

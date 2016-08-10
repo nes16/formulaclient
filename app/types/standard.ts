@@ -9,6 +9,9 @@ export class ResourceCollection<T extends BaseResource>{
     resources: Array<T>;
     ole: Observable<any>;
     or: Observer<any>;
+
+    eole: Observable<any>;
+    eor: Observer<any>;
     
     //State stream
     state: number;
@@ -27,9 +30,8 @@ export class ResourceCollection<T extends BaseResource>{
         this.ole = new Observable(or => {
             this.or = or;
             if(this.State == States.LOAD_COMPLETE)
-                    or.next(this.resources);
+                or.next(this.resources);
             else
-                
                 Observable.from([this.controller.init(), this.controller.loadListAndDepenent(this)])
                           .map(i =>  i)
                           .concatAll()
@@ -42,6 +44,18 @@ export class ResourceCollection<T extends BaseResource>{
         });
 
         this.offlineData = new TableOfflineData(type.table);
+
+        this.eole = new Observable(eor => {
+                this.eor = eor;
+                eor.next(this.findErrorItems());
+        });
+    }
+
+    findErrorItems(){
+        var errorItems = this.offlineData.resources.filter(i => i.error_code > 0);
+        var childItems = this.resources.filter(i => i.getChildErrors().length > 0);
+        errorItems = errorItems.concat(childItems.filter(i => errorItems.indexOf(i) == -1))
+        return errorItems;
     }
 
     initItems(info) {
@@ -105,7 +119,7 @@ export class ResourceCollection<T extends BaseResource>{
     }
 
     hasErrorInfo(){
-        var errorItems = this.offlineData.deletedItems.filter(i => i.error_code > 0);
+        var errorItems = this.findErrorItems();
         return errorItems.length > 0;
     }
 
@@ -122,6 +136,12 @@ export class ResourceCollection<T extends BaseResource>{
            })
            return errorInfo;
         }
+    }    
+
+    publishErrors(){
+        if(!this.eor)
+            return;
+        this.eor.next(this.findErrorItems());
     }
 }
 
@@ -145,6 +165,7 @@ export class BaseResource {
         unknown_error:100
     }
 
+
     //Internal
     tempId: number;
     deleted:string;
@@ -166,10 +187,13 @@ export class BaseResource {
         this.syncState = state.syncState;
         this.deleted = state.deleted;
         this.lock_version = state.lock_version;
+        this.error_code = state.error_code;
+        if(state.error_messages)
+            this.error_messages = JSON.stringify(state.error_messages);
         if(this.syncState == null)
             this.syncState = 0;
-        if(!state.lock_version)
-            state.lock_version = 0;
+        if(this.lock_version == null)
+            this.lock_version = 0;
     }
 
     getState(){
@@ -258,6 +282,10 @@ export class BaseResource {
 
         return errorInfo;
     }
+
+    getChildErrors():any{
+        return [];
+    }
 }
     
 export class Unit extends BaseResource {
@@ -285,6 +313,8 @@ export class Unit extends BaseResource {
             this.symbol = "ss"
         if(!this.system)
             this.system = "SI"
+        if(!this.approx)
+            this.approx = false;
     }
 
     init(info){
@@ -294,6 +324,7 @@ export class Unit extends BaseResource {
         }
     }
     
+
     getState(){
         if(this.Property)
           this.property_id = this.Property.id;
@@ -484,6 +515,10 @@ export class Property extends BaseResource {
         super.enterEdit();
         this.DefaultUnit.enterEdit();
     }
+
+    getChildErrors():any{
+        return this._units.filter(i => i.error_code > 0);
+    }
 }
 
 
@@ -501,6 +536,8 @@ export class Global extends BaseResource {
             this.name = "New Global";
         if(!this.unit_id)
             this.unit_id = null;
+        if(!this.symbol)
+            this.symbol = "";
     }
 
     init(info:any){
@@ -871,7 +908,7 @@ export class TableOfflineData {
     resources: Array<BaseResource> = new Array<BaseResource>();
     deletedItems: Array<any> = new Array();
     lastSync:string="";
-
+    
     constructor(public name:string){
     }
 
@@ -910,6 +947,13 @@ export class TableOfflineData {
         })
         this.resources = new Array<BaseResource>();
         this.deletedItems = new Array<BaseResource>();
+    }
+
+    clearErrors(){
+        this.resources.forEach(i => {
+            i.error_code = 0;
+            i.error_messages = null;
+        })
     }
 
     hasOfflineData():boolean{
@@ -969,7 +1013,7 @@ export class LogHandler{
     handleSqlResult(res){
       if(!res || !res.res)
       {
-        console.log("INFO: Next result " + JSON.stringify(res))
+        console.log("INFO: Next result " + JSON.stringify(res, null, 2))
         return;
       }
       res = res.res;
@@ -1019,4 +1063,12 @@ export class OpCodes {
     static UPDATE: number = 1;
     static DELETE: number = 2;
     static MAX_OP: number = 3;
+}
+
+export function pass(or){
+    return {
+        next:res=>or.next(res),
+        err:err=>or.error(err),
+        complete:()=>or.complete()
+    }
 }

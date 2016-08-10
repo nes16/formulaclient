@@ -63,8 +63,30 @@ export function createMeasureValidator(required:boolean, onlyUnit:boolean=false)
 
 
 export function createUniqueNameValidator(service:DataService, resourceType:string, component) {
+
   return function(control) {
+    if(component.nameTimeout)
+      clearTimeout(component.nameTimeout);
     return new Promise((resolve, reject) => {
+                component.nameTimeout = setTimeout(() => {
+                  service.isUnique(resourceType, "name", control.value as string, (res, i)=> control.value == res.name)
+                        .subscribe(res => {
+                          if(res.unique){
+                              resolve(null);
+                          }
+                          else{
+                            resolve({uniqueName: true});
+                          }
+                        }, err=>{
+                            resolve({uniqueName: true});
+                        }, () => resolve({uniqueName: true}))
+          }, 600);
+
+    });
+  }
+
+
+
       // service.findByName(resourceType, control.value).subscribe(
     	 //  data => {
       //     if (data.length === 0 || (data.length === 1 &&
@@ -78,6 +100,5 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
       //     resolve({uniqueName: true});
       //   }
       // });
-    });
-  };
 }
+

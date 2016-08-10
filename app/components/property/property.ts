@@ -1,17 +1,20 @@
 import { Component, ElementRef, Input, Output,  ViewChildren, EventEmitter, QueryList } from '@angular/core';
 import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
-import { App, IONIC_DIRECTIVES, NavController } from 'ionic-angular';
+import { App, IONIC_DIRECTIVES,  NavController } from 'ionic-angular';
+//import { GESTURE_DIRECTIVES } from 'ionic-angular/gesture';
+
 
 import { Property, Unit } from '../../types/standard';
 import { DataService } from '../../services/data-service'
 import { UIStateService } from '../../services/ui-state-service'
 import { BaseResource } from '../base-resource';
+import { ResourceListPage } from '../../pages/resource-list'
 import { BaseComponent } from '../base-component'
 import { UnitComponent } from '../unit/unit'
 import { MathQ } from '../mathquill'
 import { MathQValueAccessor } from '../mathquill-accessor';
 import { DetailPage } from '../../pages/detail/detail';
-import { symbolValidator, numberValidator, createMeasureValidator } from '../validators/custom.validators'
+import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-property',
@@ -38,14 +41,15 @@ export class PropertyComponent extends BaseComponent{
 	@Input() resource;
 	@ViewChildren(UnitComponent) unitForm: QueryList<UnitComponent>;
 	@Input() mode = 'list';
-
-
+	@Input() index = null;
+	@Input() last = null;
+	
 	ngOnInit() {
 		super.ngOnInit();
 		this.form = new FormGroup({
 		name: new FormControl(this.resource.name, [Validators.required
 									, Validators.minLength(5)
-									, Validators.maxLength(30)])
+									, Validators.maxLength(30)], createUniqueNameValidator(this.dataService, "properties", this.resource))
 	})	
 	}
 
@@ -60,6 +64,10 @@ export class PropertyComponent extends BaseComponent{
 
 	onEditCmd(evt) {
 		super.onEditCmd(evt);
+	}
+
+	showUnits(evt){
+		this.nav.push(ResourceListPage, {type:"units", prop:this.resource})
 	}
 
 	get diagnostic() { return JSON.stringify(this.resource.getState()) 

@@ -1,5 +1,8 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
+        <ion-item-divider *ngIf="index == 0" danger>
+              Syncronizing Errors
+        </ion-item-divider>
         <ion-item  (click)="presentActionSheet($event)">
             <div>
                 <span>{{resource.name}}</span>
@@ -9,6 +12,9 @@
                 <span>{{resource.value}}</span>
             </div>
         </ion-item>
+        <ion-item-divider *ngIf="last" danger>
+          <button item-right outline light>Hide</button>
+        </ion-item-divider>
     </template>
     <template [ngSwitchCase]="'row'">
         <ion-row (click)="presentActionSheet($event)">

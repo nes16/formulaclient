@@ -64,6 +64,10 @@ export class RemoteService {
         else
             return this.base.query('put', '/sync', {data:obj})
     }
+
+    isUnique(obj:any){
+        return this.base.query('put', '/unique', {data:obj})
+    }
     get OnLine(){
         return true;
     }

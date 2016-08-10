@@ -1,6 +1,9 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-        <ion-item *ngIf="!query" (click)="presentActionSheet($event)">
+        <ion-item-divider *ngIf="index == 0" danger>
+              Syncronizing Errors
+        </ion-item-divider>
+        <ion-item *ngIf="!query" (dbltap)="showUnits($event)" (click)="presentActionSheet($event)">
             <fl-base [resource]="resource"></fl-base>
             {{resource.name}}
             <ion-buttons right>
@@ -11,15 +14,23 @@
             </p>
         </ion-item>
         <template [ngIf]="expand">
-            <fl-unit  *ngFor="let u of resource.Units" [resource]="u"></fl-unit> 
+            <template [ngIf]="index == null">
+                <fl-unit  *ngFor="let u of resource.Units"  [resource]="u"></fl-unit> 
+            </template>
+            <template [ngIf]="index != null">
+                <fl-unit  *ngFor="let u of resource.getChildErrors()"  [resource]="u"></fl-unit> 
+            </template>
         </template>
+        <ion-item-divider *ngIf="last" danger>
+          <button item-right outline light>Hide</button>
+        </ion-item-divider>
     </template>
     <template [ngSwitchCase]="'edit'">
             <form [formGroup]="form" (submit)="edit($event, propertyForm.value)">
 	            <ion-list>
 	                <ion-item>
                         <ion-label>Name</ion-label>
-	                    <ion-input type="text" formControlName="name"></ion-input>
+	                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
 	                </ion-item>
                     <ion-item divider>Default Unit</ion-item>
                     <ion-item>

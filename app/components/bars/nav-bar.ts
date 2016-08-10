@@ -60,14 +60,6 @@ export class FlNavBar {
 	     moreOptions.present();
 	  }
 
-	refresh(evt){
-		let v = this.nav.getActive();
-		let ct = v.componentType;
-		this.nav.pop();
-		//this._templateCompiler.clearCache();
-		this.nav.push(ct);
-	}
-
 	add(evt){
 		this.onAdd.emit(evt)
 	}

@@ -27,7 +27,8 @@ export class BaseComponent {
 	@Input() query;
 	@Input() units;
 	@Input() onlyProp = false;
-
+	@Input() index = null;
+	@Input() last = null;
 
 	ngOnInit() {
 		if(this.resource)
@@ -84,13 +85,19 @@ export class BaseComponent {
 
 	}
 
-	onSelect(evt){
+	showUnits(evt){
+
+	}
+
+	onSelect(evt):boolean{
 	    if(this.uiStateService.inSelectMode){
 	    	var type = UIStateService.event_types.resource_selected; 
 	        this.uiStateService.or.next({status:'success', type:type, resource:this.resource})
 	        this.nav.pop();
 	    	this.uiStateService.inSelectMode = false;
+	    	return true;
 	    }
+	    return false;
 	}
 
 	emit(){
@@ -113,6 +120,8 @@ export class BaseComponent {
 	
 	
 	presentActionSheet(evt) {
+	  if(this.onSelect(evt)) //If in select mode this will be handled by the above function
+	  	return;
 	  var errorButton = {
 	      	text: 'Errors',
 	        role: 'destructive',
@@ -121,10 +130,9 @@ export class BaseComponent {
 	        }	
 	  }
 	  var newButton = {
-	        text: 'New unit',
+	        text: 'Units',
 	        handler: () => {
-	          var unit = this.resource.newUnit();
-	          this.onNewCmd(null, unit);
+	          this.showUnits(evt);
 	        }
 	      }
 

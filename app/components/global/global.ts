@@ -35,6 +35,8 @@ export class GlobalComponent extends BaseComponent {
 	@Output('moveToVariable') moveToVariable = new EventEmitter();
 	@Input() resource;
 	@Input() mode = 'list';
+	@Input() index = null;
+	@Input() last = null;
 	
 	ngOnInit() {
 		super.ngOnInit();

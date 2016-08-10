@@ -20,9 +20,6 @@
             <button royal [class.fl-hidden]="!moreButton" (click)="more($event)">
                 <ion-icon name="more"></ion-icon>
             </button>
-            <button royal (click)="refresh()">
-                <ion-icon name="refresh"></ion-icon>
-            </button>
         </ion-buttons>
     </ion-navbar>
     <ion-searchbar *ngIf="searchBar" (input)="onInput($event)" (onCancel)="onCancel()" [(ngModel)]="searchQuery" [debounce]="searchDelay" [hideCancelButton]=true>

@@ -47,13 +47,14 @@ export class UIStateService {
             states[Connection.CELL_3G]  = 'Cell 3G connection';
             states[Connection.CELL_4G]  = 'Cell 4G connection';
             states[Connection.NONE]     = 'No network connection';
+            this.online = navigator.onLine; 
         });
     }
 
     showErrorModal(nav, errorInfo){
         var data = {option:"error", errorInfo:errorInfo}
         let modals = new Modal(this.app, AllModals, data);
-        nav.popup(modals);
+        modals.present();
     }
 
     onOnline(){
@@ -65,8 +66,8 @@ export class UIStateService {
     }
 
     get IsOnline() {
-        //return this.online;
-		return navigator.onLine;
+        return this.online;
+		//return navigator.onLine;
     }
 
 
