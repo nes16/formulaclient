@@ -78,11 +78,11 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
                                 resolve(null);
                             }
                             else{
-                              resolve({uniqueName: true});
+                              resolve({uniqueness: true});
                             }
                           }, err=>{
-                              resolve({uniqueName: true});
-                          }, () => resolve({uniqueName: true}))
+                              resolve({uniqueness: true});
+                          }, () => resolve({uniqueness: true}))
             }, 600);
 
     });
@@ -105,11 +105,11 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
                                   resolve(null);
                               }
                               else{
-                                resolve({uniqueName: true});
+                                resolve({uniqueness: true});
                               }
                             }, err=>{
-                                resolve({uniqueName: true});
-                            }, () => resolve({uniqueName: true}))
+                                resolve({uniqueness: true});
+                            }, () => resolve({uniqueness: true}))
             }, 600);
 
       });

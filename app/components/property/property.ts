@@ -1,8 +1,6 @@
 import { Component, ElementRef, Input, Output,  ViewChildren, EventEmitter, QueryList } from '@angular/core';
-import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
+import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators} from '@angular/forms';
 import { App, IONIC_DIRECTIVES,  NavController } from 'ionic-angular';
-//import { GESTURE_DIRECTIVES } from 'ionic-angular/gesture';
-
 
 import { Property, Unit } from '../../types/standard';
 import { DataService } from '../../services/data-service'
@@ -14,12 +12,13 @@ import { UnitComponent } from '../unit/unit'
 import { MathQ } from '../mathquill'
 import { MathQValueAccessor } from '../mathquill-accessor';
 import { DetailPage } from '../../pages/detail/detail';
+import { FBInput } from '../fb-input'
 import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-property',
 	templateUrl: 'build/components/property/property.html',
-	directives: [REACTIVE_FORM_DIRECTIVES, IONIC_DIRECTIVES, BaseResource, UnitComponent, MathQ, MathQValueAccessor]
+	directives: [REACTIVE_FORM_DIRECTIVES, IONIC_DIRECTIVES, BaseResource, UnitComponent, MathQ, MathQValueAccessor, FBInput]
 })
 
 export class PropertyComponent extends BaseComponent{

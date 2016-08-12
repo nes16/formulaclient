@@ -12,6 +12,11 @@ export class BaseComponent {
 	errorMessage: string;
 	expand: boolean = false;
 	detailPage: any;
+	errorDefs={required: 'This field is required',
+	        maxlength: 'The value should be at maximum 50 characters',
+	        minlength: 'The value should be at least 2 characters',
+	        uniqueness:'This value already taken'}
+	
 	constructor(public app:App,
 				public dataService:DataService
 				, public nav:NavController
@@ -176,4 +181,13 @@ export class BaseComponent {
 	error(cname){
 		return this.form.controls[cname].status +":" + JSON.stringify(this.form.controls[cname].errors)
 	}
+
+	elementChanged(input){
+        let field = input.inputControl.name;
+        this[field + "Changed"] = true;
+    }
+
+    getErrorMessage(con){
+    	return this.errorDefs[Object.keys(con.errors)[0]]
+    }
 }
