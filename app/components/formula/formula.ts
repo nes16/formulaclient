@@ -16,7 +16,7 @@ import { UnitSelector } from '../selectors/unit';
 import { UnitValueAccessor } from '../selectors/unit-accessor';
 import { DetailPage } from '../../pages/detail/detail';
 import { Observable } from 'rxjs/Observable';
-import { symbolValidator, createMeasureValidator, createFormulaValidator } from '../validators/custom.validators'
+import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueNameValidator, createUniqueSymbolValidator  } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-formula',
@@ -57,19 +57,19 @@ export class FormulaComponent extends BaseComponent {
 
 	ngOnInit() {
 		super.ngOnInit();
-		this.form = new FormGroup({
-			name: new FormControl(this.resource.name, [Validators.required
-										, Validators.minLength(5)
-										, Validators.maxLength(30)]),
-			symbol: new FormControl(this.resource.symbol, [Validators.required
-										,symbolValidator]),
-			latex: new FormControl(this.resource.latex, [Validators.required
-										,createFormulaValidator(this.resource)]),
-			measure: new FormControl(this.resource.measure, [Validators.required
-										,createMeasureValidator(false, false)])
-		})
-
-		this.form.controls[name]
+		if(this.mode == 'edit'){
+			this.form = new FormGroup({
+				name: new FormControl(this.resource.name, [Validators.required
+											, Validators.minLength(2)
+											, Validators.maxLength(30)],createUniqueNameValidator(this.dataService, "formulas", this.resource)),
+				symbol: new FormControl(this.resource.symbol, [Validators.required
+											,symbolValidator], createUniqueSymbolValidator(this.dataService, "formulas", this.resource)),
+				latex: new FormControl(this.resource.latex, [Validators.required
+											,createFormulaValidator(this.resource)]),
+				measure: new FormControl(this.resource.measure, [Validators.required
+											,createMeasureValidator(false, false)])
+			})
+		}
 	}
 
 	moveToVariable(global:FG){

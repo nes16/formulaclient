@@ -24,7 +24,8 @@ export class MyTokenAuth {
   _hasLocalStorage:boolean = false;
 
   config:any = {
-        apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
+       // apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
+        apiUrl: 'http://192.168.1.25/api/v1',
         signOutUrl: '/auth/sign_out.json',
         emailSignInPath: '/auth/sign_in.json',
         emailRegistrationPath: '/auth',

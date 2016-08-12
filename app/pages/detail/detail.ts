@@ -12,6 +12,7 @@ import { VarComponent } from '../../components/variable/variable';
 import { MathKeypad } from '../../components/keys/keypad';
 import { FlNavBar } from '../../components/bars/nav-bar';
 import { Observer } from 'rxjs/Observer';
+import {MQService} from '../../services/mq-service'
 
 @Component({
     //templateUrl: 'build/pages/unit/unit-test.html',
@@ -26,7 +27,7 @@ export class DetailPage {
     type: string;
     title:string;
     master: any;
-    constructor(public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService) {
+    constructor(public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService, public mq:MQService) {
         this.currResource = navParams.get('currResource');
         if(this.currResource)
             this.type = this.currResource.getTable();

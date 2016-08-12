@@ -41,15 +41,18 @@ export class VarComponent extends BaseComponent {
 
 	ngOnInit() {
 		super.ngOnInit();
-		this.form  = new FormGroup({
-			name: new FormControl(this.resource.name, [Validators.required
-										, Validators.minLength(5)
-										, Validators.maxLength(30)]),
-			symbol: new FormControl(this.resource.symbol, [Validators.required
-														,symbolValidator]),
-			measure: new FormControl(this.resource.measure, [Validators.required
-														,createMeasureValidator(false,false)])
-		})
+		if(this.mode == 'edit'){
+
+			this.form  = new FormGroup({
+				name: new FormControl(this.resource.name, [Validators.required
+											, Validators.minLength(2)
+											, Validators.maxLength(30)]),
+				symbol: new FormControl(this.resource.symbol, [Validators.required
+															,symbolValidator]),
+				measure: new FormControl(this.resource.measure, [Validators.required
+															,createMeasureValidator(false,false)])
+			})
+		}
 	}
 
 	edit(evt, value) {

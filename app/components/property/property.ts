@@ -46,11 +46,14 @@ export class PropertyComponent extends BaseComponent{
 	
 	ngOnInit() {
 		super.ngOnInit();
+		if(this.mode == 'edit'){
 		this.form = new FormGroup({
-		name: new FormControl(this.resource.name, [Validators.required
-									, Validators.minLength(5)
-									, Validators.maxLength(30)], createUniqueNameValidator(this.dataService, "properties", this.resource))
-	})	
+			name: new FormControl(this.resource.name, [Validators.required
+									, Validators.minLength(2)
+									, Validators.maxLength(30)], 
+									createUniqueNameValidator(this.dataService, "properties", this.resource))
+			})	
+		}
 	}
 
 	ngAfterViewInit(){

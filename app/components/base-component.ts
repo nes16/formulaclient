@@ -172,4 +172,8 @@ export class BaseComponent {
 
 	  actionSheet.present();
 	}
+
+	error(cname){
+		return this.form.controls[cname].status +":" + JSON.stringify(this.form.controls[cname].errors)
+	}
 }

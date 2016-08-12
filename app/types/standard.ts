@@ -172,7 +172,7 @@ export class BaseResource {
     syncState: number = 0;
     oldState:any;
     error_code:number;
-    error_messages:any;
+    error_messages:any = null;
     constructor(state){
         this.loadState(state);
     }

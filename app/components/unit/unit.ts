@@ -9,7 +9,7 @@ import { MathQ } from '../mathquill';
 import { MathQValueAccessor } from '../mathquill-accessor';
 import { Unit } from '../../types/standard';
 import { DetailPage } from '../../pages/detail/detail';
-import { symbolValidator, factorValidator } from '../validators/custom.validators'
+import { symbolValidator, factorValidator, createUniqueNameValidator, createUniqueSymbolValidator} from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-unit',
@@ -43,20 +43,21 @@ export class UnitComponent extends BaseComponent {
 			this.resource.system=this.systems[0];
 		else
 			this.resource.system=this.systems[1];
-
-		this.form = new FormGroup({
-			name: new FormControl(this.resource.name, [Validators.required
-										, Validators.minLength(5)
-										, Validators.maxLength(30)]),
-			description: new FormControl(this.resource.description, [Validators.required
-											, Validators.minLength(5)
-											, Validators.maxLength(50)]),
-			symbol: new FormControl(this.resource.symbol),
-			factor: new FormControl(this.resource.factor, [Validators.required
-										, factorValidator]),
-			approx: new FormControl(this.resource.approx)
-		
-		})
+		if(this.mode == 'edit'){
+			this.form = new FormGroup({
+				name: new FormControl(this.resource.name, [Validators.required
+											, Validators.minLength(2)
+											, Validators.maxLength(30)]
+											, createUniqueNameValidator(this.dataService, "properties", this.resource)),
+				description: new FormControl(this.resource.description, [Validators.minLength(2)
+												, Validators.maxLength(50)]),
+				symbol: new FormControl(this.resource.symbol, [Validators.required, symbolValidator],createUniqueSymbolValidator(this.dataService, "units", this.resource)),
+				factor: new FormControl(this.resource.factor, [Validators.required
+											, factorValidator]),
+				approx: new FormControl(this.resource.approx)
+			
+			})
+		}
 	}
 
 	onEditCmd(evt){

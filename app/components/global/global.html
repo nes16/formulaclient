@@ -33,6 +33,7 @@
         </ion-row>
     </template>
     <template [ngSwitchCase]="'edit'">
+        {{error('name')}}        
         <form [formGroup]="form" (submit)="edit($event, form.value)">
             <ion-list>
                 <ion-item>

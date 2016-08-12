@@ -10,8 +10,8 @@ import 'rxjs/add/operator/catch';
 export class BaseService{
 //https://github.com/ronzeidman/ng2-ui-auth/blob/master/src/jwtHttp.ts
 	baseUrlRemote:string = "https://young-hollows-77540.herokuapp.com/api/v1" 
-	baseUrlLocal:string = "http://localhost/api/v1" 
-	baseUrl:string = this.baseUrlRemote;
+	baseUrlLocal:string = "http://192.168.1.25/api/v1" 
+	baseUrl:string = this.baseUrlLocal;
 	http: any = null;
 
 	constructor(public auth:MyTokenAuth, public uiService:UIStateService){

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { DataService } from '../../services/data-service';
-import { Measure, Formula } from '../../types/standard';
+import { Measure, Formula, Unit, Global, BaseResource } from '../../types/standard';
 /*
 source:https://raw.githubusercontent.com/restlet/restlet-sample-angular2-forms/master/app/validators/custom.validators.ts
 
@@ -62,43 +62,57 @@ export function createMeasureValidator(required:boolean, onlyUnit:boolean=false)
 }
 
 
-export function createUniqueNameValidator(service:DataService, resourceType:string, component) {
+export function createUniqueNameValidator(service:DataService, resourceType:string, resource:any) {
 
   return function(control) {
-    if(component.nameTimeout)
-      clearTimeout(component.nameTimeout);
+    if(resource.nameTimeout)
+      clearTimeout(resource.nameTimeout);
     return new Promise((resolve, reject) => {
-                component.nameTimeout = setTimeout(() => {
-                  service.isUnique(resourceType, "name", control.value as string, (res, i)=> control.value == res.name)
-                        .subscribe(res => {
-                          if(res.unique){
-                              resolve(null);
-                          }
-                          else{
-                            resolve({uniqueName: true});
-                          }
-                        }, err=>{
-                            resolve({uniqueName: true});
-                        }, () => resolve({uniqueName: true}))
-          }, 600);
+                resource.nameTimeout = setTimeout(() => {
+                  if(resource.id && (control.value == resource.oldState["name"]))
+                    resolve(null);
+                  else
+                    service.isUnique(resourceType, "name", control.value as string, (res, i)=> control.value == res.name)
+                          .subscribe(res => {
+                            if(res.unique){
+                                resolve(null);
+                            }
+                            else{
+                              resolve({uniqueName: true});
+                            }
+                          }, err=>{
+                              resolve({uniqueName: true});
+                          }, () => resolve({uniqueName: true}))
+            }, 600);
 
     });
   }
+}
 
+  export function createUniqueSymbolValidator(service:DataService, resourceType:string, resource) {
 
+    return function(control) {
+      if(resource.symbolTimeout)
+        clearTimeout(resource.symbolTimeout);
+      return new Promise((resolve, reject) => {
+                  resource.symbolTimeout = setTimeout(() => {
+                    if(resource.id && (control.value == resource.oldState["symbol"]))
+                      resolve(null);
+                    else
+                      service.isUnique(resourceType, "symbol", control.value as string, (res , i)=> control.value == (res as Unit).symbol)
+                            .subscribe(res => {
+                              if(res.unique){
+                                  resolve(null);
+                              }
+                              else{
+                                resolve({uniqueName: true});
+                              }
+                            }, err=>{
+                                resolve({uniqueName: true});
+                            }, () => resolve({uniqueName: true}))
+            }, 600);
 
-      // service.findByName(resourceType, control.value).subscribe(
-    	 //  data => {
-      //     if (data.length === 0 || (data.length === 1 &&
-      //           component.company.id === data[0].id)) {
-      //       resolve(null);
-      //     } else {
-      //       resolve({uniqueName: true});
-      //     }
-      //   },
-      //   err => {
-      //     resolve({uniqueName: true});
-      //   }
-      // });
+      });
+    }
 }
 
