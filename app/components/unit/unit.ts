@@ -10,11 +10,12 @@ import { MathQValueAccessor } from '../mathquill-accessor';
 import { Unit } from '../../types/standard';
 import { DetailPage } from '../../pages/detail/detail';
 import { symbolValidator, factorValidator, createUniqueNameValidator, createUniqueSymbolValidator} from '../validators/custom.validators'
+import { FBError } from '../fb-error';
 
 @Component({
 	selector: 'fl-unit',
 	templateUrl: 'build/components/unit/unit.html',
-	directives: [IONIC_DIRECTIVES, BaseResource, MathQ, MathQValueAccessor]
+	directives: [IONIC_DIRECTIVES, BaseResource, MathQ, MathQValueAccessor, FBError]
 })
 
 export class UnitComponent extends BaseComponent {
@@ -48,7 +49,7 @@ export class UnitComponent extends BaseComponent {
 				name: new FormControl(this.resource.name, [Validators.required
 											, Validators.minLength(2)
 											, Validators.maxLength(30)]
-											, createUniqueNameValidator(this.dataService, "properties", this.resource)),
+											, createUniqueNameValidator(this.dataService, "units", this.resource)),
 				description: new FormControl(this.resource.description, [Validators.minLength(2)
 												, Validators.maxLength(50)]),
 				symbol: new FormControl(this.resource.symbol, [Validators.required, symbolValidator],createUniqueSymbolValidator(this.dataService, "units", this.resource)),

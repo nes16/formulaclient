@@ -17,6 +17,7 @@ import { UnitValueAccessor } from '../selectors/unit-accessor';
 import { DetailPage } from '../../pages/detail/detail';
 import { Observable } from 'rxjs/Observable';
 import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueNameValidator, createUniqueSymbolValidator  } from '../validators/custom.validators'
+import { FBError } from '../fb-error';
 
 @Component({
 	selector: 'fl-formula',
@@ -28,7 +29,8 @@ import { symbolValidator, createMeasureValidator, createFormulaValidator,  creat
 				, GlobalComponent
 				, MathQValueAccessor
 				, UnitSelector
-				, UnitValueAccessor],
+				, UnitValueAccessor
+				, FBError],
 	providers: [LatexParserService]
 
 	

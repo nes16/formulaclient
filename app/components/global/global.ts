@@ -12,11 +12,12 @@ import { UnitSelector } from '../selectors/unit';
 import { UnitValueAccessor } from '../selectors/unit-accessor';
 import { DetailPage } from '../../pages/detail/detail';
 import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator, createUniqueSymbolValidator } from '../validators/custom.validators'
+import { FBError } from '../fb-error';
 
 @Component({
 	selector: 'fl-global',
 	templateUrl: 'build/components/global/global.html',
-	directives: [IONIC_DIRECTIVES/*, BaseResource*/, MathQ, MathQValueAccessor, UnitSelector, UnitValueAccessor]
+	directives: [IONIC_DIRECTIVES/*, BaseResource*/, MathQ, MathQValueAccessor, UnitSelector, UnitValueAccessor, FBError]
 })
 export class GlobalComponent extends BaseComponent {
 	detailPage: any;
@@ -49,8 +50,7 @@ export class GlobalComponent extends BaseComponent {
 											, numberValidator]),
 				symbol: new FormControl(this.resource.symbol, [Validators.required
 											, symbolValidator], createUniqueSymbolValidator(this.dataService, "globals", this.resource)),
-				measure: new FormControl(this.resource.measure, [Validators.required
-											, createMeasureValidator(false, true)]),
+				measure: new FormControl(this.resource.measure, [createMeasureValidator(false, true)]),
 			})
 		}
 

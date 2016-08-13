@@ -12,13 +12,13 @@ import { UnitComponent } from '../unit/unit'
 import { MathQ } from '../mathquill'
 import { MathQValueAccessor } from '../mathquill-accessor';
 import { DetailPage } from '../../pages/detail/detail';
-import { FBInput } from '../fb-input'
+import { FBError } from '../fb-error';
 import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-property',
 	templateUrl: 'build/components/property/property.html',
-	directives: [REACTIVE_FORM_DIRECTIVES, IONIC_DIRECTIVES, BaseResource, UnitComponent, MathQ, MathQValueAccessor, FBInput]
+	directives: [REACTIVE_FORM_DIRECTIVES, IONIC_DIRECTIVES, BaseResource, UnitComponent, MathQ, MathQValueAccessor, FBError]
 })
 
 export class PropertyComponent extends BaseComponent{

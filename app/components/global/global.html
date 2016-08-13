@@ -33,28 +33,31 @@
         </ion-row>
     </template>
     <template [ngSwitchCase]="'edit'">
-        {{error('name')}}        
+        {{error('measure')}}        
         <form [formGroup]="form" (submit)="edit($event, form.value)">
             <ion-list>
                 <ion-item>
                     <ion-label>Name</ion-label>
                     <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
                 </ion-item>
+                <fb-error [fcontrol]="form.controls.name"></fb-error>
                 <ion-item>
                     <ion-label>Symbol</ion-label>
                     <mathq [editable]="true"  item-right formControlName="symbol" [(ngModel)]="resource.symbol"></mathq>
                 </ion-item>
+                <fb-error [fcontrol]="form.controls.symbol"></fb-error>
                 <ion-item>
                     <ion-label>Value</ion-label>
-
                     <ion-input type="text" formControlName="value" [(ngModel)]="resource.value"></ion-input>
                 </ion-item>
+                <fb-error [fcontrol]="form.controls.measure"></fb-error>
                 <ion-item>
                         <ion-label>Measure</ion-label>
                         
                         <fl-unit-sel item-right  formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
                         
                 </ion-item>
+                <fb-error [fcontrol]="form.controls.measure"></fb-error>
                 <ion-item>
                     <button type="button" name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid">{{submitButtonName}}</button>
                 </ion-item>

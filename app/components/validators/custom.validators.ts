@@ -44,19 +44,19 @@ export function createFormulaValidator(formula:Formula){
   }
 }
 export function createMeasureValidator(required:boolean, onlyUnit:boolean=false){
-  return function(control) {
+  return function(control):any {
     if(!control.value)
       return null;
     var mea = control.value as Measure;
-    if(!required && !mea.isProperty && !mea.isUnit)
+    if(!required && !mea.isProperty() && !mea.isUnit())
       return null;
     if(onlyUnit){
       var valid = mea.isUnit();
-      return !valid ? {invalidMeasure: true}:null;
+      return !valid ? {onlyUnit: true}:null;
     }
     else{
       var valid = mea.isUnit() || mea.isProperty()
-      return !valid ? {invalidMeasure: true}:null;
+      return !valid ? {required: true}:null;
     }
   }
 }

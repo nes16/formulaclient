@@ -27,11 +27,12 @@
                     <ion-label>Name</ion-label>
                     <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
                 </ion-item>
+                <fb-error [fcontrol]="form.controls.name"></fb-error>
                 <ion-item>
                     <ion-label>Description</ion-label>
                     <ion-input type="text" formControlName="description" [(ngModel)]="resource.description"></ion-input>
                 </ion-item>
-                
+                <fb-error [fcontrol]="form.controls.description"></fb-error>
                 <ion-item>
                     <ion-label>System</ion-label>
                     <ion-select  [(ngModel)]="resource.system" [ngModelOptions]="{standalone: true}" required.>
@@ -42,6 +43,7 @@
                     <ion-label>Symbol</ion-label>
                     <ion-input type="text" formControlName="symbol" [(ngModel)]="resource.Symbol"></ion-input>
                 </ion-item>
+                <fb-error [fcontrol]="form.controls.symbol"></fb-error>
                 <template [ngIf]="!resource.IsDefaultUnit">
                     <ion-item class="item-input">
                         <ion-label>Factor</ion-label>

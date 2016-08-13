@@ -30,14 +30,9 @@
 	            <ion-list>
                     <ion-item>
                     <ion-label>Name</ion-label> 
-                    <ion-input type="text" formControlName="name" name="name" [(ngModel)]="resource.name"></ion-input >
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input >
                     </ion-item>
-                    <ion-item *ngIf="form.controls.name.pending">
-                        <p>Checking name...</p>
-                    </ion-item>        
-                    <ion-item *ngIf="!form.controls.name.valid && !form.controls.name.pending && (!form.controls.name.pristine || submitAttempt)">
-                        <p>{{getErrorMessage(form.controls.name)}}</p>
-                    </ion-item>
+                    <fb-error [fcontrol]="form.controls.name"></fb-error>
                     <ion-item divider>Default Unit</ion-item>
                     <ion-item>
                         <fl-unit  [mode]="'edit'" [updateButton]="false" [resource]="resource.DefaultUnit"></fl-unit>

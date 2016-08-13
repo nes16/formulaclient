@@ -12,10 +12,7 @@ export class BaseComponent {
 	errorMessage: string;
 	expand: boolean = false;
 	detailPage: any;
-	errorDefs={required: 'This field is required',
-	        maxlength: 'The value should be at maximum 50 characters',
-	        minlength: 'The value should be at least 2 characters',
-	        uniqueness:'This value already taken'}
+	
 	
 	constructor(public app:App,
 				public dataService:DataService
@@ -179,7 +176,12 @@ export class BaseComponent {
 	}
 
 	error(cname){
-		return this.form.controls[cname].status +":" + JSON.stringify(this.form.controls[cname].errors)
+		var str = '';
+		var keys=Object.keys(this.form.controls);
+		keys.forEach(i => {
+			str = str + this.form.controls[i].status +":" + JSON.stringify(this.form.controls[i].errors) + '\n'	
+		})
+		return str;
 	}
 
 	elementChanged(input){
@@ -187,7 +189,5 @@ export class BaseComponent {
         this[field + "Changed"] = true;
     }
 
-    getErrorMessage(con){
-    	return this.errorDefs[Object.keys(con.errors)[0]]
-    }
+    
 }
