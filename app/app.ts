@@ -1,5 +1,5 @@
 import { Platform, Nav,  MenuController, ionicBootstrap, App, Events, NavController } from 'ionic-angular';
-import { Component, ViewChild, enableProdMode } from '@angular/core';
+import { Component, ViewChild, enableProdMode, provide } from '@angular/core';
 import {StatusBar} from 'ionic-native';
 
 import {ResourceListPage} from './pages/resource-list';
@@ -89,6 +89,8 @@ ionicBootstrap(MyApp, [
         useValue: [REACTIVE_FORM_DIRECTIVES],
         multi: true
   } ,
+  provide('ApiEndpoint', {useValue: 'http://192.168.1.25/api/v1'})
+  ,
   MyTokenAuth, JwtHttp, MQService, BaseService, DataService
   ])
  

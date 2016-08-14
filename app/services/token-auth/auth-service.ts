@@ -1,10 +1,11 @@
-import { Injectable} from '@angular/core';
+import { Injectable, Inject} from '@angular/core';
 import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { JwtHttp } from "./jwtHttp";
+import { Util } from '../../lib/util'
 
 @Injectable()
 export class MyTokenAuth {
@@ -25,7 +26,7 @@ export class MyTokenAuth {
 
   config:any = {
        // apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
-        apiUrl: 'http://192.168.1.25/api/v1',
+        apiUrl: this.apiEndpoint,
         signOutUrl: '/auth/sign_out.json',
         emailSignInPath: '/auth/sign_in.json',
         emailRegistrationPath: '/auth',
@@ -83,7 +84,9 @@ export class MyTokenAuth {
         }
       }
 
-  constructor(public http: JwtHttp) {
+  constructor(public http: JwtHttp
+    , @Inject('ApiEndpoint') private apiEndpoint: string
+    ) {
     this.http.setAuth(this);
     this.initializeListeners();
     this.observable = Observable.create(observer => { 
@@ -166,10 +169,12 @@ export class MyTokenAuth {
         this.observer.next({
           event: 'auth:registration-email-success',
           data:  params})})
-      .catch(resp => {
+      .catch(error => {
         this.observer.next({
           event: 'auth:registration-email-error',
-          data: resp})})
+          data: error})
+        return Util.handleError(error);
+      })
   }
 
   submitLogin(params, opts) {
@@ -184,33 +189,14 @@ export class MyTokenAuth {
     return this.http.post(this.config.apiUrl + this.config.emailSignInPath, params, headers)
       .map(resp => {
         var authData;
-        authData = this.config.handleLoginResponse(JSON.parse(resp._body).data);
+        authData = this.config.handleLoginResponse(JSON.parse(resp.json().body).data);
         this.handleValidAuth(authData, null);
         this.observer.next({ event: 'auth:login-success', data: this.user });})
       .catch(error => {
         this.observer.next({ event: 'auth:login-error', data: error });
-        return error;
+        return Util.handleError(error);
       })
   }
-
-  submitLogin123(params, opts) {
-    if (opts == null) {
-      opts = {};
-    }
-        var headers = {headers : new Headers({
-          'Content-Type': 'application/json'
-        })}
-    var res = this.http.post(this.config.apiUrl + this.config.emailSignInPath, params, headers)
-      .subscribe(resp => {
-        var authData;
-        authData = this.config.handleLoginResponse(resp._body, this);
-        this.handleValidAuth(authData, null);
-        this.observer.next({ event: 'auth:login-success', data: this.user });},
-       error => {
-        this.observer.next({ event: 'auth:login-error', data: error })
-        return error;})
-  }
-
 
   
   signOut() {
@@ -220,10 +206,13 @@ export class MyTokenAuth {
     return this.http["delete"](this.config.apiUrl + this.config.signOutUrl,  headers)
       .map(resp => {
         this.invalidateTokens();
-        this.observer.next({event: 'auth:logout-success', data:resp});})
-      .catch(resp => {
+        this.observer.next({event: 'auth:logout-success', data:resp});
+       })
+      .catch(error => {
         this.invalidateTokens();
-        this.observer.next({event: 'auth:logout-error', data:resp});})
+        this.observer.next({event: 'auth:logout-error', data:error});
+        return Util.handleError(error);
+       })
   }
 
   requestPasswordReset(params, opts) {
@@ -236,8 +225,10 @@ export class MyTokenAuth {
     return this.http.post(this.config.apiUrl + this.config.passwordResetPath, params, null)
       .map(resp => {
         this.observer.next({ event: 'auth:password-reset-request-success', data: params })})
-      .catch(resp => {
-        this.observer.next({ event: 'auth:password-reset-request-error', data: resp })})
+      .catch(error => {
+        this.observer.next({ event: 'auth:password-reset-request-error', data: error })
+        return Util.handleError(error);
+      })
   }
 
   updatePassword(params) {
@@ -247,10 +238,12 @@ export class MyTokenAuth {
           event: 'auth:password-change-success',
           data: resp});
         this.mustResetPassword = false;})
-      .catch(resp => {
+      .catch(error => {
         this.observer.next({
         event: 'auth:password-change-error',
-        data: resp})})
+        data: error})
+        return Util.handleError(error);
+      })
   }
 
   updateAccount(params) {
@@ -274,10 +267,12 @@ export class MyTokenAuth {
         this.observer.next({
           event: 'auth:account-update-success',
           data: resp});})
-      .catch(resp => {
+      .catch(error => {
         this.observer.next({
           event: 'auth:account-update-error',
-          data: resp});})
+          data: error});
+        return Util.handleError(error);
+      })
   }
 
   destroyAccount(params) {
@@ -287,10 +282,12 @@ export class MyTokenAuth {
         this.observer.next({
           event: 'auth:account-destroy-success',
           data: resp});})
-      .catch(resp => {
+      .catch(error => {
         this.observer.next({
           event: 'auth:account-destroy-error',
-          data: resp});});
+          data: error});
+        return Util.handleError(error);
+      });
   }
 
   authenticate(provider, opts) {
@@ -487,19 +484,23 @@ export class MyTokenAuth {
             this.observer.next({ event: 'auth:password-reset-confirm-success', data: this.user });
           }
           this.observer.next({ event: 'auth:validation-success', data: this.user });})
-        .catch(data => {
+        .catch(error => {
           if (this.firstTimeLogin) {
             this.observer.next({
               event: 'auth:email-confirmation-error',
-              data: data
+              data: error
             });
+
           }
           if (this.mustResetPassword) {
-            this.observer.next({ event: 'auth:password-reset-confirm-error data:', data });
+            this.observer.next({ event: 'auth:password-reset-confirm-error data:', error });
           }
-          this.observer.next({ event: 'auth:validation-error', data: data });})
+          this.observer.next({ event: 'auth:validation-error', data: error });
+          return Util.handleError(error);
+        })
+          
     } else {
-      
+
     }
   }
 
