@@ -26,7 +26,6 @@ export class BaseService{
 							return body.data || {};
 					 })
 					.catch(Util.handleError)
-
 	}
 
 	
