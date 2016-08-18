@@ -49,9 +49,9 @@ export class ResourceListPage {
 
     onErrorCmd(evt){
         //Save 
-        var errorInfo = this.dataService[this.resourceType].getDeletedItemErrorInfo();
-        if(errorInfo)
-            this.uiStateService.showErrorModal(this.nav, errorInfo)
+        //var errorInfo = this.dataService[this.resourceType].getDeletedItemErrorInfo();
+        //if(errorInfo)
+        //    this.uiStateService.showErrorModal(this.nav, errorInfo)
     }
 
     get Title(){

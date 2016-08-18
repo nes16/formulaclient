@@ -25,82 +25,42 @@ export class SqlService {
 	constructor(private platform: Platform) {
 	}
 
-	init(drop:number): Observable<any> {
+	init(): Observable<any> {
 		
 		if (this.initComplete)
 			return Observable.empty();
 		
-		if(localStorage.getItem("dbInit") == "1")
-			return this.initSql();
-		
-
-		if(drop)
-			return Observable.from([this.initSql(), this.dropTables(), this.createTables(), this.saveInitState()])
-							 .map(i => i)
+		if(localStorage.getItem("dbInit") == null || localStorage.getItem("dbInit") == "0")
+			return Observable.from([this.initSql(), this.dropTables(), this.createTables()])
 							 .concatAll()
-		else
-			return Observable.from([this.initSql(), this.createTables(), this.saveInitState()])
-								 .map(i => i)
-								 .concatAll();
+							 .map(i => i==3?this.saveInitState():i)
+
+		return this.initSql();
 	}
 
-	initSql(){
-		return Observable.create(or => {
-			Observable.fromPromise(this.platform.ready())
-					  .subscribe(res=>res, err=>err, ()=>{
-							this.storage = new Storage(SqlStorage);
-							or.complete();
-						})
-					})
+	initSql():Observable<any>{
+		return Observable.fromPromise(this.platform.ready())
+							 .map(i => {this.storage = new Storage(SqlStorage);return Observable.empty()})
 	}
 
 	saveInitState(){
-		return Observable.create(or => {
-			localStorage.setItem("dbInit", "1");
-			or.complete();
-		})
-
+		localStorage.setItem("dbInit", "1");
 	}
 
 	dropTables():Observable<any>{
 		return Observable.from(this.tables)
-						 .map(t => {
-						 	return this.initQuery('DROP TABLE ' + t)
-						 })
-						 .concat([this.initQuery('DELETE FROM kv')])
+						 .map(t => this._query('DROP TABLE ' + t))
+						 .concat([this._query('DELETE FROM kv')])
 						 .concatAll()
-				
 	}
-	
-	
-
 
 	createTables():Observable<any> {
-	//	this.storage = new Storage(SqlStorage);
 		return Observable.from(this.createTableStmts)
-						 .flatMap((t, i) => { 
-							return [
-								  this.initQuery(t)
-								 , this.initQuery(this.getAlterStatement(this.tables[i]))
-							]
-						})
-						.concatAll()
+						 .map(t => this._query(t))
+						 .concatAll()
 	}
 	
 	
-	//ALTER TABLE OLD_COMPANY ADD COLUMN SEX char(1);
-	getAlterStatement(table){
-		var astmt = `ALTER TABLE ${table} ADD COLUMN  \"syncState\" integer`;
-		return astmt;
-	}
-
-	/*Not used*/
-	initSequeceId(){
-		var obj = { seq: 10E6 };
-		this.query("update", "sqlite_sequence", obj, { and: { seq: { cond: "<=", val: 1 } } }).subscribe(
-			res => { }
-			)
-	}
 
 	prepareQuery(type:string, table:string, obj, condition){
 		var andCond = ""
@@ -208,68 +168,13 @@ export class SqlService {
 			}
 		}
 	}
-/*
-	then((data) => {
-    var results;
-    if(type == 'select' && data.res.rows.length > 0) {
-		results = [];
-    	for(var i = 0; i < data.res.rows.length; i++) {
-    		results.push(data.res.rows.item(i))	
-    	}
-		
-   	}
-	else if (type == 'insert' && data.res.insertId){
-		results = data.res.insertId;
-	}
-	else if (type == 'update'){
-		results = 'success';
-	}
-	if(observer){
-		observer.next(results);
-		observer.complete();
-	}
-	}, (error) => {
-	observer.error(error);
-	            });
-*/
 
-	query(type, table, obj, cond:any=null, async=true) {
-		return this._query(type, table, obj, cond);
-	}
-/*
-	INSERT INTO units (id,property_id,name,system,baseunit,symbol,prefix,extend,definition,description,approx,factor,repeat) 
-	VALUES 
-	(187,4,"arcsecond","_",0,"\"",null,null,"1°/3600","",1,"4.848137×10−6",null)
-	INSERT INTO units (id,property_id,name,system,baseunit,symbol,prefix,extend,definition,description,approx,factor,repeat) 
-	VALUES 
-	(189,4,"centesimal second of arc","_",0,"\"",null,null,"1 grad/10000","",1,"1.570796×10−6",null)
-*/
-	_query(type, table, obj, cond) {
-		var queryStr = this.prepareQuery(type, table, obj, cond);
-		return this.query1(queryStr);//Observable.create(or => {this.query1(queryStr, or)})
+	query(params) {
+		var queryStr = this.prepareQuery(params.type, params.table, params.obj, params.cond);
+		return this._query(queryStr);//Observable.create(or => {this.query1(queryStr, or)})
 	}
 
-	initQuery(stmt):Observable<any>{
-			return Observable.create(or => {
-				this.storage.query(stmt).then((res) => {
-					if(or){
-						//Send the statement string with result
-						if(res.res)
-							res.res.stmt = stmt;
-						or.next(res);
-						or.complete();
-					}
-				},(err) => {
-					//Send the stmt string with error
-					if(err.err)
-						console.log(err.err)
-					or.complete();
-
-				})
-			})
-		}
-
-	query1(stmt):Observable<any>{
+	_query(stmt):Observable<any>{
 		return Observable.create(or => {
 			this.storage.query(stmt).then((res) => {
 				if(or){
@@ -277,7 +182,7 @@ export class SqlService {
 					//console.log('TEMMMMMM----------'+stmt)
 					if(res.res)
 						res.res.stmt = stmt;
-					or.next(res);
+					or.next(res.res);
 					or.complete();
 				}
 			},(err) => {
@@ -288,11 +193,28 @@ export class SqlService {
 			})
 		})
 	}
-	getKV(key:string):any{
-		return Observable.fromPromise(this.storage.get(key));
+
+	getKV(key:string):any {
+		return Observable.create(or => {
+			this.storage.get(key).then((res) => {
+				or.next(res)
+					or.complete();
+				},
+				err =>{
+					or.error(err)
+				})
+		})
 	}
 
-	setKV(key:string, obj:any){
-		return Observable.fromPromise(this.storage.set(key, obj));
+	setKV(key:string, obj:any):Observable<any>{
+		return Observable.create(or => {
+				this.storage.set(key, obj).then(res => {
+					or.next(res)
+					or.complete();
+				},
+				err =>{
+					or.error(err)
+				})
+		})
 	}
 }

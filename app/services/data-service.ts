@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { RemoteService } from './remote-service';
-import { SqlService } from './sql-service';
+import { SqlCacheService } from './sqlcache-service';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, Category, States, OpCodes, ItemSyncState, FG, OfflineData, TableOfflineData, LogHandler, pass} from '../types/standard';
+import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
+import { SyncSuccessHandler, SyncFailureHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
+import { FG, OfflineData, TableOfflineData, LogHandler, pass } from '../types/standard'
 import { UIStateService } from './ui-state-service'
 import { Platform } from 'ionic-angular';
 /*
@@ -24,6 +26,7 @@ export class DataService {
     variables: ResourceCollection<Variable> = new ResourceCollection<Variable>(this, Variable);;
     fgs: ResourceCollection<FG> = new ResourceCollection<FG>(this, FG);
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
+    
     logHandler:LogHandler;
 
     // formulas: ResourceCollection;
@@ -34,116 +37,75 @@ export class DataService {
     initComplete: boolean = false;
     
     constructor(private platform: Platform
+
         , public remoteService: RemoteService
-        , public sqlService: SqlService
+        //Encapsulate cache into cache service
+        , public cache: SqlCacheService
         , private uiService: UIStateService) {      
-     
+        //What is this
+        //Why log handler
+        //When it is required, is it required in production?    
         this.logHandler = new LogHandler("Load items");
     }
 
     init():Observable<any> {
-        //Sqlservice drop all tables.
-        var dropdb = localStorage.getItem("dropdb");
-        localStorage.setItem("dropdb", "0");
-        if(dropdb)
-          dropdb = parseInt(dropdb);
-        else
-          dropdb = 0;
-        if(this.initComplete)
-            return Observable.create(or => or.complete())
-        else 
-            return this.sqlService.init(dropdb);
+        //cache drop all tables.
+        return this.cache.init()
+                        .map(i => {this.initComplete = true; return Observable.empty()})
     }
-
-    setKV(key:string, value:Object):Observable<any>{
-        return this.sqlService.setKV(key, JSON.stringify(value))
-    }
-
-    getKV(key):Observable<any>{
-        return this.sqlService.getKV(key);
-    }
-
+    
     
     loadListAndDepenent(list:ResourceCollection<BaseResource>):Observable<any>{
         var lists = this.getDepentent(list).filter(li => li.State == States.CREATED);
         return Observable.from(lists)
-                  .flatMap(li => [this.load(li)
-                                , this.loadDeletedItems(li)
-                                , this.loadLastSync(li)
-                                ])
-                  .concat([this.sync(list)])
+                  .map(li => this.cache.selectAll(this.getTable(li)))
                   .concatAll()
-                  //Log the stream events
-                  //.do(this.logHandler)
-                  .finally(() => {
-                    console.log('Info:Initializing lists...')
-                    lists.forEach(li => {
-                      li.State = States.LOAD_COMPLETE;
-                      this.initListItem(li)
-                    });
-                    lists.forEach(li => {
-                      this.publishErrors(li);
-                    });
-                    console.log('Info:Initializing list complete')
+                  .map((res,i) => lists[i].addRows(res.rows))              
+                  .map((n, i) => {
+                      if(i == lists.length-1){
+                      console.log('Info:Initializing lists...')
+                      lists.forEach(li => {
+                        li.State = States.LOAD_COMPLETE;
+                        this.initListItem(li)
+                        console.log('Info:Initializing list complete')
+                        })
+                    }
                   })
     }
 
-
-    
-    load(li:ResourceCollection<BaseResource>):Observable<any>{
-            return Observable.create(or => {
-                this.sqlService.query('select', this.getTable(li), null, null)
-                    .subscribe(res => {
-                        or.next(res);
-                        this.addRows(li, res.res.rows)
-                    },err => or.error(err), () => or.complete())
-            })        
+    initListItem(list){
+      list.initItems(this.getInitParameters(list))
     }
 
-
-
-    loadDeletedItems(li: ResourceCollection<BaseResource>):Observable<any> {
-        var table = this.getTable(li);
-        return Observable.create(or => {
-            this.getKV('deletedItems_'+table)
-                .subscribe(res => {
-                    or.next(res);
-                    if(res)
-                      li.offlineData.deletedItems = JSON.parse(res);
-                    else
-                      li.offlineData.deletedItems = new Array<any>();
-                }, err => or.error(err), ()=>or.complete())
-        })
+    getInitParameters(list):any{
+        switch (list) {
+             case this.properties:
+                return { ulist: this.units };
+             case this.globals:
+                 return { ulist: this.units};
+             case this.formulas:
+                 return { plist:this.properties, ulist: this.units, vlist:this.variables, glist:this.globals, fglist:this.fgs};
+             default :
+                 return {};
+        }
     }
 
-    loadLastSync(li:ResourceCollection<BaseResource>):Observable<any>{
-      return Observable.create(or => {
-        this.getKV('lastSync_'+this.getTable(li)).subscribe(res =>{
-          or.next(res);
-          li.offlineData.lastSync = res;
-        }, err=> or.error(err), ()=>or.complete())
-      })
-    }
-
-    setDeletedItems(li: ResourceCollection<BaseResource>):Observable<any> {
-        var table = this.getTable(li);
-        return Observable.create(or => {
-            //Ignore error codes in storage
-            var deletedItems = li.offlineData.deletedItems.map(i => ({id: i.id}))
-            
-            this.setKV('deletedItems_'+table, deletedItems)
-                .subscribe(res => {
-                    or.next(res);
-                }, err => or.error(err), ()=>or.complete())
-        })
-    }
-
-    setLastSync(li:ResourceCollection<BaseResource>):Observable<any>{
-      return Observable.create(or => {
-        this.setKV('lastSync_'+this.getTable(li), li.offlineData.lastSync).subscribe(res =>{
-          or.next(res);
-        }, err=> or.error(err), ()=>or.complete())
-      })
+    isUnique(table:string, field:string, value:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
+     if(this.uiService.IsOnline)
+       return Observable.create(or => {
+         this.remoteService
+             .isUnique({table:table, field:field, value:value})
+             .subscribe(od => {
+               or.next(od);
+             }, err=>or.erro(err), ()=>or.complete())
+       })
+     else
+       return Observable.create(or => {
+            if(this[table].find(predicate, null))
+              or.next(false), or.complete();
+            else
+              or.next(true), or.complete();
+       })
     }
 
 
@@ -155,38 +117,26 @@ export class DataService {
           var syncResponse = null;
           this.remoteService
               .sync({syncInfo: offLineData.asJson()})
-              .subscribe(od => {
-                or.next(od);
-                syncResponse = od;
-              }, err=>or.erro(err), ()=>{
-                  if(syncResponse){
-                    if(syncResponse.status == 'success'){
-                        var innerObs = this.handleSyncResponse(syncResponse);
-                        innerObs.subscribe(res => or.next(res), err=>or.error(err), ()=> or.complete())
-                      }
-                      else {
-                         Observable.from(syncResponse.tables as Array<TableOfflineData> )
-                           .map(tod => this.handleSyncErrors(tod))
-                           .concatAll()
-                           .subscribe(res => or.next(res), err=>or.error(err), ()=> or.complete())
-                      }
-                  }
-                  else
-                    or.complete();
-              })
+              .map(i => i.success?this.handleSyncSuccess(i):this.handleSyncFailure(i))
+              .subscribe()
       })
     }
 
 
 
-    handleSyncResponse(offlineData:OfflineData): Observable<any>{
+    handleSyncSuccess(offlineData:OfflineData): Observable<any>{
         //Update in memory objects in
         //Resource lists of each table
-        return Observable.from(offlineData.tables)
-                         .map(tod => this.handleSyncResponseForTable(tod))
-                         .concatAll()
+        return new SyncSuccessHandler(offlineData, this,  this.cache).sync();
     }
-    
+
+
+    handleSyncFailure(offlineData:OfflineData): Observable<any>{
+        //Update in memory objects in
+        //Resource lists of each table
+        return new SyncFailureHandler(offlineData, this,  this.cache).sync();
+    }
+    /*
     handleSyncResponseForTable(tod:TableOfflineData):Observable<any>{
 
       return Observable.from([this.memSync(tod)
@@ -316,16 +266,16 @@ export class DataService {
         obj['syncState'] = 0;
         obj['error_code'] = 0;
         obj['error_messages'] = null;
-        return this.sqlService
-         .query("update", table, obj, null)
+        return this.cache
+         .query({type:"update", table:table, obj:obj, cond:null})
     }
 
     lclearErrorState(table):Observable<any>{
         var obj = {};
         obj['error_code'] = 0;
         obj['error_messages'] = null;
-        return this.sqlService
-         .query("update", table, obj, null)
+        return this.cache
+         .query({type:"update", table:table, obj:obj, cond:null})
     }
 
 
@@ -370,7 +320,7 @@ export class DataService {
       var linkTable = this.getTable(link)
       var cond = { and: {  } } ;
       cond.and["id"] = {cond: 'IN', query:`(select ${col1} from ${linkTable} where ${col2} == ${oldId})`}
-      return this.sqlService.query("delete", table, null, cond)
+      return this.cache.query({type:"delete", table:table, obj:null, cond:cond})
     }
 
     //Update forign key ids of particular table
@@ -380,7 +330,7 @@ export class DataService {
         cond.and[col] = {cond: '=', value:oldId}
         var obj = {};
         obj[col] = newId;
-        return this.sqlService.query("update", table, obj, cond)
+        return this.cache.query({type:"update", table:table, obj:obj, cond:cond})
     }
 
     //Update forign key ids of particular table
@@ -388,15 +338,15 @@ export class DataService {
         var table = this.getTable(list)
         var cond = { and: {  } } ;
         cond.and[col] = {cond: '=', value:id}
-        return this.sqlService.query("delete", table, null, cond)
+        return this.cache.query({type:"delete", table:table, obj:null, cond:cond})
     }
 
 
 
     ladd(r:BaseResource):Observable<any>{
         return Observable.create(or => {
-            this.sqlService
-                .query("insert", r.getTable(), r.getState(), null)
+            this.cache
+                .query({type:"insert", table:r.getTable(), obj:r.getState(), cond:null})
                 .subscribe(res => {
                   r.id = res.res.insertId;
                   or.next(res)
@@ -407,21 +357,17 @@ export class DataService {
     //used when sync from remote
     laddorupdate(r:BaseResource):Observable<any>{
         return Observable.create(or => {
-            this.sqlService
-                .query("insertorupdate", r.getTable(), r.getState(), null)
+            this.cache
+                .query({type:"insertorupdate", table:r.getTable(), obj:r.getState(), cond:null})
                 .subscribe(res => or.next(res), err=>or.error(err), ()=>or.complete())
             })
     }
-
-
-
-
      
     lupdate(r: BaseResource) :Observable<any>{
       return Observable.create(or => {
           var cond = { and: { id: { cond: '=', value: r.id } } };
-          this.sqlService
-              .query("update", r.getTable(), r.getState(), cond)
+          this.cache
+              .query({type:"update", table:r.getTable(), obj:r.getState(), cond:cond})
               .subscribe(res => or.next(res), err=>or.error(err), ()=>or.complete())
           })
 
@@ -431,8 +377,8 @@ export class DataService {
     ldeleteMany(table, ids):Observable<any>{
       return Observable.create(or => {
         var cond = { and: { id: { cond: 'in', value: ids } } };
-        this.sqlService
-            .query("delete", table, null, cond)
+        this.cache
+            .query({type:"delete", table:table, obj:null, cond:cond})
             .subscribe(res => or.next(res), err=>or.error(err), ()=>or.complete())
       })
     }
@@ -440,8 +386,8 @@ export class DataService {
     ldelete(r:any):Observable<any>{
         return Observable.create(or => {
           var cond = { and: { id: { cond: '=', value: r.id } } };
-          this.sqlService
-              .query("delete", r.getTable(), r.getState(), cond)
+          this.cache
+              .query({type:"delete", table:r.getTable(), obj:r.getState(), cond:cond})
               .subscribe(res => or.next(res), err=> or.error(err), ()=>or.complete())
         })
     }
@@ -452,10 +398,10 @@ export class DataService {
         var obj = {};
         obj['error_code'] = jd.error_code;
         obj['error_messages'] = JSON.stringify(jd.error_messages);
-        return this.sqlService.query("update", table, obj, cond)
+        return this.cache.query({type:"update", table:table, obj:obj, cond:cond})
     }
     
-
+    */
     //Client API
     //==========
     //These functions are called from UI to store the
@@ -464,6 +410,7 @@ export class DataService {
     //Then calls sync method to update the server
 
     add(r: BaseResource) :Observable<any>{
+      /*
       r.setSyncState(ItemSyncState.NEW);
        var addOle = Observable.create(or => {
            this[r.getTable()].add(r);
@@ -471,10 +418,15 @@ export class DataService {
        })
        return Observable.from([this.ladd(r), addOle])
                         .concatAll()
+      */
+      return Observable.empty();
+
     }
 
 
+
     update(r:BaseResource):Observable<any>{
+      /*
       if(!r.isChanged()){
         console.log('Info: No change found for in table resource - '+ r.getTable()  + ' id:' + r.id +' Name:' + r.name );
         return Observable.empty();        
@@ -484,9 +436,13 @@ export class DataService {
       this[r.getTable()].onUpdate(r);
       return Observable.from([this.lupdate(r)])
                        .concatAll()
+      */
+      return Observable.empty();
     }
 
+
     remove(r:BaseResource, noSync:boolean = false):Observable<any>{
+        /*
         r.setSyncState(ItemSyncState.DELETE);
         var removeOle = Observable.create(or => {
            var li = this[r.getTable()] as ResourceCollection<BaseResource>;
@@ -510,6 +466,8 @@ export class DataService {
                     .concat([syncOle])
                     .concatAll()
                     .do(new LogHandler("Remove Item"))
+        */
+        return Observable.empty();
     }
 
     saveItem(r:BaseResource):Observable<any>{
@@ -521,7 +479,9 @@ export class DataService {
     }
 
     saveItemRecursive(r:BaseResource):Observable<any>{
+
        var items = [r];
+       /*
        if(r.getTable() == "formulas"){
          return Observable.from([this.updateVars(r as Formula), this.updateGlobals(r as Formula) ])
                    .map(i => i)
@@ -531,17 +491,21 @@ export class DataService {
                    .do(new LogHandler("Save Formula"))
        }
        else{
-         items = items.concat(r.getUnsavedChildItems());
+        */
+         items = items.concat(r.getChildItems());
          return Observable.from(items)
                    .map(r => this.saveItem(r))
                    .concat([this.sync(this[r.getTable()])])
                    .concatAll()
                    .do(new LogHandler('Save Item'))
+        /*
        }
+       */
     }
 
     //CLient API Helper functions
     //===========================
+    /*
     updateVars(f:Formula):Observable<any>{
       return Observable.from(f.Variables)
                        .map(v =>{
@@ -643,24 +607,9 @@ export class DataService {
       return Observable.empty();
     }
 
-    initListItem(list){
-      list.initItems(this.getInitParameters(list))
-    }
 
 
 
-    getInitParameters(list):any{
-        switch (list) {
-             case this.properties:
-                return { ulist: this.units };
-             case this.globals:
-                 return { ulist: this.units};
-             case this.formulas:
-                 return { plist:this.properties, ulist: this.units, vlist:this.variables, glist:this.globals, fglist:this.fgs};
-             default :
-                 return {};
-        }   
-    }
  
     removeIdsRegressive(r:BaseResource){
         var list = this[r.getTable()]
@@ -687,7 +636,7 @@ export class DataService {
         var items = li.filter(i => i[col] == oldId)
         items.forEach(i => i[col] = newId);
     }
-
+````*/
     getTable(list: ResourceCollection<BaseResource>): string {
         return list.type.table;
     }
@@ -731,32 +680,5 @@ export class DataService {
         }
     }
     
-    addRows(li:ResourceCollection<BaseResource>, rows){
-       var i;
-       for(i=0; i< rows.length; i++){
-         var obj = new li.type(rows.item(i))
-         li.add(obj)
-       }
-    }
-
-    isUnique(table:string, field:string, value:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
-     if(this.uiService.IsOnline)
-       return Observable.create(or => {
-         this.remoteService
-             .isUnique({table:table, field:field, value:value})
-             .subscribe(od => {
-               or.next(od);
-             }, err=>or.erro(err), ()=>or.complete())
-       })
-     else
-       return Observable.create(or => {
-            if(this[table].find(predicate, null))
-              or.next(false), or.complete();
-            else
-              or.next(true), or.complete();
-       })
-    }
-
-
-
+    
 }
