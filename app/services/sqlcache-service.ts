@@ -29,11 +29,10 @@ export class SqlCacheService implements CacheService{
     }
 
     updateItem(item:BaseResource):Observable<any>{
-    	let cond = { and: {  } } ;
-    	cond.and["id"] = {cond: item.id}
+    	let cond = { and: { id: { cond: '=', value: item.id } } };
     	
     	return this.sqlService
-    	 		   .query({type:"update", table:item.getTable(), obj:item, cond:cond})
+    	 		   .query({type:"update", table:item.getTable(), obj:item.getState(), cond:cond})
 
     }
 

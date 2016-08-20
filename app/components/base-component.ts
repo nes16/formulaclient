@@ -59,7 +59,7 @@ export class BaseComponent {
 
 	onRemoveCmd(evt){
 		this.dataService
-			.remove(this.resource)
+			.removeItem(this.resource)
 			.subscribe(res=>{},err=>{},()=>{});
 	}
 

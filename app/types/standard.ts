@@ -83,12 +83,11 @@ export class ResourceCollection<T extends BaseResource>{
     }
 
 
-    remove(r1:T, child:boolean = false, syncronizing:boolean =false){
+    remove(r1:T){
         var r = this.getItem("id", r1.id)
         if(r){
             this.resources.splice(this.resources.indexOf(r), 1)
-            if(!child && !syncronizing)
-                this.offlineData.addResource(r1, "deleted")
+            this.offlineData.addResource(r1, "deleted")
         }
     }
 
@@ -131,13 +130,16 @@ export class ResourceCollection<T extends BaseResource>{
         this.eor.next(this.findErrorItems());
     }
 
+
+
     addRows(rows){
-       var i;
+       let i;
        for(i=0; i< rows.length; i++){
          var obj = new this.type(rows.item(i))
          this.add(obj)
        }
     }
+
 }
 
 export class BaseResource {
@@ -162,9 +164,7 @@ export class BaseResource {
 
 
     //Internal
-    tempId: number;
     deleted:string;
-    syncState: number = 0;
     oldState:any;
     error_code:number;
     error_messages:any = null;
@@ -179,20 +179,17 @@ export class BaseResource {
     loadState(state){
         this.id = state.id;
         this.name = state.name;
-        this.syncState = state.syncState;
         this.deleted = state.deleted;
         this.lock_version = state.lock_version;
         this.error_code = state.error_code;
         if(state.error_messages)
             this.error_messages = JSON.stringify(state.error_messages);
-        if(this.syncState == null)
-            this.syncState = 0;
         if(this.lock_version == null)
             this.lock_version = 0;
     }
 
     getState(){
-        return { id: this.id, name: this.name, syncState: this.syncState, lock_version:this.lock_version };
+        return { id: this.id, name: this.name, lock_version:this.lock_version };
     }
 
 
@@ -213,18 +210,6 @@ export class BaseResource {
     }
 
     
-    setSyncState(state){
-        this.syncState |= state;
-    }
-
-    clearSyncState(state){
-        this.syncState &= ~state;
-    }
-
-    clearAllSyncState(){
-        this.syncState = 0;
-    }
-  
     initMeasure(info:any, property_id:number, unit_id:number):Measure{
         if(property_id){
             var plist = info.plist.resources as Array<Property>;
@@ -251,18 +236,6 @@ export class BaseResource {
         this.oldState = this.getState();
     }
     
-    isNewPending():boolean{
-       return ((ItemSyncState.NEW & this.syncState) != 0)
-    }
-
-    isUpdatePending():boolean{
-        return ((ItemSyncState.CHANGE & this.syncState) != 0)
-    }
-
-    isDeletePending():boolean{
-        return ((ItemSyncState.DELETE & this.syncState) != 0)
-    }
-
     getErrorInfo(){
         var errorInfo:any = {};
         errorInfo.message = BaseResource.errors_messages[this.error_code];
@@ -942,12 +915,21 @@ export class TableOfflineData {
         return (this.added.length != 0 ||this.updated.length != 0 || this.deleted.length != 0)
     }
 
-    loadFromCache(jdata:any){
-
+    loadFromCache(li:ResourceCollection<BaseResource>, jdata:string){
+        if(jdata){
+            let jobj = JSON.parse(jdata);
+            jobj.added.forEach(i => this.added.push(li.getItem("id", i)))
+            jobj.updated.forEach(i => this.updated.push(li.getItem("id", i)))
+            jobj.deleted.forEach(i => this.deleted.push(i))
+        }
     }
 
-    asJSONForCache(){
-
+    asJSONForCache():any{
+        let json = {added:[], updated:[], deleted:[]}
+        this.added.forEach(i => json.added.push(i.id))
+        this.updated.forEach(i => json.updated.push(i.id))
+        this.deleted.forEach(i => json.deleted.push(i))
+        return json;
     }
 
     asJSON(){
@@ -1255,6 +1237,11 @@ export class LogHandler{
     } 
 
 
+}
+
+export class AsyncSync{
+    constructor(public async: (li:any, i:number) => Observable<any>, public sync:(res:any, i:number) => any){
+    }
 }
 export class States {
     static CREATED:number = 0

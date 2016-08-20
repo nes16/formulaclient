@@ -36,7 +36,7 @@ export class MyApp {
      this.initializeApp();
      // set our app's pages
      this.pages = [
-         {title: 'Units and Properties', component: ResourceListPage, params:{type:"properties"} },
+         { title: 'Units and Properties', component: ResourceListPage, params:{type:"properties"} },
          { title: 'Global Constants', component: ResourceListPage, params:{type:"globals"} },
          { title: 'Formulas', component: ResourceListPage, params: { type: "formulas" } }
      ];
