@@ -4,9 +4,9 @@ import { RemoteService } from './remote-service';
 import { SqlCacheService } from './sqlcache-service';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
-import { SyncSuccessHandler, SyncFailureHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
 import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
+import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
+import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
 import { UIStateService } from './ui-state-service'
 import { Platform } from 'ionic-angular';
 import { UUID } from 'angular2-uuid';
@@ -22,8 +22,9 @@ export class DataService {
     variables: ResourceCollection<Variable> = new ResourceCollection<Variable>(this, Variable);;
     fgs: ResourceCollection<FG> = new ResourceCollection<FG>(this, FG);
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
-    
     logHandler:LogHandler;
+
+    static allOff: OfflineData = new OfflineData();
 
     // formulas: ResourceCollection;
     resourceTables: Array<string> = ['properties', 'units', 'globals'
@@ -121,30 +122,41 @@ export class DataService {
     sync(li):Observable<any> {
       var lists = this.getDepentent(li);
       return Observable.create(or => {
-        var offLineData = new OfflineData(lists);
+        var offLineData = DataService.allOff;
+        let info = {syncInfo: offLineData.asJson()};
+        console.log(JSON.stringify(info, null, 2));
+        or.complete()
         //Handle response for sync opertaion
-        var syncResponse = null;
-        this.remoteService
-        .sync({syncInfo: offLineData.asJson()})
-        .map(i => i.success?this.handleSyncSuccess(i):this.handleSyncFailure(i))
-        .subscribe()
+        // var syncResponse = null;
+        // this.remoteService
+        // .sync({syncInfo: offLineData.asJson()})
+        // .subscribe(res=>{
+        //     this.handleSyncResponse(res)
+        //     .subscribe(res=>{
+        //       or.netx(res);
+        //     },err=>{
+        //       or.error(err);
+        //     },()=>{
+        //     })
+        //   },
+        //   err=>{
+        //     console.log(err);
+        //     or.error(err);
+        //   },
+        //   ()=>or.complete())
       })
     }
 
 
 
-    handleSyncSuccess(offlineData:OfflineData): Observable<any>{
+    handleSyncResponse(offlineData:OfflineData): Observable<any>{
       //Update in memory objects in
       //Resource lists of each table
-      return new SyncSuccessHandler(offlineData, this,  this.cache).sync();
+      return new SyncResponseHandler(offlineData, this,  this.cache).sync();
     }
 
 
-    handleSyncFailure(offlineData:OfflineData): Observable<any>{
-      //Update in memory objects in
-      //Resource lists of each table
-      return new SyncFailureHandler(offlineData, this,  this.cache).sync();
-    }
+    
 
     removeItem(r:BaseResource):Observable<any>{
       let items = [r];
@@ -206,7 +218,7 @@ export class DataService {
 
       let syncOle = this.sync(this.properties);
 
-      return Observable.from([saveOle, saveOfflineOle])
+      return Observable.from([saveOle, saveOfflineOle, syncOle])
       .concatAll()
     }
 
@@ -252,7 +264,4 @@ export class DataService {
         default:
       }
     }
-
-
-
 }

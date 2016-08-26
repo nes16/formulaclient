@@ -19,7 +19,7 @@ export class ResourceCollection<T extends BaseResource>{
     sor: Observer<any>;
 
     offlineData: TableOfflineData;
-
+    static all: { [id: string] : BaseResource; } = {};
     constructor(public controller: DataService
         , public type: any)
     {
@@ -45,6 +45,7 @@ export class ResourceCollection<T extends BaseResource>{
         });
 
         this.offlineData = new TableOfflineData(type.table);
+        DataService.allOff.tables.push(this.offlineData);
 
         this.eole = new Observable(eor => {
                 this.eor = eor;
@@ -53,7 +54,7 @@ export class ResourceCollection<T extends BaseResource>{
     }
 
     findErrorItems(){
-        var errorItems = this.offlineData.getAll().filter(i => i.error_code > 0);
+        var errorItems = this.offlineData.getAll().map(i => DataService.allOff.resources[i]).filter(i => i.error_code > 0);
         var childItems = this.resources.filter(i => i.getChildItems().some(j => j.error_code > 0))
         errorItems = errorItems.concat(childItems.filter(i => errorItems.indexOf(i) == -1))
         return errorItems;
@@ -73,6 +74,7 @@ export class ResourceCollection<T extends BaseResource>{
             if(this.getItem("id", r.id))
                 return;
             this.resources.push(r);
+            ResourceCollection.all[r.id] = r;
             if(!syncronizing)
                 this.offlineData.addResource(r, "added");
         }
@@ -87,6 +89,7 @@ export class ResourceCollection<T extends BaseResource>{
         var r = this.getItem("id", r1.id)
         if(r){
             this.resources.splice(this.resources.indexOf(r), 1)
+            delete ResourceCollection.all[r.id]
             this.offlineData.addResource(r1, "deleted")
         }
     }
@@ -864,51 +867,49 @@ export class Category extends BaseResource {
 }
 
 export class TableOfflineData {
-    added: Array<BaseResource> = new Array<BaseResource>();
-    updated: Array<BaseResource> = new Array<BaseResource>();
-    deleted: Array<any> = new Array();
+    added: Array<string> = new Array<string>();
+    updated: Array<string> = new Array<string>();
+    deleted: Array<string> = new Array<string>();
     lastSync:string="";
     
     constructor(public name:string){
-    
     }
 
 
     addResource(res:BaseResource, op:string){
         if(op == 'added'){
-            this.added.push(res);
+            this.added.push(res.id);
         }else if(op == 'updated'){
-            if(this.added.indexOf(res) >= 0)
+            if(this.added.indexOf(res.id) >= 0)
                 return;
-            this.updated.push(res);
+            this.updated.push(res.id);
         }else{
-            let i = this.added.indexOf(res);
+            let i = this.added.indexOf(res.id);
             if (i >= 0)
                 this.added.splice(i, 1);
             else{
-                i = this.updated.indexOf(res);
+                i = this.updated.indexOf(res.id);
                 this.updated.splice(i, 1); 
             }
-            this.deleted.push(res);
+            this.deleted.push(res.id);
         }
     }
 
-    getAll():Array<BaseResource>{
+    getAll():Array<string>{
         return this.added.concat(this.updated);
     }
 
     clearResources(lastSync:string){
         this.lastSync = lastSync;
-        this.added = new Array<BaseResource>();
-        this.updated = new Array<BaseResource>();
-        this.deleted = new Array<BaseResource>();
+        this.added = new Array<string>();
+        this.updated = new Array<string>();
+        this.deleted = new Array<string>();
     }
 
     clearErrors(){
         let all = this.added.concat(this.updated);
         all.forEach(i => {
-            i.error_code = 0;
-            i.error_messages = null;
+            ResourceCollection.all[i].error_messages = null;
         })
     }
 
@@ -919,27 +920,25 @@ export class TableOfflineData {
     loadFromCache(li:ResourceCollection<BaseResource>, jdata:string){
         if(jdata){
             let jobj = JSON.parse(jdata);
-            jobj.added.forEach(i => this.added.push(li.getItem("id", i)))
-            jobj.updated.forEach(i => this.updated.push(li.getItem("id", i)))
-            jobj.deleted.forEach(i => this.deleted.push(i))
+            this.added = jobj.added;
+            this.updated = jobj.updated;
+            this.deleted = jobj.deleted;
         }
     }
 
     asJSONForCache():any{
-        let json = {added:[], updated:[], deleted:[]}
-        this.added.forEach(i => json.added.push(i.id))
-        this.updated.forEach(i => json.updated.push(i.id))
-        this.deleted.forEach(i => json.deleted.push(i))
-        return json;
+        return this;
     }
 
-    asJSON(){
+    asJSON(resources:any){
+         this.added.concat(this.updated).forEach(id => {
+            //this.resources[id] =   ResourceCollection.all[id].getState() as BaseResource;
+         })
          return {name: this.name
                 ,lastSync:this.lastSync
-                ,added: this.added.map(r => r.getState())
-                ,updated: this.updated.map(r => r.getState())
+                ,added: this.added
+                ,updated: this.updated
                 ,deleted: this.deleted}
-
     }
 }
 
@@ -947,23 +946,17 @@ export class OfflineData {
     transactionId:string;
     clientId:string;
     tables:Array<TableOfflineData> = new Array<TableOfflineData>();
+    resources:{[id:string]:BaseResource} = {};
 
-    constructor(lists:ResourceCollection<BaseResource>[]){
-        this.init(lists);
-    }
-
-    init(lists:ResourceCollection<BaseResource>[]){
-        this.transactionId = ""
-        this.clientId = ""
-        lists.forEach(li => {
-            this.tables.push(li.offlineData);
-        })
+    constructor(){
+        this.transactionId = "";
+        this.clientId = "";
     }
 
 
     asJson(){
-        var jsonData = {transactionId: this.transactionId, clientId: this.clientId, tables:[] }
-        this.tables.forEach(t => jsonData.tables.push(t.asJSON()))
+        var jsonData = {transactionId: this.transactionId, clientId: this.clientId, resources:{}, tables:[] }
+        this.tables.forEach(t => jsonData.tables.push(t.asJSON(jsonData.resources)))
         return jsonData;
     }
 
@@ -974,173 +967,69 @@ export class OfflineData {
 
 }
 
-export class SyncSuccessHandler{
+export class SyncResponseHandler{
     constructor(public offlineData:OfflineData, public ds:DataService, public cs:CacheService){
     
     }
     sync():Observable<any>{
-        this.syncMem()
-        return this.syncCache();
+        return this.syncMem()
     }
 
     private syncMem(){
         //Delete exting added items because we will add items
         //from newly created in server
+        let oles = [] as Array<Observable<any>>;
+        let resources = this.offlineData.resources;
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
-            li.offlineData.added.forEach(j => {
-                li.remove(j);
+            let table = this.ds.getTable(li); 
+            li.offlineData.deleted.forEach(j => {
+                li.remove(ResourceCollection.all[j])
+                oles.push(this.cs.deleteItem(table, j));
             })
         })
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
-            i.added.forEach(j => {
-                let res = new li.type(j) as BaseResource;
-                li.add(res)
+            let table = this.ds.getTable(li);
+            i.added.forEach(i => {
+                let j = <string>i;
+                if(resources[j].error_messages){
+                    let r = li.getItem("id", j)
+                    if(resources[j].error_messages.length == 0){
+                        r.id = resources[j].id;
+                    }
+                    else{
+                        r.error_messages = resources[j].error_messages;
+                    }
+                    oles.push(this.cs.updateItem(r))
+                }
+                else{
+                    let r = new li.type(resources[j])
+                    oles.push(this.cs.addItem(r));
+                    li.add(r);
+                }
             })
         })
 
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             i.updated.forEach(j => {
-                let res = li.getItem("id", j.id);
-                res.loadState(j);
+                let msg = resources[j].error_messages
+                let r = li.getItem("id", j) as BaseResource;
+                if(msg && msg.length == 0){
+                    //No action requred
+                }
+                else{
+                   if(msg)
+                       r.error_messages = msg;
+                   else
+                       r.loadState(resources[j])
+                   oles.push(this.cs.updateItem(r))         
+                }
             })
         })
 
-        this.offlineData.tables.forEach(i => {
-            let li = this.ds[i.name] as ResourceCollection<BaseResource>;
-            i.deleted.forEach(j => {
-                let res = li.getItem("id", j.id);
-                res.loadState(j);
-            })
-        })
-
-
-
-    }
-
-
-    private syncCache():Observable<any>{
-        //Delete exting added items because we will add items
-        //from newly created in server
-        return Observable.create(or =>{
-            let a = Observable.from(this.offlineData.tables)
-                              .flatMap(t => {
-                     let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                     return Observable.from(li.offlineData.added)
-                           .map(i => this.cs.deleteItem(li.type.table, i.id))
-                           .concatAll()
-                })
-            let b = Observable.from(this.offlineData.tables)
-                              .flatMap(t => {
-                     let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                     return Observable.from(t.added)
-                                     .map(i => this.cs.addItem(i))
-                                     .concatAll()             
-                              })
-
-            let c = Observable.from(this.offlineData.tables)
-                              .flatMap(t => {
-                     let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                     return Observable.from(t.updated)
-                                     .map(i => this.cs.updateItem(i))
-                                     .concatAll()             
-                              })
-          let d = Observable.from(this.offlineData.tables)
-                            .flatMap(t => {
-                   let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                   return Observable.from(t.deleted)
-                                   .map(i => this.cs.deleteItem(li.type.table, i))
-                                   .concatAll()             
-                            })
-
-           Observable.from([a, b, c, d])
-                     .concatAll()
-                     .subscribe(res =>{
-
-                     }, err => {
-
-                     }, () => {
-
-                     })
-        })
-    }
-}
-
-export class SyncFailureHandler{
-    constructor(public offlineData:OfflineData, public ds:DataService, public cs:CacheService){
-    
-    }
-    sync():Observable<any>{
-        this.syncMem()
-        return this.syncCache();
-    }
-
-    private syncMem(){
-        
-
-        this.offlineData.tables.forEach(i => {
-            let li = this.ds[i.name] as ResourceCollection<BaseResource>;
-            i.added.forEach(j => {
-                let res = li.getItem("id", j.id);
-                res.error_code = j.error_code;
-                res.error_messages = j.error_messages;
-            })
-            i.updated.forEach(j => {
-                let res = li.getItem("id", j.id);
-                res.error_code = j.error_code;
-                res.error_messages = j.error_messages;
-            })
-        })
-
-        this.offlineData.tables.forEach(i => {
-            let li = this.ds[i.name] as ResourceCollection<BaseResource>;
-            i.deleted.forEach(j => {
-                let res = li.getItem("id", j.id);
-                li.remove(res);
-            })
-        })
-    }
-
-
-    private syncCache():Observable<any>{
-        //Delete exting added items because we will add items
-        //from newly created in server
-        return Observable.create(or =>{
-            let a = Observable.from(this.offlineData.tables)
-                              .flatMap(t => {
-                     let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                     return Observable.from(li.offlineData.deleted)
-                           .map(i => this.cs.deleteItem(li.type.table, i.id))
-                           .concatAll()
-                })
-            let b = Observable.from(this.offlineData.tables)
-                              .flatMap(t => {
-                     let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                     return Observable.from(t.added)
-                                     .map(i => this.cs.updateItem(li.getItem("id", i.id)))
-                                     .concatAll()             
-                              })
-
-            let c = Observable.from(this.offlineData.tables)
-                              .flatMap(t => {
-                     let li = this.ds[t.name] as ResourceCollection<BaseResource>;
-                     return Observable.from(t.updated)
-                                     .map(i => this.cs.updateItem(li.getItem("id", i.id)))
-                                     .concatAll()             
-                              })
-
-           Observable.from([a, b, c])
-                     .concatAll()
-                     .subscribe(res =>{
-
-                     }, err => {
-
-                     }, () => {
-
-                     })
-        })
+        return Observable.from(oles).map(i => i).concatAll();
     }
 }
 
@@ -1170,7 +1059,7 @@ export class ChangeHandler{
             let items = res.getChildItems();
             items = [res].concat(items);
             let li = this.ds[res.getTable()] as ResourceCollection<BaseResource>;
-            let op = li.offlineData.deleted.indexOf(res) >= 0?'deleted':null;
+            let op = li.offlineData.deleted.indexOf(res.id) >= 0?'deleted':null;
             if (!op){
                 op = res.newItem ?'added':'updated';
             }

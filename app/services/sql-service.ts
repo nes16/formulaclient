@@ -179,7 +179,7 @@ export class SqlService {
 			this.storage.query(stmt).then((res) => {
 				if(or){
 					//Send the statement string with result
-					console.log('TEMMMMMM----------'+stmt)
+					//console.log('TEMMMMMM----------'+stmt)
 					if(res.res)
 						res.res.stmt = stmt;
 					or.next(res.res);
