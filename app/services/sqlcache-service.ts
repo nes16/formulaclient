@@ -14,12 +14,12 @@ export class SqlCacheService implements CacheService{
 		return this.sqlService.init()
 	}
 
-	deleteItem(table:string, id:number):Observable<any>{
+	deleteItem(table:string, id:string):Observable<any>{
         let cond = { and: { id: { cond: '=', value: id } } };
 		return this.sqlService.query({type:"delete", table:table, obj:null, cond:cond})
 	}
 
-	deleteMany(table:string, ids:Array<number>):Observable<any>{
+	deleteMany(table:string, ids:Array<string>):Observable<any>{
 		let cond = { and: { id: { cond: 'in', value: ids } } };
 		return  this.sqlService.query({type:"delete", table:table, obj:null, cond:cond})
 	}

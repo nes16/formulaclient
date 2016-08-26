@@ -143,8 +143,9 @@ export class ResourceCollection<T extends BaseResource>{
 }
 
 export class BaseResource {
-    id: number;
+    id: string;
     name: string;
+    newItem: boolean = false;
     lock_version:number;
     static errors_messages:any = {
         0:"Success",
@@ -210,7 +211,7 @@ export class BaseResource {
     }
 
     
-    initMeasure(info:any, property_id:number, unit_id:number):Measure{
+    initMeasure(info:any, property_id:string, unit_id:string):Measure{
         if(property_id){
             var plist = info.plist.resources as Array<Property>;
             var p = plist.find(p => p.id == property_id)
@@ -260,7 +261,7 @@ export class Unit extends BaseResource {
     description: string;
     approx: boolean;
     factor: string;
-    property_id: number;
+    property_id: string;
     
 
     //local members
@@ -481,7 +482,7 @@ export class Property extends BaseResource {
 
 
 export class Global extends BaseResource {
-    unit_id: number;
+    unit_id: string;
     value: string;
     symbol: string;
     static table:string = "globals";
@@ -599,8 +600,8 @@ export class Measure {
 export class Formula extends BaseResource {
     symbol: string;
     latex: string;
-    property_id: number;
-    unit_id: number;
+    property_id: string;
+    unit_id: string;
     static table: string = "formulas";
 
     //private
@@ -695,9 +696,9 @@ export class Formula extends BaseResource {
 }
 
 export class Variable extends BaseResource {
-    unit_id: number = null;
-    property_id: number;
-    formula_id: number;
+    unit_id: string = null;
+    property_id: string;
+    formula_id: string;
     symbol: string;
     static table:string = "variables";
     
@@ -764,8 +765,8 @@ export class Variable extends BaseResource {
 
 
 export class FG extends BaseResource {
-    formula_id: number;
-    global_id: number;
+    formula_id: string;
+    global_id: string;
     static table:string = "fgs"
 
     _formula: Formula;
@@ -1171,7 +1172,7 @@ export class ChangeHandler{
             let li = this.ds[res.getTable()] as ResourceCollection<BaseResource>;
             let op = li.offlineData.deleted.indexOf(res) >= 0?'deleted':null;
             if (!op){
-                op = res.id > 0?'added':'updated';
+                op = res.newItem ?'added':'updated';
             }
             else
                 op = 'updated'
@@ -1278,7 +1279,7 @@ export function pass(or){
 }
 
 export interface CacheService{
-    deleteItem(table:string, id:number):Observable<any>;
+    deleteItem(table:string, id:string):Observable<any>;
     addItem(item:BaseResource):Observable<any>;
     updateItem(item:BaseResource):Observable<any>;
     selectAll(table:string):Observable<any>;

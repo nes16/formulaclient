@@ -9,6 +9,7 @@ import { SyncSuccessHandler, SyncFailureHandler, Category, States, OpCodes, Item
 import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
 import { UIStateService } from './ui-state-service'
 import { Platform } from 'ionic-angular';
+import { UUID } from 'angular2-uuid';
 
 @Injectable()
 export class DataService {
@@ -162,8 +163,11 @@ export class DataService {
     
     _saveItem(r:BaseResource){
       let li = this[r.getTable()] as ResourceCollection<BaseResource>;
-      if(r.id == null)
+      if(r.id == null){
+        r.id = UUID.UUID();
+        r.newItem = true;
         li.add(r);
+      }
       else if(r.deleted)
         li.remove(r);
       else
@@ -185,13 +189,8 @@ export class DataService {
 
       let saveOle =  Observable.from(items)
       .map(r => {
-        if(r.id == null)
-          return Observable.create(or => this.cache.addItem(r)
-            .subscribe(res => {
-              r.id = res.insertId;
-              or.next(res);
-            },err=>or.error(err)
-              ,() => or.complete()))
+        if(r.newItem)
+          return this.cache.addItem(r)
         else if(r.deleted)
           return this.cache.deleteItem(r.getTable(), r.id);
         else if(r.isChanged())
@@ -207,7 +206,7 @@ export class DataService {
 
       let syncOle = this.sync(this.properties);
 
-      return Observable.from([saveOle, saveOfflineOle, ])
+      return Observable.from([saveOle, saveOfflineOle])
       .concatAll()
     }
 
