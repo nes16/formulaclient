@@ -96,12 +96,14 @@
         <template [ngSwitchCase]="'error'">
             <ion-list>
                 <ion-item>
-                    <ion-label stacked>{{errorInfo.message}}</ion-label>
+                    <ion-label stacked>{{errorInfo.common_message}}</ion-label>
                 </ion-item>
-                <template [ngIf]="errorInfo.fieldErrors">
-                    <ion-item *ngFor="let f of errorInfo.fieldErrors">
-                        <ion-label >{{f.name}}</ion-label>
-                        <ion-label >{{f.errors}}</ion-label>
+                <template [ngIf]="hasFieldErrors()">
+                    <ion-item *ngFor="let f of Object.keys(errorInfo)">
+                        <ion-label >{{f}}</ion-label>
+                        <p *ngFor="let e of errorInfo[f]">
+                            e
+                        </p>
                     </ion-item>
                 </template>
                 <ion-item>

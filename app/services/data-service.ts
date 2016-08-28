@@ -73,8 +73,10 @@ export class DataService {
             this.initListItem(li)
             console.log('Info:Initializing list complete')
           })
+          this.sync(list).subscribe();
         }
       })
+
     }
 
 
@@ -123,27 +125,32 @@ export class DataService {
       var lists = this.getDepentent(li);
       return Observable.create(or => {
         var offLineData = DataService.allOff;
-        let info = {syncInfo: offLineData.asJson()};
+        let info = {syncInfo: offLineData.asJson(lists)};
         console.log(JSON.stringify(info, null, 2));
-        or.complete()
+        //or.complete()
         //Handle response for sync opertaion
-        // var syncResponse = null;
-        // this.remoteService
-        // .sync({syncInfo: offLineData.asJson()})
-        // .subscribe(res=>{
-        //     this.handleSyncResponse(res)
-        //     .subscribe(res=>{
-        //       or.netx(res);
-        //     },err=>{
-        //       or.error(err);
-        //     },()=>{
-        //     })
-        //   },
-        //   err=>{
-        //     console.log(err);
-        //     or.error(err);
-        //   },
-        //   ()=>or.complete())
+        var syncResponse = null;
+        this.remoteService
+        .sync({syncInfo: offLineData.asJson(lists)})
+        .subscribe(res=>{
+            console.log(JSON.stringify(res, null, 2));
+            this.handleSyncResponse(res)
+            .subscribe(res=>{
+              or.next(res);
+              lists.forEach(li => {
+                if(li.eor)
+                  li.eor.next(li.findErrorItems())
+              })
+            },err=>{
+              or.error(err);
+            },()=>{
+              or.complete()
+            })
+          },
+          err=>{
+            console.log(err);
+            or.error(err);
+          })
       })
     }
 
@@ -154,23 +161,25 @@ export class DataService {
       //Resource lists of each table
       return new SyncResponseHandler(offlineData, this,  this.cache).sync();
     }
-
-
     
 
     removeItem(r:BaseResource):Observable<any>{
       let items = [r];
+      let oles = [] as Observable<any>[];
+      let li = this[r.getTable()] as ResourceCollection<BaseResource>;
       if(r.getTable() == 'properties'){
         let prop = r as Property;
         items = items.concat(prop.getChildItems());
       }
       items.forEach(i => {
-        let li = this[r.getTable()] as ResourceCollection<BaseResource>;
-        li.remove(r);
+        let li = this[i.getTable()] as ResourceCollection<BaseResource>;
+        li.remove(i);
+        oles.push(this.cache.deleteItem(i.getTable(), i.id));
       })
-      return Observable.from(items)
-        .map(r => this.cache.deleteItem(r.getTable(), r.id))
-        .concatAll()
+      oles.push(this.saveOfflineData(li))
+      return Observable.from(oles)
+      .map(i => i)
+      .concatAll();
     }
     
     _saveItem(r:BaseResource){
@@ -247,6 +256,33 @@ export class DataService {
       }
     }
 
+    getReferingList(list):ResourceCollection<BaseResource>[]{
+      switch (list) {
+        case this.properties:
+          return [this.units, this.formulas, this.variables];
+        case this.globals:
+          return [this.fgs]
+        case this.formulas:
+          return [this.fgs, this.variables]
+        case this.variables:
+        case this.fgs:
+          return [];
+      }
+    }
+    getRefIdColumn(list):string{
+        switch (list) {
+          case this.properties:
+            return 'property_id';
+          case this.units:
+            return 'unit_id'
+          case this.globals:
+            return 'global_id';
+          case this.formulas:
+            return 'formula_id'
+          default:
+            throw('Dataserver:Invalid list passed to getRefIdColumn');
+        }
+    }
     publishErrors(list){
       switch (list) {
         case this.properties:

@@ -48,6 +48,12 @@ export class SqlCacheService implements CacheService{
 
     }
     
+    updateIds(list:string, idField:string, oldId:string, newId:string){
+        let cond = { and: { id: { cond: '=', value: oldId } } };
+        let obj = {id:newId}
+        return this.sqlService
+                    .query({type:"update", list, obj:obj, cond:cond})        
+    }
 
     selectAll(table:string):Observable<any>{
     	let param = {type:"select", table:table, obj:null, cond:null}

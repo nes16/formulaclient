@@ -54,8 +54,8 @@ export class ResourceCollection<T extends BaseResource>{
     }
 
     findErrorItems(){
-        var errorItems = this.offlineData.getAll().map(i => DataService.allOff.resources[i]).filter(i => i.error_code > 0);
-        var childItems = this.resources.filter(i => i.getChildItems().some(j => j.error_code > 0))
+        var errorItems = this.offlineData.getAll().map(i => ResourceCollection.all[i]).filter(i => i.hasError());
+        var childItems = this.resources.filter(i => i.getChildItems().some(j => j.hasError()));
         errorItems = errorItems.concat(childItems.filter(i => errorItems.indexOf(i) == -1))
         return errorItems;
     }
@@ -85,12 +85,13 @@ export class ResourceCollection<T extends BaseResource>{
     }
 
 
-    remove(r1:T){
+    remove(r1:T, syncronizing:boolean =false){
         var r = this.getItem("id", r1.id)
         if(r){
             this.resources.splice(this.resources.indexOf(r), 1)
             delete ResourceCollection.all[r.id]
-            this.offlineData.addResource(r1, "deleted")
+            if(!syncronizing)
+                this.offlineData.addResource(r1, "deleted")
         }
     }
 
@@ -150,6 +151,8 @@ export class BaseResource {
     name: string;
     newItem: boolean = false;
     lock_version:number;
+    error_messages:any;
+
     static errors_messages:any = {
         0:"Success",
         1:"Validation error",
@@ -170,8 +173,6 @@ export class BaseResource {
     //Internal
     deleted:string;
     oldState:any;
-    error_code:number;
-    error_messages:any = null;
     constructor(state){
         this.loadState(state);
     }
@@ -185,15 +186,27 @@ export class BaseResource {
         this.name = state.name;
         this.deleted = state.deleted;
         this.lock_version = state.lock_version;
-        this.error_code = state.error_code;
         if(state.error_messages)
-            this.error_messages = JSON.stringify(state.error_messages);
+            this.error_messages = JSON.parse(state.error_messages);
+        else
+            this.error_messages = {}
+
         if(this.lock_version == null)
             this.lock_version = 0;
     }
 
     getState(){
-        return { id: this.id, name: this.name, lock_version:this.lock_version };
+        let error_messages:string;
+        if(this.hasError()){
+            error_messages = JSON.stringify(this.error_messages); 
+        }
+        else
+            error_messages = null;
+        return { id: this.id, 
+                 name: this.name,
+                 lock_version:this.lock_version,
+                 error_messages:error_messages
+                  };
     }
 
 
@@ -212,9 +225,8 @@ export class BaseResource {
     getTable(){
         return "";
     }
-
     
-    initMeasure(info:any, property_id:string, unit_id:string):Measure{
+    static initMeasure(info:any, property_id:string, unit_id:string):Measure{
         if(property_id){
             var plist = info.plist.resources as Array<Property>;
             var p = plist.find(p => p.id == property_id)
@@ -240,19 +252,15 @@ export class BaseResource {
         this.oldState = this.getState();
     }
     
-    getErrorInfo(){
-        var errorInfo:any = {};
-        errorInfo.message = BaseResource.errors_messages[this.error_code];
-        if(this.error_messages){
-            errorInfo.fieldErrors = Object.keys(this.error_messages).map(i => {
-                var str = i+":";
-                this.error_messages[i].forEach(k => str=str+k+"\n")
-                return str;
-            })
-        }
-        errorInfo.fieldErrors = [];
+    hasError():boolean{
+        return Object.keys(this.error_messages).length != 0
+    }
 
-        return errorInfo;
+    getErrorMessages(){
+        if(this.hasError())
+            return this.error_messages;
+        else
+            return null;
     }
 }
     
@@ -292,6 +300,7 @@ export class Unit extends BaseResource {
         }
     }
     
+
 
     getState(){
         if(this.Property)
@@ -503,7 +512,7 @@ export class Global extends BaseResource {
     }
 
     init(info:any){
-        this._measure = this.initMeasure(info, null, this.unit_id)
+        this._measure = BaseResource.initMeasure(info, null, this.unit_id)
     }
 
     getTable(){
@@ -632,7 +641,7 @@ export class Formula extends BaseResource {
     }
 
     init(info:any){
-        this._measure = this.initMeasure(info, this.property_id, this.unit_id);
+        this._measure = BaseResource.initMeasure(info, this.property_id, this.unit_id);
         this._variables = info.vlist.resources.filter(i => i.formula_id == this.id)
         this._variables.forEach(i => {
             i.init({formula:this, ulist:info.ulist, plist:info.plist});
@@ -719,7 +728,7 @@ export class Variable extends BaseResource {
     init(info){
         if(info.formula){
             this._formula = info.formula;
-            this._measure = this.initMeasure(info, this.property_id, this.unit_id);
+            this._measure = BaseResource.initMeasure(info, this.property_id, this.unit_id);
         }
     }
 
@@ -923,6 +932,7 @@ export class TableOfflineData {
             this.added = jobj.added;
             this.updated = jobj.updated;
             this.deleted = jobj.deleted;
+            this.lastSync = jobj.lastSync;
         }
     }
 
@@ -930,9 +940,9 @@ export class TableOfflineData {
         return this;
     }
 
-    asJSON(resources:any){
+    asJSON(resources){
          this.added.concat(this.updated).forEach(id => {
-            //this.resources[id] =   ResourceCollection.all[id].getState() as BaseResource;
+           resources[id] = ResourceCollection.all[id].getState();
          })
          return {name: this.name
                 ,lastSync:this.lastSync
@@ -945,18 +955,18 @@ export class TableOfflineData {
 export class OfflineData {
     transactionId:string;
     clientId:string;
-    tables:Array<TableOfflineData> = new Array<TableOfflineData>();
+    //For server data
     resources:{[id:string]:BaseResource} = {};
-
+    tables:TableOfflineData[] = new Array<TableOfflineData>();
     constructor(){
         this.transactionId = "";
         this.clientId = "";
     }
 
 
-    asJson(){
+    asJson(tables:ResourceCollection<BaseResource>[]){
         var jsonData = {transactionId: this.transactionId, clientId: this.clientId, resources:{}, tables:[] }
-        this.tables.forEach(t => jsonData.tables.push(t.asJSON(jsonData.resources)))
+        tables.forEach(t => jsonData.tables.push(t.offlineData.asJSON(jsonData.resources)))
         return jsonData;
     }
 
@@ -980,33 +990,47 @@ export class SyncResponseHandler{
         //from newly created in server
         let oles = [] as Array<Observable<any>>;
         let resources = this.offlineData.resources;
+
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
+            li.offlineData.deleted = [];
             let table = this.ds.getTable(li); 
             li.offlineData.deleted.forEach(j => {
-                li.remove(ResourceCollection.all[j])
+                li.remove(ResourceCollection.all[j], true)
                 oles.push(this.cs.deleteItem(table, j));
             })
         })
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             let table = this.ds.getTable(li);
-            i.added.forEach(i => {
-                let j = <string>i;
-                if(resources[j].error_messages){
-                    let r = li.getItem("id", j)
-                    if(resources[j].error_messages.length == 0){
-                        r.id = resources[j].id;
+            i.added.forEach(j => {
+                let r = new li.type(resources[j]) as BaseResource;
+                r.id = j;
+                let lr = li.getItem("id",j) 
+                if(lr){
+                    let oldId = j;
+                    if(!r.hasError()){
+                        lr.id = r.id;
+                        lr.error_messages = {}
+                        oles.push(this.cs.updateItem(lr))
+                        let dts = this.ds.getReferingList(li);
+                        let refId_col = this.ds.getRefIdColumn(li);
+                        dts.map(t => this.ds.getTable(t)).forEach(t => {
+                            oles.push(this.cs.updateIds(t, refId_col, oldId, r.id));
+                        })
+                        ResourceCollection[lr.id]=lr;
+                        let index = li.offlineData.added.indexOf(j);
+                        li.offlineData.added.splice(index, 1)
                     }
                     else{
-                        r.error_messages = resources[j].error_messages;
+                        lr.error_messages = r.error_messages;
+                        oles.push(this.cs.updateItem(lr));
                     }
-                    oles.push(this.cs.updateItem(r))
+                    
                 }
                 else{
-                    let r = new li.type(resources[j])
                     oles.push(this.cs.addItem(r));
-                    li.add(r);
+                    li.add(r, true);
                 }
             })
         })
@@ -1014,21 +1038,36 @@ export class SyncResponseHandler{
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             i.updated.forEach(j => {
-                let msg = resources[j].error_messages
-                let r = li.getItem("id", j) as BaseResource;
-                if(msg && msg.length == 0){
-                    //No action requred
-                }
-                else{
-                   if(msg)
-                       r.error_messages = msg;
-                   else
-                       r.loadState(resources[j])
-                   oles.push(this.cs.updateItem(r))         
-                }
+               let r = new li.type(resources[j]) as BaseResource;
+               let lr = li.getItem("id", j) as BaseResource;
+               if(r.hasError()){
+                   lr.error_messages = r.error_messages;
+                   oles.push(this.cs.updateItem(lr))         
+               }
+               else{
+                   let index = li.offlineData.updated.indexOf(j);
+                   if(lr.hasError()){
+                       lr.error_messages = {} 
+                       oles.push(this.cs.updateItem(lr))
+                   }
+                   li.offlineData.updated.splice(index, 1)
+               }
             })
         })
-
+        this.offlineData.tables.forEach(i => {
+            let li = this.ds[i.name] as ResourceCollection<BaseResource>;
+            li.offlineData.lastSync = i.lastSync;
+            oles.push(this.ds.saveOfflineData(li));
+        })
+        this.offlineData.tables.forEach(t => {
+            let li = this.ds[t.name] as ResourceCollection<BaseResource>;
+            let all = t.updated.concat(t.added);
+            let param = this.ds.getInitParameters(li);
+            all.forEach(i => {
+                ResourceCollection.all[i].init(param);
+            })
+        })
+       
         return Observable.from(oles).map(i => i).concatAll();
     }
 }
@@ -1171,6 +1210,7 @@ export interface CacheService{
     deleteItem(table:string, id:string):Observable<any>;
     addItem(item:BaseResource):Observable<any>;
     updateItem(item:BaseResource):Observable<any>;
+    updateIds(list:string, idField:string, oldId:string, newId:string  ):Observable<any>;
     selectAll(table:string):Observable<any>;
     setKV(key:string, value:string):Observable<any>;
     getKV(key:string):Observable<any>;

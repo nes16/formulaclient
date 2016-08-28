@@ -10,14 +10,14 @@ import {ResourceCollection, Unit, Property/*, Category, Formula*/} from '../type
 @Injectable()
 export class SqlService {
 	createTableStmts: string[] = [
-		'CREATE TABLE IF NOT EXISTS "properties" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "dims" varchar, "user_id" integer, "shared" boolean, "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "units" ("id" varchar PRIMARY KEY NOT NULL, "property_id" varchar, "name" varchar, "system" varchar,  "symbol" varchar,  "description" varchar, "approx" boolean, "factor" varchar,  "user_id" integer, "shared" boolean, "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "formulas" ("id" varchar PRIMARY KEY NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "favorites" ("id" varchar PRIMARY KEY NOT NULL, "user_id" integer, "favoritable_id" varchar, "favoritable_type" varchar, "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "globals" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "value" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "fgs" ("id" varchar PRIMARY KEY NOT NULL, "formula_id" varchar, "global_id" varchar, "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "variables" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "formula_id" varchar, "property_id" varchar, "lock_version" integer, "error_code" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "categories" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "parent_id" varchar, "lock_version" integer, "error_code" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "properties" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "dims" varchar, "user_id" integer, "shared" boolean, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "units" ("id" varchar PRIMARY KEY NOT NULL, "property_id" varchar, "name" varchar, "system" varchar,  "symbol" varchar,  "description" varchar, "approx" boolean, "factor" varchar,  "user_id" integer, "shared" boolean, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "formulas" ("id" varchar PRIMARY KEY NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "favorites" ("id" varchar PRIMARY KEY NOT NULL, "user_id" integer, "favoritable_id" varchar, "favoritable_type" varchar, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "globals" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "value" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "fgs" ("id" varchar PRIMARY KEY NOT NULL, "formula_id" varchar, "global_id" varchar, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "variables" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "formula_id" varchar, "property_id" varchar, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "categories" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "parent_id" varchar, "lock_version" integer, "error_messages" varchar);',
 	]
 	storage: Storage;
 	tables: string[] = ["properties", "units", "formulas", "favorites", "globals", "fgs", "variables", "categories"]
@@ -52,6 +52,7 @@ export class SqlService {
 						 .map(t => this._query('DROP TABLE ' + t))
 						 .concat([this._query('DELETE FROM kv')])
 						 .concatAll()
+						 .catch(err => {console.log('Drop failed' + err); return Observable.empty()})
 	}
 
 	createTables():Observable<any> {
@@ -179,7 +180,7 @@ export class SqlService {
 			this.storage.query(stmt).then((res) => {
 				if(or){
 					//Send the statement string with result
-					//console.log('TEMMMMMM----------'+stmt)
+					console.log('TEMMMMMM----------'+stmt)
 					if(res.res)
 						res.res.stmt = stmt;
 					or.next(res.res);
@@ -197,6 +198,8 @@ export class SqlService {
 	getKV(key:string):any {
 		return Observable.create(or => {
 			this.storage.get(key).then((res) => {
+				console.log('TEMMMMMM----getKV------'+key)
+
 				or.next(res)
 					or.complete();
 				},
@@ -209,6 +212,7 @@ export class SqlService {
 	setKV(key:string, obj:any):Observable<any>{
 		return Observable.create(or => {
 				this.storage.set(key, obj).then(res => {
+					console.log('TEMMMMMM----setKV------'+key)
 					or.next(res)
 					or.complete();
 				},

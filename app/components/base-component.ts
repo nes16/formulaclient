@@ -51,10 +51,11 @@ export class BaseComponent {
 		//Load the page
 		this.nav.push(this.detailPage, {  'currResource': this.resource })
 	}
+	
 	onErrorCmd(evt){
 		//Save 
-		var errorInfo = this.resource.getErrorInfo();
-		this.uiStateService.showErrorModal(this.nav, errorInfo);
+		var error_messages = this.resource.getErrorMessages();
+		this.uiStateService.showErrorModal(this.nav, error_messages);
 	}
 
 	onRemoveCmd(evt){
