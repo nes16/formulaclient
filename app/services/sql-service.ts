@@ -188,6 +188,7 @@ export class SqlService {
 				}
 			},(err) => {
 				//Send the stmt string with error
+				console.log('ERROR:TEMMMMMM----------'+stmt)
 				if(err.err)
 					err.err.stmt = stmt;
 				or.error(err)

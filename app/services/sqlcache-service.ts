@@ -48,11 +48,12 @@ export class SqlCacheService implements CacheService{
 
     }
     
-    updateIds(list:string, idField:string, oldId:string, newId:string){
-        let cond = { and: { id: { cond: '=', value: oldId } } };
-        let obj = {id:newId}
+    updateIds(list:string, idField:string, oldId:string, newObj:any){
+        let cond = { and: {  } };
+        cond.and[idField] = {cond: '=', value:oldId}
+        let obj = newObj;
         return this.sqlService
-                    .query({type:"update", list, obj:obj, cond:cond})        
+                    .query({type:"update", table:list, obj:obj, cond:cond})        
     }
 
     selectAll(table:string):Observable<any>{
@@ -67,4 +68,4 @@ export class SqlCacheService implements CacheService{
     	return this.sqlService.getKV(key)
     }
 
-}
+}    

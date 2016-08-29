@@ -192,7 +192,8 @@ export class DataService {
       else if(r.deleted)
         li.remove(r);
       else
-        li.onUpdate(r);
+        if(r.isChanged())
+          li.onUpdate(r);
     }  
 
     saveItemRecursive(r:BaseResource):Observable<any>{
@@ -201,6 +202,11 @@ export class DataService {
       if(r.getTable() == 'properties'){
         let prop = r as Property;
         items = items.concat(prop.DefaultUnit);
+      }
+      else if(r.getTable() == 'formulas'){
+        let r1 = r as Formula;
+        items = items.concat(r1.Globals);
+        items = items.concat(r1.Variables)
       }
       items.forEach(i => {
         this._saveItem(i)
@@ -214,18 +220,20 @@ export class DataService {
           return this.cache.addItem(r)
         else if(r.deleted)
           return this.cache.deleteItem(r.getTable(), r.id);
-        else if(r.isChanged())
+        else if(r.isChanged()){
           return this.cache.updateItem(r)
+        }
         else
           return Observable.empty();
       })
       .concatAll()
 
+
       let saveOfflineOle = Observable.from(lists)
       .map(li => this.saveOfflineData(li))
       .concatAll()
 
-      let syncOle = this.sync(this.properties);
+      let syncOle = this.sync(this[r.getTable()]);
 
       return Observable.from([saveOle, saveOfflineOle, syncOle])
       .concatAll()
@@ -250,7 +258,7 @@ export class DataService {
         case this.formulas:
         case this.variables:
         case this.fgs:
-        return [this.properties, this.units, this.variables, this.globals, this.formulas, this.fgs]
+        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables]
         default:
         return [list];
       }
@@ -260,6 +268,8 @@ export class DataService {
       switch (list) {
         case this.properties:
           return [this.units, this.formulas, this.variables];
+        case this.units:
+          return [this.globals, this.formulas, this.variables];
         case this.globals:
           return [this.fgs]
         case this.formulas:
@@ -279,6 +289,10 @@ export class DataService {
             return 'global_id';
           case this.formulas:
             return 'formula_id'
+          case this.fgs:
+            return 'fg_id';
+          case this.variables:
+            return 'variable_id'
           default:
             throw('Dataserver:Invalid list passed to getRefIdColumn');
         }

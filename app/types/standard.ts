@@ -942,7 +942,10 @@ export class TableOfflineData {
 
     asJSON(resources){
          this.added.concat(this.updated).forEach(id => {
-           resources[id] = ResourceCollection.all[id].getState();
+           let state = ResourceCollection.all[id].getState();
+           delete state.id;
+           delete state.error_messages;
+           resources[id] = state;
          })
          return {name: this.name
                 ,lastSync:this.lastSync
@@ -1005,30 +1008,33 @@ export class SyncResponseHandler{
             let table = this.ds.getTable(li);
             i.added.forEach(j => {
                 let r = new li.type(resources[j]) as BaseResource;
-                r.id = j;
                 let lr = li.getItem("id",j) 
                 if(lr){
                     let oldId = j;
                     if(!r.hasError()){
                         lr.id = r.id;
                         lr.error_messages = {}
-                        oles.push(this.cs.updateItem(lr))
+                        oles.push(this.cs.updateIds(table, "id", j, {id:lr.id, error_messages:null}))
                         let dts = this.ds.getReferingList(li);
                         let refId_col = this.ds.getRefIdColumn(li);
                         dts.map(t => this.ds.getTable(t)).forEach(t => {
-                            oles.push(this.cs.updateIds(t, refId_col, oldId, r.id));
+                            let obj = {}
+                            obj[refId_col]=r.id;
+                            oles.push(this.cs.updateIds(t, refId_col, oldId, obj));
                         })
                         ResourceCollection[lr.id]=lr;
                         let index = li.offlineData.added.indexOf(j);
                         li.offlineData.added.splice(index, 1)
                     }
                     else{
+
                         lr.error_messages = r.error_messages;
                         oles.push(this.cs.updateItem(lr));
                     }
                     
                 }
                 else{
+                    r.id = j;
                     oles.push(this.cs.addItem(r));
                     li.add(r, true);
                 }
@@ -1046,11 +1052,16 @@ export class SyncResponseHandler{
                }
                else{
                    let index = li.offlineData.updated.indexOf(j);
-                   if(lr.hasError()){
+                   if(index >= 0){
                        lr.error_messages = {} 
+                       lr.lock_version = r.lock_version;
+                       oles.push(this.cs.updateItem(lr))
+                       li.offlineData.updated.splice(index, 1)
+                   }
+                   else{
+                       lr.loadState(r.getState());
                        oles.push(this.cs.updateItem(lr))
                    }
-                   li.offlineData.updated.splice(index, 1)
                }
             })
         })
@@ -1210,7 +1221,7 @@ export interface CacheService{
     deleteItem(table:string, id:string):Observable<any>;
     addItem(item:BaseResource):Observable<any>;
     updateItem(item:BaseResource):Observable<any>;
-    updateIds(list:string, idField:string, oldId:string, newId:string  ):Observable<any>;
+    updateIds(list:string, idField:string, oldId:string, newId:any  ):Observable<any>;
     selectAll(table:string):Observable<any>;
     setKV(key:string, value:string):Observable<any>;
     getKV(key:string):Observable<any>;
