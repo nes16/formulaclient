@@ -155,10 +155,13 @@ export class DataService {
           var syncResponse = null;
           this.remoteService
               .sync({syncInfo: offLineData.asJson()})
+              .catch(err =>{
+                return Observable.empty();
+              })
               .subscribe(od => {
                 or.next(od);
                 syncResponse = od;
-              }, err=>or.erro(err), ()=>{
+              }, err=>or.error(err), ()=>{
                   if(syncResponse){
                     if(syncResponse.status == 'success'){
                         var innerObs = this.handleSyncResponse(syncResponse);
@@ -740,20 +743,23 @@ export class DataService {
     }
 
     isUnique(table:string, field:string, value:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
-     if(this.uiService.IsOnline)
+     
        return Observable.create(or => {
+        var response = null;
+
          this.remoteService
              .isUnique({table:table, field:field, value:value})
              .subscribe(od => {
+               response = od;
                or.next(od);
-             }, err=>or.erro(err), ()=>or.complete())
-       })
-     else
-       return Observable.create(or => {
-            if(this[table].find(predicate, null))
-              or.next(false), or.complete();
-            else
-              or.next(true), or.complete();
+             }, err=>or.error(err), ()=>{
+               if(response == null){
+                 if(this[table].find(predicate, null))
+                   or.next({unique:false}), or.complete();
+                 else
+                   or.next({unique:true}), or.complete();
+               }
+             })
        })
     }
 

@@ -44,21 +44,11 @@ export class JwtHttp {
             }
         }
         
-        var obsservable = Observable.create(observer => {
-            var req = this._http.request(url, options)
+        return this._http.request(url, options)
                       .map(resp => {
-
                             this.updateHeadersFromResponse(resp);
-                            observer.next(resp); 
-                            observer.complete();
-                })
-                .catch((error: any, caught: Observable<void>) => {
-                    console.log('Error : ' + error)
-                    return observer.error(error)
-                })
-                      .subscribe()
-                  })
-        return obsservable;
+                            return resp; 
+                       })
     }
 
 
@@ -134,4 +124,6 @@ export class JwtHttp {
       newTokenExpiry = Number(this._auth.config.parseExpiry(headers || {}));
       return newTokenExpiry >= oldTokenExpiry;
     }
+
+    
 }
