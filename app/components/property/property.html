@@ -1,7 +1,7 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
         <ion-item-divider *ngIf="index == 0" danger>
-              Syncronizing Errors
+              Syncronize Errors
         </ion-item-divider>
         <ion-item *ngIf="!query" (dbltap)="showUnits($event)" (click)="presentActionSheet($event)">
             <fl-base [resource]="resource"></fl-base>

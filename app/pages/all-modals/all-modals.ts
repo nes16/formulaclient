@@ -131,7 +131,6 @@ export class AllModals {
         }
     }
 
-
     doSettings(evt, value){
         evt.preventDefault();
     }
@@ -140,4 +139,10 @@ export class AllModals {
         // this.auth.authenticate(provider, null);
     }
 
+    hasFieldErrors(){
+        if(!this.errorInfo.common_message)
+            return true;
+        else
+            return Object.keys(this.errorInfo).length >= 2
+    }
 }

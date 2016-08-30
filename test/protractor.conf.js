@@ -25,7 +25,7 @@ exports.config = {
         'browserName': 'chrome'
     },
 
-    onPrepare: function() {
+    onPrepare1: function() {
         var SpecReporter = require('jasmine-spec-reporter');
         // add jasmine spec reporter
         jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: true}));

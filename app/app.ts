@@ -12,12 +12,13 @@ import {DataService} from './services/data-service';
 import {MQService} from './services/mq-service';
 import {RemoteService} from './services/remote-service';
 import {SqlService} from './services/sql-service';
+import {SqlCacheService} from './services/sqlcache-service';
 import {PLATFORM_DIRECTIVES} from '@angular/core';
 import {disableDeprecatedForms, provideForms, REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
 
 @Component({
   templateUrl: 'build/app.html',
-  providers: [  MyTokenAuth, JwtHttp, MQService, BaseService, DataService,RemoteService, SqlService,UIStateService]
+  providers: [  MyTokenAuth, JwtHttp, MQService, BaseService, DataService,RemoteService, SqlService, SqlCacheService, UIStateService]
 })
 
 export class MyApp {
@@ -35,7 +36,7 @@ export class MyApp {
      this.initializeApp();
      // set our app's pages
      this.pages = [
-         {title: 'Units and Properties', component: ResourceListPage, params:{type:"properties"} },
+         { title: 'Units and Properties', component: ResourceListPage, params:{type:"properties"} },
          { title: 'Global Constants', component: ResourceListPage, params:{type:"globals"} },
          { title: 'Formulas', component: ResourceListPage, params: { type: "formulas" } }
      ];
