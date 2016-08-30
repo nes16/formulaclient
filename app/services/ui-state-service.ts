@@ -8,7 +8,7 @@ import { AllModals } from '../pages/all-modals/all-modals';
 @Injectable()
 export class UIStateService {
     authenticated: boolean = false;
-    online:boolean = true;
+    online:boolean = false;
     content:Content;
 
     static event_types = {
@@ -47,7 +47,8 @@ export class UIStateService {
             states[Connection.CELL_3G]  = 'Cell 3G connection';
             states[Connection.CELL_4G]  = 'Cell 4G connection';
             states[Connection.NONE]     = 'No network connection';
-            this.online = navigator.onLine; 
+            // this.online = navigator.onLine; 
+            this.online = false; 
         });
     }
 

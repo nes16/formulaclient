@@ -25,6 +25,7 @@ gulp.task('build-e2e', ['clean-test'], function () {
     var src = [
         path_1.join(config.typingsDir, '/index.d.ts'),
         path_1.join(config.appDir, '**/*e2e.ts'),
+        path_1.join(config.appDir, '**/*pgo.ts')
     ];
     var result = gulp.src(src)
         .pipe(typescript(tsProject));
