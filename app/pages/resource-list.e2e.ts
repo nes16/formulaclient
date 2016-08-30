@@ -6,8 +6,8 @@ describe('angularjs homepage', function() {
   var page = new ResourceListPO();
 
   beforeEach(function() {
-  		browser.driver.sleep(10);
-        browser.get('');
+      browser.get('');
+      browser.driver.sleep(10);
   });
 
   it('Page should have proper title', function() {
@@ -16,13 +16,26 @@ describe('angularjs homepage', function() {
   });
 
   it('Property add', function(){
+  	var EC = protractor.ExpectedConditions;
   	page.addButton.click();
   	page.getInput("description").sendKeys("Property1");
   	let but = page.getSubmitButton();
-  	browser.driver.wait(protractor.until.elementIsEnabled(but));
+  	browser.wait(EC.elementToBeClickable(but), 1000);
   	but.click();
     expect(page.getTitle().getText()).toEqual('Properties');
   });
+
+  it('List should have one property', function() {
+    var list = element.all(by.css('ion-list fl-property'));
+    expect(list.count()).toBe(1);
+  });
+
+  it('refresh should have one item', function(){
+    browser.refresh();
+    browser.debugger();
+    var list = element.all(by.css('ion-list fl-property'));
+    expect(list.count()).toBe(1);
+  })
 
 });
 

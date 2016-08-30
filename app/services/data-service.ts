@@ -133,6 +133,8 @@ export class DataService {
         this.remoteService
         .sync({syncInfo: offLineData.asJson(lists)})
         .subscribe(res=>{
+            if(res == 'offline')
+              return or.complete();
             console.log(JSON.stringify(res, null, 2));
             this.handleSyncResponse(res)
             .subscribe(res=>{

@@ -19,7 +19,7 @@ export class BaseService{
 		
 	query(method:string, url:string, param:any=null){
 		if(!this.uiService.IsOnline)
-			return Observable.empty(); 
+			return Observable.create(or => {or.next('offline');or.complete();}); 
 		return	this.http[method](this.apiEndpoint+url, param?JSON.stringify(param):null)
 					.map(res => {
 							let body = res.json();

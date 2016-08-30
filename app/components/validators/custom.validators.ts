@@ -74,7 +74,7 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
                   else
                     service.isUnique(resourceType, "name", control.value as string, (res, i)=> control.value == res.name)
                           .subscribe(res => {
-                            if(res.unique){
+                            if(res){
                                 resolve(null);
                             }
                             else{
@@ -101,7 +101,7 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
                     else
                       service.isUnique(resourceType, "symbol", control.value as string, (res , i)=> control.value == (res as Unit).symbol)
                             .subscribe(res => {
-                              if(res.unique){
+                              if(res){
                                   resolve(null);
                               }
                               else{
