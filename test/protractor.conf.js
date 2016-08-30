@@ -1,8 +1,10 @@
 exports.config = {
-    baseUrl: 'http://localhost:8100',
+    //baseUrl: 'http://localhost:8100',
 
     specs: [
-        '../www/build/test/**/*.e2e.js'
+        //'../www/build/test/**/*.e2e.js'
+          'spec.js'
+
     ],
 
     exclude: [],
@@ -25,7 +27,7 @@ exports.config = {
         'browserName': 'chrome'
     },
 
-    onPrepare: function() {
+    onPrepare1: function() {
         var SpecReporter = require('jasmine-spec-reporter');
         // add jasmine spec reporter
         jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: true}));
@@ -41,5 +43,5 @@ exports.config = {
      * `rootEl`
      *
      */
-    useAllAngular2AppRoots: true
+    //useAllAngular2AppRoots: true
 };
