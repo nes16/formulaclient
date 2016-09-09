@@ -42,6 +42,8 @@ export class DataService {
       //Why log handler
       //When it is required, is it required in production?    
       this.logHandler = new LogHandler("Load items");
+      
+
     }
 
     init():Observable<any> {
@@ -102,22 +104,44 @@ export class DataService {
       }
     }
 
-    isUnique(table:string, field:string, value:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
+    isUnique(table:string, field:string, value:string, id:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
+      let li = this[table] as ResourceCollection<BaseResource>;
+      let oles = new Array<Observable<any>>();
       if(this.uiService.IsOnline)
-        return Observable.create(or => {
+        oles.push(Observable.create(or => {
           this.remoteService
-          .isUnique({table:table, field:field, value:value})
-          .subscribe(od => {
-            or.next(od);
-          }, err=>or.erro(err), ()=>or.complete())
-        })
-      else
-        return Observable.create(or => {
-          if(this[table].find(predicate, null))
-            or.next(false), or.complete();
+            .isUnique({table:table, field:field, value:value, id:id})
+            .subscribe(od => {
+              or.next(od);
+            }, err=>or.erro(err), ()=>or.complete())
+        }))
+
+       oles.push(Observable.create(or => {
+          let r = this[table].find(predicate, null)
+          if(r)
+            or.next({id:r.id}), or.complete();
           else
-            or.next(true), or.complete();
-        })
+            or.next({id:id}), or.complete();
+        }))
+
+       let combined = Observable.from(oles)
+           .map(i => i)
+           .concatAll();
+
+       return Observable.create(or => {
+         let result = true;
+         combined.map(res => { 
+           return res.id != id
+         }).subscribe(res => {
+                   if(res) {
+                     result = false;
+                     }
+                   },err => or.error(err)
+                   ,() => {
+                     or.next({unique:result}); or.complete()
+                   });
+
+       }) 
     }
 
 
@@ -132,9 +156,12 @@ export class DataService {
         var syncResponse = null;
         this.remoteService
         .sync({syncInfo: offLineData.asJson(lists)})
-        .subscribe(res=>{
-            if(res == 'offline')
+        .subscribe(res=>{ 
+            this.uiService.showProgressModal("Syncronizing", "Please wait");
+            if(res == 'offline'){
+              this.uiService.closeProgressModal();
               return or.complete();
+            }
             console.log(JSON.stringify(res, null, 2));
             this.handleSyncResponse(res)
             .subscribe(res=>{
@@ -145,17 +172,29 @@ export class DataService {
               })
             },err=>{
               or.error(err);
+              this.uiService.closeProgressModal();
             },()=>{
               or.complete()
+              this.uiService.closeProgressModal();
             })
           },
           err=>{
             console.log(err);
             or.error(err);
+            this.uiService.closeProgressModal();
           })
       })
     }
 
+    checkOnlineAndErrors(r:BaseResource){
+      if(this.uiService.IsOnline && this.resourceTables.some(i => this[i].hasErrorInfo()) && !r.hasError())
+      {
+        console.log("You are online and have items with server errors")
+        return false;
+      }
+      else
+        return true;
+    }
 
 
     handleSyncResponse(offlineData:OfflineData): Observable<any>{
@@ -179,27 +218,36 @@ export class DataService {
         oles.push(this.cache.deleteItem(i.getTable(), i.id));
       })
       oles.push(this.saveOfflineData(li))
+
+      oles.push(this.sync(this[r.getTable()]));
+
       return Observable.from(oles)
       .map(i => i)
       .concatAll();
     }
     
-    _saveItem(r:BaseResource){
+    _saveItem(r:BaseResource):Observable<any>{
       let li = this[r.getTable()] as ResourceCollection<BaseResource>;
       if(r.id == null){
         r.id = UUID.UUID();
-        r.newItem = true;
         li.add(r);
+        return this.cache.addItem(r)
       }
-      else if(r.deleted)
+      else if(r.deleted){
         li.remove(r);
+        return this.cache.deleteItem(r.getTable(), r.id);
+      }
       else
-        if(r.isChanged())
+        if(r.isChanged()){
           li.onUpdate(r);
+          return this.cache.updateItem(r)
+        }
+        else 
+          return Observable.empty();
     }  
 
     saveItemRecursive(r:BaseResource):Observable<any>{
-
+      let cacheOles = new Array<Observable<any>>();
       let items = [r] as Array<BaseResource>;
       if(r.getTable() == 'properties'){
         let prop = r as Property;
@@ -211,24 +259,14 @@ export class DataService {
         items = items.concat(r1.Variables)
       }
       items.forEach(i => {
-        this._saveItem(i)
+        cacheOles.push(this._saveItem(i))
       })
       let lists = [];
       items.forEach(i => {if(lists.indexOf(this[i.getTable()]) == -1) lists.push(this[i.getTable()])})
 
-      let saveOle =  Observable.from(items)
-      .map(r => {
-        if(r.newItem)
-          return this.cache.addItem(r)
-        else if(r.deleted)
-          return this.cache.deleteItem(r.getTable(), r.id);
-        else if(r.isChanged()){
-          return this.cache.updateItem(r)
-        }
-        else
-          return Observable.empty();
-      })
-      .concatAll()
+      let saveOle =  Observable.from(cacheOles)
+                               .map(i => i)
+                               .concatAll()
 
 
       let saveOfflineOle = Observable.from(lists)

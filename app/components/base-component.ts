@@ -67,10 +67,12 @@ export class BaseComponent {
 	}
 
 	onNewCmd(evt, resource){
-		this.nav.push(this.detailPage, {  'currResource': resource })
-		if(evt){
-			evt.stopPropagation();
-	    	evt.preventDefault();
+		if(this.dataService.checkOnlineAndErrors(this.resource)){
+			this.nav.push(this.detailPage, {  'currResource': resource })
+			if(evt){
+				evt.stopPropagation();
+		    	evt.preventDefault();
+			}
 		}
 	}
 
@@ -165,9 +167,9 @@ export class BaseComponent {
 	    ]
 	  };
 
-	  if(this.resource.error_code > 0)
+	  if(this.resource.hasError() == true){
 	  	actionSheetItems.buttons.splice(0, 0, errorButton);
-
+	  }
 	  if(this.resource.getTable() == 'properties')
 	  	actionSheetItems.buttons.splice(1, 0, newButton) 
 

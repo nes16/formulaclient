@@ -13,7 +13,7 @@ import { MathQ } from '../mathquill'
 import { MathQValueAccessor } from '../mathquill-accessor';
 import { DetailPage } from '../../pages/detail/detail';
 import { FBError } from '../fb-error';
-import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator } from '../validators/custom.validators'
+import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator} from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-property',

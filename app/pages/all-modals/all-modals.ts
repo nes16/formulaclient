@@ -20,6 +20,7 @@ export class AllModals {
     error: string;
     errorInfo:any;
     title:string;
+    message:string = "";
     constructor(params: NavParams, public nav:NavController, public viewCtrl:ViewController, public auth:MyTokenAuth) {
         this.option = params.get('option');
 
@@ -45,6 +46,8 @@ export class AllModals {
             case 'error' :
                 this.title="Error";
                 break;
+            case 'progress':
+                this.title = this.option.title;
         }
         this.login = new FormGroup({
             emailId: new FormControl("senthilr2007@gmail.com", Validators.required),
@@ -71,6 +74,12 @@ export class AllModals {
         if(this.option == "error"){
             this.title = "Errors"
             this.errorInfo = params.get("errorInfo");
+        }
+
+
+        if(this.option == "progress"){
+            this.title = params.get("title");
+            this.message = params.get("message");
         }
     }
 
@@ -144,5 +153,13 @@ export class AllModals {
             return true;
         else
             return Object.keys(this.errorInfo).length >= 2
+    }
+
+    getErrorFields(){
+        return Object.keys(this.errorInfo);
+    }
+
+    getMessagesForField(field){
+        return this.errorInfo[field];
     }
 }

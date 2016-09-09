@@ -18,7 +18,7 @@
                 <fl-unit  *ngFor="let u of resource.Units"  [resource]="u"></fl-unit> 
             </template>
             <template [ngIf]="index != null">
-                <fl-unit  *ngFor="let u of resource.getChildErrors()"  [resource]="u"></fl-unit> 
+                <fl-unit  *ngFor="let u of resource.getChildWithErrors(resource.Units)"  [resource]="u"></fl-unit> 
             </template>
         </template>
         <ion-item-divider *ngIf="last" danger>

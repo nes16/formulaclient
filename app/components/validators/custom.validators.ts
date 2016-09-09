@@ -69,12 +69,9 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
       clearTimeout(resource.nameTimeout);
     return new Promise((resolve, reject) => {
                 resource.nameTimeout = setTimeout(() => {
-                  if(resource.id && (control.value == resource.oldState["name"]))
-                    resolve(null);
-                  else
-                    service.isUnique(resourceType, "name", control.value as string, (res, i)=> control.value == res.name)
+                    service.isUnique(resourceType, "name", control.value as string, resource.id, (res, i)=> control.value == res.name)
                           .subscribe(res => {
-                            if(res){
+                            if(res.unique){
                                 resolve(null);
                             }
                             else{
@@ -89,6 +86,7 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
   }
 }
 
+
   export function createUniqueSymbolValidator(service:DataService, resourceType:string, resource) {
 
     return function(control) {
@@ -96,12 +94,9 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
         clearTimeout(resource.symbolTimeout);
       return new Promise((resolve, reject) => {
                   resource.symbolTimeout = setTimeout(() => {
-                    if(resource.id && (control.value == resource.oldState["symbol"]))
-                      resolve(null);
-                    else
-                      service.isUnique(resourceType, "symbol", control.value as string, (res , i)=> control.value == (res as Unit).symbol)
+                      service.isUnique(resourceType, "symbol", control.value as string, resource.id, (res , i)=> control.value == (res as Unit).symbol)
                             .subscribe(res => {
-                              if(res){
+                              if(res.unique){
                                   resolve(null);
                               }
                               else{
@@ -116,3 +111,15 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
     }
 }
 
+
+export function remoteValidator(resource:BaseResource, field:string) {
+  return function(control) {
+    if(!resource.hasError() || !resource.error_messages[field])
+    {
+      return null;
+     }
+     else{
+       return {serverErrors: resource.error_messages[field]}
+     }
+   }
+}

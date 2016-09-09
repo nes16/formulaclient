@@ -149,7 +149,6 @@ export class ResourceCollection<T extends BaseResource>{
 export class BaseResource {
     id: string;
     name: string;
-    newItem: boolean = false;
     lock_version:number;
     error_messages:any;
 
@@ -186,14 +185,19 @@ export class BaseResource {
         this.name = state.name;
         this.deleted = state.deleted;
         this.lock_version = state.lock_version;
-        if(state.error_messages)
-            this.error_messages = JSON.parse(state.error_messages);
+        if(state.error_messages){
+            if(typeof state.error_messages == 'string')
+                this.error_messages = JSON.parse(state.error_messages);
+            else
+                this.error_messages = state.error_messages;
+        }
         else
             this.error_messages = {}
 
         if(this.lock_version == null)
             this.lock_version = 0;
     }
+
 
     getState(){
         let error_messages:string;
@@ -242,6 +246,10 @@ export class BaseResource {
 
     destroy(){
 
+    }
+
+    getChildWithErrors():Array<BaseResource>{
+        return this.getChildItems().filter(i => i.hasError())
     }
 
     getChildItems():Array<BaseResource>{
@@ -441,7 +449,9 @@ export class Property extends BaseResource {
         ulist.resources.forEach(u => {
             if(u.property_id == this.id){
                 u.init({property:this})
-                this._units.push(u)
+                let u1 = this._units.some(i => i.id == u.id);
+                if(!u1)
+                    this._units.push(u)
                 if(u.Factor == 1)
                     this._defaultUnit = u 
             }
@@ -521,7 +531,7 @@ export class Global extends BaseResource {
 
     getState(){
         return Object.assign(super.getState(), { 
-          unit_id: this._measure.UnitId,
+          unit_id: this.unit_id?this.unit_id:this._measure.UnitId,
           value: this.value,
           symbol: this.symbol,
         });
@@ -540,6 +550,7 @@ export class Global extends BaseResource {
 
     set Measure(measure){
         this._measure = measure;
+        this.unit_id = measure.UnitId;
     }
 }
 
@@ -680,12 +691,13 @@ export class Formula extends BaseResource {
 
 
     getState() {
+
         return Object.assign(
                 super.getState(), { 
                 symbol: this.symbol,
                 latex: this.latex,
-                property_id: this._measure.PropertyId,
-                unit_id:  this._measure.UnitId
+                property_id: this.property_id?this.property_id:this._measure.PropertyId,
+                unit_id:this.unit_id?this.unit_id:this._measure.UnitId
             });
     }
 
@@ -702,6 +714,8 @@ export class Formula extends BaseResource {
     }
 
     set Measure(val){
+        this.property_id = val.PropertyId;
+        this.unit_id = val.UnitId;
         this._measure = val;
     }
 
@@ -743,8 +757,8 @@ export class Variable extends BaseResource {
         return Object.assign(super.getState(), { 
           formula_id: this.formula_id,
           symbol: this.symbol,
-          property_id: this._measure.PropertyId,
-          unit_id:  this._measure.UnitId
+          property_id: this.property_id?this.property_id:this._measure.PropertyId,
+          unit_id: this.unit_id?this.unit_id: this._measure.UnitId
         });
     }
 
@@ -770,6 +784,9 @@ export class Variable extends BaseResource {
 
     set Measure(val){
         this._measure = val;
+        this.property_id = val.PropertyId;
+        this.unit_id = val.UnitId;
+        
     }
 }
 
@@ -998,7 +1015,7 @@ export class SyncResponseHandler{
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             li.offlineData.deleted = [];
             let table = this.ds.getTable(li); 
-            li.offlineData.deleted.forEach(j => {
+            i.deleted.forEach(j => {
                 li.remove(ResourceCollection.all[j], true)
                 oles.push(this.cs.deleteItem(table, j));
             })
@@ -1022,7 +1039,7 @@ export class SyncResponseHandler{
                             obj[refId_col]=r.id;
                             oles.push(this.cs.updateIds(t, refId_col, oldId, obj));
                         })
-                        ResourceCollection[lr.id]=lr;
+                        ResourceCollection.all[lr.id]=lr;
                         let index = li.offlineData.added.indexOf(j);
                         li.offlineData.added.splice(index, 1)
                     }
@@ -1059,6 +1076,7 @@ export class SyncResponseHandler{
                        li.offlineData.updated.splice(index, 1)
                    }
                    else{
+                       r.id = j;
                        lr.loadState(r.getState());
                        oles.push(this.cs.updateItem(lr))
                    }
@@ -1083,54 +1101,6 @@ export class SyncResponseHandler{
     }
 }
 
-export class ChangeHandler{
-
-    constructor(public ds:DataService, public cs:CacheService, public rs:RemoteService){
-
-    } 
-
-    save(res:BaseResource){
-        this.saveLocal(res).subscribe(res =>{
-
-        },err => {
-
-        },() => {
-            this.saveRemote(res);
-        })
-
-    }
-
-    saveRemote(res:BaseResource){
-        return this.ds.sync(this.ds[res.getTable()]);
-    }
-
-    saveLocal(res:BaseResource):Observable<any>{
-        return Observable.create(or => {
-            let items = res.getChildItems();
-            items = [res].concat(items);
-            let li = this.ds[res.getTable()] as ResourceCollection<BaseResource>;
-            let op = li.offlineData.deleted.indexOf(res.id) >= 0?'deleted':null;
-            if (!op){
-                op = res.newItem ?'added':'updated';
-            }
-            else
-                op = 'updated'
-            let a;
-            if(op == 'added')
-               a = Observable.from(items)
-                      .map(i => this.cs.addItem(i))
-            else if(a == 'updated')
-                a = Observable.from(items)
-                            .map(i => this.cs.updateItem(i))
-            else
-                a = Observable.from(items)
-                              .map(i => this.cs.deleteItem(i.getTable(), i.id))
-
-            a.concatAll()
-             .subscribe()
-        })
-    }
-}
 export class LogHandler{
     processId:number = 0;
     constructor(private process:string = ""){

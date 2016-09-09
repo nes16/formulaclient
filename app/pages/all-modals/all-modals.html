@@ -99,15 +99,22 @@
                     <ion-label stacked>{{errorInfo.common_message}}</ion-label>
                 </ion-item>
                 <template [ngIf]="hasFieldErrors()">
-                    <ion-item *ngFor="let f of Object.keys(errorInfo)">
-                        <ion-label >{{f}}</ion-label>
-                        <p *ngFor="let e of errorInfo[f]">
-                            e
+                    <ion-item *ngFor="let f of getErrorFields()">
+                        <h1>{{f}}</h1>
+                        <p *ngFor="let e of getMessagesForField(f)">
+                            {{e}}
                         </p>
                     </ion-item>
                 </template>
                 <ion-item>
                     <button class="button button-block button-positive" (click)="dismiss($event)">Ok</button>
+                </ion-item>
+            </ion-list>
+        </template>
+        <template [ngSwitchCase]="'progress'">
+            <ion-list>
+                <ion-item>
+                    <ion-label stacked>{{message}}</ion-label>
                 </ion-item>
             </ion-list>
         </template>

@@ -34,6 +34,7 @@ export class MyApp {
                , public menu: MenuController) {
      // set up our app
      this.initializeApp();
+     
      // set our app's pages
      this.pages = [
          { title: 'Units and Properties', component: ResourceListPage, params:{type:"properties"} },

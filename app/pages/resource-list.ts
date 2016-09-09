@@ -1,5 +1,5 @@
 import { Page, NavParams, NavController } from 'ionic-angular';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataService } from '../services/data-service';
 import { UIStateService } from '../services/ui-state-service';
 import { PropertyComponent } from '../components/property/property';
@@ -16,10 +16,11 @@ import { Property, Formula, Global } from '../types/standard'
     directives:[FlNavBar, PropertyComponent, UnitComponent, GlobalComponent, FormulaComponent]
 })
 
-export class ResourceListPage {
+export class ResourceListPage implements  OnInit, OnDestroy {
 	resourceType:string;
     args:any;
     prop:Property;
+    uiSubscription:any;
     constructor(public navParams: NavParams
               , public dataService:DataService
               , public uiStateService:UIStateService
@@ -38,13 +39,20 @@ export class ResourceListPage {
         }
         this.args = this.navParams.get("args");
 
-        this.uiStateService.ole.subscribe(res => {
+        this.uiSubscription = this.uiStateService.ole.subscribe(res => {
             if(res.type == UIStateService.event_types.service_error_occurred){
                 this.uiStateService.showErrorModal(this.nav, res.content)
+            }
+            if(res.type == UIStateService.event_types.network_state_change && res.value == "online"){
+              this.dataService.sync(this.dataService[this.resourceType]).subscribe();
             }
         })
 
         this.onErrorCmd(null);
+    }
+
+    ngOnDestroy(){
+        this.uiSubscription.unsubscribe();
     }
 
     onErrorCmd(evt){

@@ -10,11 +10,12 @@ export class UIStateService {
     authenticated: boolean = false;
     online:boolean = false;
     content:Content;
-
+    modals:Modal;
     static event_types = {
         resource_save_complete:1,   //Successful save of an resource
         service_error_occurred:2, //Publishing errors from services
-        resource_selected:3
+        resource_selected:3,
+        network_state_change:4
     }
 
     //Used for communicate async operation
@@ -47,8 +48,8 @@ export class UIStateService {
             states[Connection.CELL_3G]  = 'Cell 3G connection';
             states[Connection.CELL_4G]  = 'Cell 4G connection';
             states[Connection.NONE]     = 'No network connection';
-            // this.online = navigator.onLine; 
-            this.online = false; 
+            this.online = navigator.onLine; 
+            //this.online = false; 
         });
     }
 
@@ -57,6 +58,19 @@ export class UIStateService {
         let modals = new Modal(this.app, AllModals, data);
         modals.present();
     }
+
+    showProgressModal(title:string, message:string){
+        var data = {option:"progress", title:title, messsage:message}
+        this.modals = new Modal(this.app, AllModals, data);
+        this.modals.present();
+    }
+
+    closeProgressModal(){
+        if(this.modals)
+            this.modals.dismiss();
+    }
+
+
 
     onOnline(){
         console.log('=================Online=================');
@@ -74,6 +88,10 @@ export class UIStateService {
 
     set IsOnline(state:boolean) {
         this.online = state;
+        let value = "offline";
+        if(this.online) 
+            value = "online";
+        this.or.next({type:UIStateService.event_types.network_state_change, value:value})
         //return navigator.onLine;
     }
 

@@ -50,7 +50,7 @@ export class GlobalComponent extends BaseComponent {
 											, numberValidator]),
 				symbol: new FormControl(this.resource.symbol, [Validators.required
 											, symbolValidator], createUniqueSymbolValidator(this.dataService, "globals", this.resource)),
-				measure: new FormControl(this.resource.measure, [createMeasureValidator(false, true)]),
+				measure: new FormControl(this.resource.Measure, [createMeasureValidator(false, true)]),
 			})
 		}
 

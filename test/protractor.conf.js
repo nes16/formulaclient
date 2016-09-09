@@ -25,10 +25,61 @@ exports.config = {
         'browserName': 'chrome'
     },
 
+    multiCapabilities: [{
+      'browserName': 'chrome',
+      'chromeOptions': {
+          'args': ['--user-data-dir=~/.config/google-chrome1']
+        }
+    }, {
+      'browserName': 'chrome',
+      'chromeOptions': {
+          'args': ['--user-data-dir=~/.config/google-chrome2']
+        }
+    }],
+
+    getMultiCapabilities1: function() {
+    var deferred = q.defer();
+
+    var multiCapabilities = [
+        {
+            browserName: "chrome",
+            specs: [
+                "*.spec.js"
+            ],
+
+            exclude: [
+                "footer.disabledJavascript.spec.js"
+            ]
+        }
+    ];
+
+    // Wait for a server to be ready or get capabilities asynchronously.
+    setTimeout(function() {
+        var options = new chrome.Options().
+        options
+        var firefoxProfile = new FirefoxProfile();
+        firefoxProfile.setPreference("javascript.enabled", false);
+        firefoxProfile.encoded(function (encodedProfile) {
+            var capabilities = {
+                "browserName": "chrome",
+                "firefox_profile": encodedProfile,
+                "specs": [
+                    "footer.disabledJavascript.spec.js"
+                ]
+            };
+            multiCapabilities.push(capabilities);
+            deferred.resolve(multiCapabilities);
+        });
+    }, 1000);
+
+    return deferred.promise;
+  },
+
     onPrepare: function() {
         var SpecReporter = require('jasmine-spec-reporter');
         // add jasmine spec reporter
         jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: true}));
+
 
         browser.ignoreSynchronization = false;
     },

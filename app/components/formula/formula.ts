@@ -68,7 +68,7 @@ export class FormulaComponent extends BaseComponent {
 											,symbolValidator], createUniqueSymbolValidator(this.dataService, "formulas", this.resource)),
 				latex: new FormControl(this.resource.latex, [Validators.required
 											,createFormulaValidator(this.resource)]),
-				measure: new FormControl(this.resource.measure, [Validators.required
+				measure: new FormControl(this.resource.Measure, [Validators.required
 											,createMeasureValidator(false, false)])
 			})
 		}
