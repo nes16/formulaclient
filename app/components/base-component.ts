@@ -94,6 +94,36 @@ export class BaseComponent {
 
 	}
 
+	onShare(evt){
+		if(this.resource.shared)
+			return;
+		this.resource.shared = true;
+		this.dataService
+			.saveItemRecursive(this.resource)
+			.subscribe(res => {
+
+			},err => {
+
+			},()=>{
+				this.emit();
+			});
+	}
+
+	onUnshare(evt){
+		if(!this.resource.shared)
+			return;
+		this.resource.shared = false;
+		this.dataService
+			.saveItemRecursive(this.resource)
+			.subscribe(res => {
+
+			},err => {
+
+			},()=>{
+				this.emit();
+			});
+	}
+
 	onSelect(evt):boolean{
 	    if(this.uiStateService.inSelectMode){
 	    	var type = UIStateService.event_types.resource_selected; 
@@ -141,6 +171,20 @@ export class BaseComponent {
 	        }
 	      }
 
+	  var shareButton = {
+	        text: 'Share',
+	        handler: () => {
+	          this.onShare(evt);
+	        }
+	      }
+
+	  var unshareButton = {
+	        text: 'Unshare',
+	        handler: () => {
+	          this.onUnshare(evt);
+	        }
+	      }
+
 	  var actionSheetItems = {
 	    title: 'Select item command',
 	    buttons: [
@@ -173,6 +217,12 @@ export class BaseComponent {
 	  if(this.resource.getTable() == 'properties')
 	  	actionSheetItems.buttons.splice(1, 0, newButton) 
 
+	  if(this.uiStateService.authenticated){
+		  if(!this.resource.shared && this.resource.user_id)
+		  	actionSheetItems.buttons.splice(0, 0, shareButton)
+		  else if(this.resource.user_id)
+		  	actionSheetItems.buttons.splice(0, 0, unshareButton)
+	  }
 	  let actionSheet = new ActionSheet(this.app, actionSheetItems);
 
 	  actionSheet.present();

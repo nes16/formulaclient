@@ -1,5 +1,6 @@
 import { Injectable, Inject} from '@angular/core';
 import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response } from '@angular/http';
+import { ConnectableObservable } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
@@ -13,7 +14,7 @@ export class MyTokenAuth {
   user:any = {};
   mustResetPassword:boolean = false;
   listener:any = null;
-  observable: Observable<any> = null;
+  observable: ConnectableObservable<any> = null;
   observer: Observer<any> = null;
   providerObserver: Observer<any> = null;
   providerObservable: Observable<any> = null;
@@ -89,9 +90,11 @@ export class MyTokenAuth {
     ) {
     this.http.setAuth(this);
     this.initializeListeners();
-    this.observable = Observable.create(observer => { 
+    this.observable = ConnectableObservable.create(observer => { 
                 this.observer = observer;
-    });
+    }).publish();
+    this.observable.connect();
+    
     //subscribe locally to create observer
     this.observable.subscribe(res => {})
     
@@ -209,6 +212,7 @@ export class MyTokenAuth {
         this.observer.next({event: 'auth:logout-success', data:resp});
        })
       .catch(error => {
+        console.log(JSON.stringify(error));
         this.invalidateTokens();
         this.observer.next({event: 'auth:logout-error', data:error});
         return Util.handleError(error);
@@ -301,7 +305,8 @@ export class MyTokenAuth {
   
   //Helper function
   userIsAuthenticated() {
-    return this.retrieveData('auth_headers') && this.user.signedIn && !this.tokenHasExpired();
+    //return this.retrieveData('auth_headers') && this.user.signedIn && !this.tokenHasExpired();
+    return this.retrieveData('auth_headers') && !this.tokenHasExpired();
   }
 
   openAuthWindow(provider, opts){

@@ -3,6 +3,7 @@ import { Observer } from 'rxjs/Observer';
 import { DataService } from '../services/data-service';
 import { SqlService } from '../services/sql-service';
 import { RemoteService } from '../services/remote-service';
+import { UIStateService } from '../services/ui-state-service';
 
 export class ResourceCollection<T extends BaseResource>{
     //Data stream
@@ -151,6 +152,8 @@ export class BaseResource {
     name: string;
     lock_version:number;
     error_messages:any;
+    user_id:number=null;
+    shared:boolean = false;
 
     static errors_messages:any = {
         0:"Success",
@@ -185,6 +188,10 @@ export class BaseResource {
         this.name = state.name;
         this.deleted = state.deleted;
         this.lock_version = state.lock_version;
+        if(state.user_id)
+            this.user_id = state.user_id;
+        if(state.shared)
+            this.shared = state.shared;
         if(state.error_messages){
             if(typeof state.error_messages == 'string')
                 this.error_messages = JSON.parse(state.error_messages);
@@ -206,11 +213,14 @@ export class BaseResource {
         }
         else
             error_messages = null;
-        return { id: this.id, 
+        return { 
+                 id: this.id, 
                  name: this.name,
                  lock_version:this.lock_version,
-                 error_messages:error_messages
-                  };
+                 error_messages:error_messages,
+                 user_id:this.user_id,
+                 shared:this.shared
+                };
     }
 
 
@@ -957,18 +967,21 @@ export class TableOfflineData {
         return this;
     }
 
-    asJSON(resources){
+    asJSON(resources, authenticated):any{
          this.added.concat(this.updated).forEach(id => {
            let state = ResourceCollection.all[id].getState();
            delete state.id;
            delete state.error_messages;
            resources[id] = state;
          })
-         return {name: this.name
-                ,lastSync:this.lastSync
-                ,added: this.added
-                ,updated: this.updated
-                ,deleted: this.deleted}
+         if(authenticated)
+             return {name: this.name
+                    ,lastSync:this.lastSync
+                    ,added: this.added
+                    ,updated: this.updated
+                    ,deleted: this.deleted};
+         else
+             return {name: this.name, lastSync:this.lastSync};
     }
 }
 
@@ -984,9 +997,9 @@ export class OfflineData {
     }
 
 
-    asJson(tables:ResourceCollection<BaseResource>[]){
+    asJson(tables:ResourceCollection<BaseResource>[], uiService:UIStateService){
         var jsonData = {transactionId: this.transactionId, clientId: this.clientId, resources:{}, tables:[] }
-        tables.forEach(t => jsonData.tables.push(t.offlineData.asJSON(jsonData.resources)))
+        tables.forEach(t => jsonData.tables.push(t.offlineData.asJSON(jsonData.resources, uiService.authenticated)))
         return jsonData;
     }
 

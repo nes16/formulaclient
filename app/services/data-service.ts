@@ -24,7 +24,7 @@ export class DataService {
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
     logHandler:LogHandler;
 
-    static allOff: OfflineData = new OfflineData();
+    static allOff = new OfflineData();
 
     // formulas: ResourceCollection;
     resourceTables: Array<string> = ['properties', 'units', 'globals'
@@ -149,13 +149,13 @@ export class DataService {
       var lists = this.getDepentent(li);
       return Observable.create(or => {
         var offLineData = DataService.allOff;
-        let info = {syncInfo: offLineData.asJson(lists)};
-        console.log(JSON.stringify(info, null, 2));
+        console.log(JSON.stringify(offLineData.asJson(lists, this.uiService), null, 2));
         //or.complete()
         //Handle response for sync opertaion
         var syncResponse = null;
         this.remoteService
-        .sync({syncInfo: offLineData.asJson(lists)})
+
+        .sync({syncInfo: offLineData.asJson(lists, this.uiService)})
         .subscribe(res=>{ 
             this.uiService.showProgressModal("Syncronizing", "Please wait");
             if(res == 'offline'){

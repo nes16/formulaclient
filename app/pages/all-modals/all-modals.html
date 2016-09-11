@@ -9,7 +9,8 @@
     </ion-toolbar>
     <div [ngSwitch]="option">
         <template [ngSwitchCase]="'login'">
-            <form [formGroup]="login" (submit)="doLogin($event, login.value)">
+            <div *ngIf="!userIsAuthenticated()">
+            <form  [formGroup]="login" (submit)="doLogin($event, login.value)">
                 <ion-list>
                     <ion-item>
                         <ion-label stacked>Emailid</ion-label>
@@ -36,6 +37,20 @@
                     <button class="button button-block button-assertive" (click)="oauthlogin('google')">Google Login</button>
                 </ion-item>
             </ion-list>
+            </div>
+            <div *ngIf="userIsAuthenticated()">
+                <ion-list>
+                    <ion-item>
+                        <h1>User you have logged in!</h1>
+                    </ion-item>
+                    <ion-item>
+                        <button class="button button-block button-positive" (click)="oauthlogout()">Logout</button>
+                    </ion-item>
+                    <ion-item>
+                        <button class="button button-block button-assertive" (click)="oauthprofile()">Profile</button>
+                    </ion-item>
+                </ion-list>
+            </div>
         </template>
 
         <template [ngSwitchCase]="'register'">

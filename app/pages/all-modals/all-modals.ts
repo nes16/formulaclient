@@ -28,6 +28,9 @@ export class AllModals {
             case 'login' :
                 this.title="Login";
                 break;
+            case 'logout':
+                this.title = 'logout';
+                break;
             case 'register' :
                 this.title="Register";
                 break;
@@ -145,7 +148,20 @@ export class AllModals {
     }
 
     oauthlogin(provider) {
-        // this.auth.authenticate(provider, null);
+        this.auth.authenticate(provider, null);
+    }
+
+    oauthlogout(){
+        this.auth.signOut().subscribe((res) => alert('signout success'),
+                                (error) => { this.error = error; })
+    }
+
+    userIsAuthenticated(){
+        return this.auth.userIsAuthenticated();
+    }
+
+    oauthprofile(){
+        this.auth.signOut();
     }
 
     hasFieldErrors(){

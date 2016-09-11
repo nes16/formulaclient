@@ -91,7 +91,7 @@ ionicBootstrap(MyApp, [
         useValue: [REACTIVE_FORM_DIRECTIVES],
         multi: true
   } ,
-  provide('ApiEndpoint', {useValue: 'http://192.168.1.25/api/v1'})
+  provide('ApiEndpoint', {useValue: 'http://formulalab.net/api/v1'})
   ,
   MyTokenAuth, JwtHttp, MQService, BaseService, DataService
   ])

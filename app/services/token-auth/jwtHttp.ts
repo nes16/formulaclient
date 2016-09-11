@@ -101,6 +101,7 @@ export class JwtHttp {
                 headers.set(header, ref[header]);
             }
         });
+        headers.set("token-type", "Bearer");
     }
 
     updateHeadersFromResponse(resp) {
