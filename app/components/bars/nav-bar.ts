@@ -13,7 +13,7 @@ export class FlNavBar {
 	searchQuery:string = "";
 	searchBar: boolean = false;
 	searchDelay: number = 2000;
-	viewType:string = 'All'
+	
 	a:ModalOptions;
 	constructor(public app: App
 			    , public el: ElementRef

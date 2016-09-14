@@ -90,7 +90,9 @@ export class ResourceCollection<T extends BaseResource>{
         var r = this.getItem("id", r1.id)
         if(r){
             this.resources.splice(this.resources.indexOf(r), 1)
+            r.deinit();
             delete ResourceCollection.all[r.id]
+
             if(!syncronizing)
                 this.offlineData.addResource(r1, "deleted")
         }
@@ -155,6 +157,7 @@ export class BaseResource {
     user_id:number=null;
     shared:boolean = false;
 
+
     static errors_messages:any = {
         0:"Success",
         1:"Validation error",
@@ -175,11 +178,16 @@ export class BaseResource {
     //Internal
     deleted:string;
     oldState:any;
+    favorite:Favorite = null;
     constructor(state){
         this.loadState(state);
     }
 
     init(obj:any = null) {
+
+    }
+
+    deinit(){
 
     }
 
@@ -235,7 +243,7 @@ export class BaseResource {
         else
             return false;
     }
-    
+
     getTable(){
         return "";
     }
@@ -280,6 +288,15 @@ export class BaseResource {
         else
             return null;
     }
+
+    get Favorite(){
+        return this.favorite;
+    }
+
+    set Favorite(f:Favorite){
+        this.favorite = f;
+    }
+
 }
     
 export class Unit extends BaseResource {
@@ -868,6 +885,39 @@ export class FG extends BaseResource {
     }
 }
 
+export class Favorite extends BaseResource {
+    static table: string = "favorites";
+
+    favoritable_id:string;
+
+    constructor(state:any) {
+        super(state);
+    }
+
+    init(){
+        ResourceCollection.all[this.favoritable_id].Favorite = this;
+    }
+
+    deinit(){
+        ResourceCollection.all[this.favoritable_id].Favorite = null;
+    }
+
+    getTable():string{
+        return Favorite.table;
+    }
+
+    getState(){
+        return Object.assign(super.getState(), { 
+            favoritable_id: this.favoritable_id
+        })
+    }
+
+    loadState(state){
+        super.loadState(state);
+        this.favoritable_id = state.favoritable_id;
+    }
+}
+
 export class Category extends BaseResource {
     parent_id: number;
     
@@ -907,6 +957,7 @@ export class TableOfflineData {
     updated: Array<string> = new Array<string>();
     deleted: Array<string> = new Array<string>();
     lastSync:string="";
+    lastSyncShared:string = "";
     
     constructor(public name:string){
     }
@@ -937,6 +988,7 @@ export class TableOfflineData {
 
     clearResources(lastSync:string){
         this.lastSync = lastSync;
+        this.lastSyncShared = lastSync;
         this.added = new Array<string>();
         this.updated = new Array<string>();
         this.deleted = new Array<string>();
@@ -967,19 +1019,25 @@ export class TableOfflineData {
         return this;
     }
 
-    asJSON(resources, authenticated):any{
+    asJSON(resources, authenticated:boolean = false):any{
          this.added.concat(this.updated).forEach(id => {
            let state = ResourceCollection.all[id].getState();
            delete state.id;
            delete state.error_messages;
            resources[id] = state;
          })
-         if(authenticated)
-             return {name: this.name
+         if(authenticated){
+             let tinfo = {name: this.name
                     ,lastSync:this.lastSync
+                    ,lastSyncShared:this.lastSyncShared
                     ,added: this.added
                     ,updated: this.updated
-                    ,deleted: this.deleted};
+                    ,deleted: this.deleted
+                };
+              
+              return tinfo;
+
+         }
          else
              return {name: this.name, lastSync:this.lastSync};
     }
@@ -988,6 +1046,7 @@ export class TableOfflineData {
 export class OfflineData {
     transactionId:string;
     clientId:string;
+    user_id:number;
     //For server data
     resources:{[id:string]:BaseResource} = {};
     tables:TableOfflineData[] = new Array<TableOfflineData>();
@@ -1024,6 +1083,8 @@ export class SyncResponseHandler{
         let oles = [] as Array<Observable<any>>;
         let resources = this.offlineData.resources;
 
+        let user_id = this.offlineData.user_id;
+        this.ds.uiService.userId = user_id;
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             li.offlineData.deleted = [];
@@ -1065,7 +1126,8 @@ export class SyncResponseHandler{
                 }
                 else{
                     r.id = j;
-                    oles.push(this.cs.addItem(r));
+                    if(!this.ds.isResourceShared(lr))
+                        oles.push(this.cs.addItem(r));
                     li.add(r, true);
                 }
             })
@@ -1091,7 +1153,8 @@ export class SyncResponseHandler{
                    else{
                        r.id = j;
                        lr.loadState(r.getState());
-                       oles.push(this.cs.updateItem(lr))
+                       if(!this.ds.isResourceShared(lr))
+                           oles.push(this.cs.updateItem(lr))
                    }
                }
             })

@@ -2,7 +2,7 @@ import { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from
 import { MathQ } from './mathquill';
 import { DataService } from '../services/data-service'
 import { UIStateService } from '../services/ui-state-service'
-import { Unit, States } from '../types/standard';
+import { ResourceCollection, Unit, States, Favorite } from '../types/standard';
 import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular';
 import { AllModals } from '../pages/all-modals/all-modals';
 
@@ -94,6 +94,33 @@ export class BaseComponent {
 
 	}
 
+	onFavorite(evt){
+		if(this.resource.Favorite)
+			return this.onUnfavorite(evt);
+		let f = new Favorite({favoritable_id:this.resource.id, favoritable_type:this.resource.getTable()});
+		f.init();
+		this.dataService
+			.saveItemRecursive(f)
+			.subscribe(res => {
+			},err => {
+
+			},()=>{
+			});
+	}
+
+	onUnfavorite(evt){
+		let f = this.resource.Favorite;
+		if(!f)
+			return;
+		this.dataService
+			.removeItem(f)
+			.subscribe(res => {
+			},err => {
+
+			},()=>{
+			});
+	}
+
 	onShare(evt){
 		if(this.resource.shared)
 			return;
@@ -105,7 +132,6 @@ export class BaseComponent {
 			},err => {
 
 			},()=>{
-				this.emit();
 			});
 	}
 
@@ -120,7 +146,6 @@ export class BaseComponent {
 			},err => {
 
 			},()=>{
-				this.emit();
 			});
 	}
 
@@ -185,6 +210,11 @@ export class BaseComponent {
 	        }
 	      }
 
+	  var fav = "Favorite";
+	  if(this.resource.Favorite)
+	  	fav = "Unfavorite";
+
+
 	  var actionSheetItems = {
 	    title: 'Select item command',
 	    buttons: [
@@ -207,7 +237,13 @@ export class BaseComponent {
 	        handler: () => {
 	          console.log('Cancel clicked');
 	        }
-	      }
+	      },
+	      {
+  	        text: fav,
+  	        handler: () => {
+  	          this.onFavorite(evt);
+  	        }
+  	      }	   
 	    ]
 	  };
 

@@ -2,24 +2,18 @@
 <fl-nav-bar [title]="Title" [switchButton]="true" [addButton]="true" [menuButton]="true" [searchButton]="true" [moreButton]="true" (onCancel)="onFilterCancel($event)" (onAdd)="onNewCmd($event)" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
 </ion-header>
 <ion-content>
-	<div [ngSwitch]="resourceType">
-	 <ion-list>
-		<template [ngSwitchCase]="'properties'">
-	    	<fl-property *ngFor="let prop of dataService.properties.eole | async;let i=index; let isLast=last"  [index]="i"  [last]="isLast" [resource]="prop" ></fl-property>
-			
-	    	<fl-property *ngFor="let prop of dataService.properties.ole | async"  [resource]="prop" ></fl-property>
-	    </template>
-    	<template [ngSwitchCase]="'units'">
-        	<fl-unit *ngFor="let unit of prop.Units"  [resource]="unit" ></fl-unit>
-        </template>
-		<template [ngSwitchCase]="'globals'">
-			<fl-global *ngFor="let global of dataService.globals.eole | async;let i=index; let isLast=last"  [index]="i"  [last]="isLast" [resource]="global" ></fl-global>
-	    	<fl-global *ngFor="let global of dataService.globals.ole | async"  [resource]="global"></fl-global>
-	    </template>
-	    <template [ngSwitchCase]="'formulas'">
-	    	<fl-formula *ngFor="let formula of dataService.formulas.eole | async; let i=index; let isLast=last" [index]="i" [last]="isLast" [resource]="formula"></fl-formula>
-	    	<fl-formula  *ngFor="let formula of dataService.formulas.ole | async"  [resource]="formula" ></fl-formula>
-	    </template>
-	  </ion-list>
-    </div>
+	<ion-segment [(ngModel)]="viewType" [attr.light]="isAndroid ? '' : null">
+	    <ion-segment-button value="All">
+	        All
+	    </ion-segment-button>
+	    <ion-segment-button value="Favourites">
+	        Favourites
+	    </ion-segment-button>
+	    <ion-segment-button value="Recent">
+	        Recent
+	    </ion-segment-button>
+	</ion-segment>
+	 <ion-list *ngIf="resourceType == 'properties'" [virtualScroll]="resources">
+	    	<fl-property *virtualItem="let prop"  [resource]="prop" ></fl-property>
+	 </ion-list>
 </ion-content>

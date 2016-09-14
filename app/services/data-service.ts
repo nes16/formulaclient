@@ -7,6 +7,7 @@ import { Observer } from 'rxjs/Observer';
 import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
 import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
 import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
+import { Favorite } from '../types/standard'
 import { UIStateService } from './ui-state-service'
 import { Platform } from 'ionic-angular';
 import { UUID } from 'angular2-uuid';
@@ -21,6 +22,7 @@ export class DataService {
     formulas: ResourceCollection<Formula> = new ResourceCollection<Formula>(this, Formula);
     variables: ResourceCollection<Variable> = new ResourceCollection<Variable>(this, Variable);;
     fgs: ResourceCollection<FG> = new ResourceCollection<FG>(this, FG);
+    favorites: ResourceCollection<Favorite> = new ResourceCollection<Favorite>(this, Favorite);
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
     logHandler:LogHandler;
 
@@ -37,7 +39,7 @@ export class DataService {
       , public remoteService: RemoteService
       //Encapsulate cache into cache service
       , public cache: SqlCacheService
-      , private uiService: UIStateService) {      
+      , public uiService: UIStateService) {      
       //What is this
       //Why log handler
       //When it is required, is it required in production?    
@@ -288,17 +290,27 @@ export class DataService {
       return deps.filter(a => a.offlineData.lastSync != list.offlineData.lastSync).length == 0
     }
 
+    isResourceShared(res):boolean{
+        let userId = this.uiService.userId; 
+        if(!userId)
+            return false;
+        if(res.user_id == nil || res.user_id == userId)
+            return false;
+        else
+            return true;
+    }
+
     getDepentent(list):ResourceCollection<BaseResource>[]{
       switch (list) {
         case this.properties:
         case this.units:
-        return [this.properties, this.units];
+        return [this.properties, this.units, this.favorites];
         case this.globals:
-        return [this.properties, this.units, this.globals]
+        return [this.properties, this.units, this.globals, this.favorites]
         case this.formulas:
         case this.variables:
         case this.fgs:
-        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables]
+        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables, this.favorites]
         default:
         return [list];
       }
@@ -316,6 +328,7 @@ export class DataService {
           return [this.fgs, this.variables]
         case this.variables:
         case this.fgs:
+        case this.favorites:
           return [];
       }
     }
@@ -332,7 +345,9 @@ export class DataService {
           case this.fgs:
             return 'fg_id';
           case this.variables:
-            return 'variable_id'
+            return 'variable_id';
+          case this.favorites:
+            return 'favorite_id';
           default:
             throw('Dataserver:Invalid list passed to getRefIdColumn');
         }

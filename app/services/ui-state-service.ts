@@ -11,6 +11,8 @@ export class UIStateService {
     online:boolean = false;
     content:Content;
     modals:Modal;
+    sharedTab:boolean = false;
+    userId:number = nil;
     static event_types = {
         resource_save_complete:1,   //Successful save of an resource
         service_error_occurred:2, //Publishing errors from services

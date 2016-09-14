@@ -1,0 +1,1 @@
+Property.T_cleanAll;Property.T_addTestRows;require './lib/sync_info';a=SyncInfo.new().simulate;p=Property.first;p.user_id=3;p.shared=true;p.save;p.units[0].user_id=3;p.units[0].shared=true;p.units[0].save;app.put '/api/v1/sync', {data:{syncInfo:a}}

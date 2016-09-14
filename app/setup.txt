@@ -205,3 +205,4 @@ Take a screenshot of an area of the screen. The pointer changes to a crosshair. 
 
 you can switch between them using Alt + $ {tab_number} (*eg. Alt + 1 )
 
+

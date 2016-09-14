@@ -10,10 +10,12 @@ import { FlNavBar } from '../components/bars/nav-bar';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { DetailPage } from '../pages/detail/detail';
-import { Property, Formula, Global } from '../types/standard'
+import { BaseResource, Property, Formula, Global } from '../types/standard'
+import { FavFilterPipe } from '../components/fav-filter'
 @Component({
     templateUrl: 'build/pages/resource-list.html',
-    directives:[FlNavBar, PropertyComponent, UnitComponent, GlobalComponent, FormulaComponent]
+    directives:[FlNavBar, PropertyComponent, UnitComponent, GlobalComponent, FormulaComponent],
+    pipes:      [FavFilterPipe]
 })
 
 export class ResourceListPage implements  OnInit, OnDestroy {
@@ -21,6 +23,9 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     args:any;
     prop:Property;
     uiSubscription:any;
+    resources:Array<BaseResource> = new Array<BaseResource>();
+
+    viewType:string = 'All'
     constructor(public navParams: NavParams
               , public dataService:DataService
               , public uiStateService:UIStateService
@@ -38,6 +43,22 @@ export class ResourceListPage implements  OnInit, OnDestroy {
             this.prop = this.navParams.get("prop")
         }
         this.args = this.navParams.get("args");
+        this.uiStateService.sharedTab = false;
+        if(this.viewType == 'All'){
+            this.dataService[this.resourceType].ole.subscribe(res => {
+                this.resources = res
+            })
+        }
+        else if(this.viewType == 'Favourites'){
+             this.dataService[this.resourceType].ole.subscribe(res => {
+                 this.resources = res.filter(item => item.Favorite)
+             })
+        }
+        else if(this.viewType == 'Shared'){
+             this.dataService[this.resourceType].ole.subscribe(res => {
+                 this.resources = res.filter(item => item.isShared())
+             })   
+        }
 
         this.uiSubscription = this.uiStateService.ole.subscribe(res => {
             if(res.type == UIStateService.event_types.service_error_occurred){
