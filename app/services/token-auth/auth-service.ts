@@ -6,7 +6,8 @@ import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { JwtHttp } from "./jwtHttp";
-import { Util } from '../../lib/util'
+import { Util } from '../../lib/util';
+import { ErrorHandler,User } from '../../types/standard';
 
 @Injectable()
 export class MyTokenAuth {
@@ -24,7 +25,7 @@ export class MyTokenAuth {
   timer: any = null;
   _hasSessionStorage:boolean = false;
   _hasLocalStorage:boolean = false;
-
+  guestUser:User = {uid:"guest@sangamsoftech.com", id:-1, name:'Guest'};
   config:any = {
        // apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
         apiUrl: this.apiEndpoint,
@@ -51,11 +52,11 @@ export class MyTokenAuth {
         storage: 'localStorage',
         forceValidateToken: false,
         tokenFormat: {
-          "Access-Token": "token",
-          "Token-Type": "Bearer",
-          Client: "clientId",
-          Expiry: "expiry",
-          Uid: "uid"
+          access_token: "access-token",
+          token_type: "token-type",
+          client: "client",
+          expiry: "expiry",
+          uid: "uid"
         },
         cookieOps: {
           path: "/",
@@ -96,7 +97,11 @@ export class MyTokenAuth {
     this.observable.connect();
     
     //subscribe locally to create observer
-    this.observable.subscribe(res => {})
+    this.observable.subscribe(res => {},err=>{
+      ErrorHandler.handle(err, "MyTokenAuth::constructor", false);
+
+    }
+    )
     
     if (this.config.validateOnPageLoad) {
       this.validateUser();
@@ -176,7 +181,7 @@ export class MyTokenAuth {
         this.observer.next({
           event: 'auth:registration-email-error',
           data: error})
-        return Util.handleError(error);
+        return Observable.throw(error);
       })
   }
 
@@ -192,12 +197,12 @@ export class MyTokenAuth {
     return this.http.post(this.config.apiUrl + this.config.emailSignInPath, params, headers)
       .map(resp => {
         var authData;
-        authData = this.config.handleLoginResponse(JSON.parse(resp.json().body).data);
+        authData = this.config.handleLoginResponse(resp.json().data);
         this.handleValidAuth(authData, null);
         this.observer.next({ event: 'auth:login-success', data: this.user });})
       .catch(error => {
         this.observer.next({ event: 'auth:login-error', data: error });
-        return Util.handleError(error);
+        return Observable.throw(error);
       })
   }
 
@@ -215,7 +220,7 @@ export class MyTokenAuth {
         console.log(JSON.stringify(error));
         this.invalidateTokens();
         this.observer.next({event: 'auth:logout-error', data:error});
-        return Util.handleError(error);
+        return Observable.throw(error);
        })
   }
 
@@ -231,7 +236,7 @@ export class MyTokenAuth {
         this.observer.next({ event: 'auth:password-reset-request-success', data: params })})
       .catch(error => {
         this.observer.next({ event: 'auth:password-reset-request-error', data: error })
-        return Util.handleError(error);
+        return Observable.throw(error);
       })
   }
 
@@ -246,9 +251,11 @@ export class MyTokenAuth {
         this.observer.next({
         event: 'auth:password-change-error',
         data: error})
-        return Util.handleError(error);
+        return Observable.throw(error);
       })
   }
+
+
 
   updateAccount(params) {
     return this.http.put(this.config.apiUrl + this.config.accountUpdatePath, params, null)
@@ -275,7 +282,7 @@ export class MyTokenAuth {
         this.observer.next({
           event: 'auth:account-update-error',
           data: error});
-        return Util.handleError(error);
+        return Observable.throw(error);
       })
   }
 
@@ -290,7 +297,7 @@ export class MyTokenAuth {
         this.observer.next({
           event: 'auth:account-destroy-error',
           data: error});
-        return Util.handleError(error);
+        return Observable.throw(error);
       });
   }
 
@@ -306,7 +313,7 @@ export class MyTokenAuth {
   //Helper function
   userIsAuthenticated() {
     //return this.retrieveData('auth_headers') && this.user.signedIn && !this.tokenHasExpired();
-    return this.retrieveData('auth_headers') && !this.tokenHasExpired();
+    return (this.retrieveData('auth_headers') != null) && !this.tokenHasExpired();
   }
 
   openAuthWindow(provider, opts){
@@ -421,8 +428,14 @@ export class MyTokenAuth {
     return obj;
   }
 
+  getUser():User{
+    let user = this.retrieveData('auth_user');
+    if(!user)
+      return this.guestUser;
+  }
+
   validateUser() {
-    var clientId, expiry, location_parse, params, search, token, uid, url;
+    var clientId, expiry, location_parse, params, search, token, uid, url, token_type;
     
     if (this.userIsAuthenticated()) {
       //resolve
@@ -433,18 +446,19 @@ export class MyTokenAuth {
         clientId = params.client_id;
         uid = params.uid;
         expiry = params.expiry;
+        token_type = params.token_type;
         this.mustResetPassword = params.reset_password;
         this.firstTimeLogin = params.account_confirmation_success;
         this.oauthRegistration = params.oauth_registration;
         this.setAuthHeaders(this.buildAuthHeaders({
-          token: token,
-          clientId: clientId,
+          access_token: token,
+          client: clientId,
           uid: uid,
-          expiry: expiry
+          expiry: expiry,
+          tocken_type:token_type || 'Bearer'
         }));
         url = window.location || '/';
-        ['auth_token', 'token', 'client_id', 'uid', 'expiry', 'config', 'reset_password', 'account_confirmation_success', 'oauth_registration'].forEach(function(prop) {
-          return delete params[prop];
+        ['auth_token', 'token_type', 'token', 'client_id', 'uid', 'expiry', 'config', 'reset_password', 'account_confirmation_success', 'oauth_registration'].forEach(function(prop) {          return delete params[prop];
         });
         if (Object.keys(params).length > 0) {
           url += '?' + this.buildQueryString(params, null);
@@ -501,7 +515,7 @@ export class MyTokenAuth {
             this.observer.next({ event: 'auth:password-reset-confirm-error data:', error });
           }
           this.observer.next({ event: 'auth:validation-error', data: error });
-          return Util.handleError(error);
+          return Observable.throw(error);
         })
           
     } else {
@@ -530,6 +544,7 @@ export class MyTokenAuth {
     if (this.timer != null) {
       clearTimeout(this.timer);
     }
+    this.deleteData('auth_user');
     return this.deleteData('auth_headers');
   }
 
@@ -546,24 +561,27 @@ export class MyTokenAuth {
     
     Object.assign(this.user, user);
     this.user.signedIn = true;
+    this.setUserInfo(this.user);
     if (setHeader) {
       this.setAuthHeaders(this.buildAuthHeaders({
-        token: this.user.auth_token,
-        clientId: this.user.client_id,
+        access_token: this.user.auth_token,
+        client: this.user.client_id,
         uid: this.user.uid,
-        expiry: this.user.expiry
+        expiry: this.user.expiry,
+        token_type:this.user.token_type
       }));
+      
     }
   }
 
 
   buildAuthHeaders(ctx) {
-    var headers, key, val, _ref;
+    var headers, key, val, kv;
     headers = {};
-    _ref = this.config.tokenFormat;
-    for (key in _ref) {
-      val = _ref[key];
-      headers[key] = ctx[val];
+    kv = this.config.tokenFormat;
+    for (key in kv) {
+      val = kv[key];
+      headers[val] = ctx[key];
     }
     return headers;
   }
@@ -616,6 +634,11 @@ export class MyTokenAuth {
    }
   }
 
+  setUserInfo(u){
+    let newUser = Object.assign(this.retrieveData('auth_user') || {}, u);
+    let result = this.persistData('auth_user', newUser, null);
+  }
+
   setAuthHeaders(h) {
     var expiry, newHeaders, now, result;
     newHeaders = Object.assign(this.retrieveData('auth_headers') || {}, h);
@@ -628,6 +651,8 @@ export class MyTokenAuth {
       }
       this.timer = setTimeout(() => this.validateUser(), expiry - now);
     }
+    this.setUserInfo(this.user);
+
     return result;
   }
 

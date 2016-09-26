@@ -18,6 +18,7 @@ import { DetailPage } from '../../pages/detail/detail';
 import { Observable } from 'rxjs/Observable';
 import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueNameValidator, createUniqueSymbolValidator  } from '../validators/custom.validators'
 import { FBError } from '../fb-error';
+import { ErrorHandler } from '../../types/standard';
 
 @Component({
 	selector: 'fl-formula',
@@ -121,7 +122,7 @@ export class FormulaComponent extends BaseComponent {
 							subscribtion.unsubscribe();
 						}
 					},err=>{
-						console.log('Error unable to save global constant')
+						ErrorHandler.handle(err, "FormulaComponent::onRemoveCmd", true);
 					},()=>{
 					   console.log('The subscription completed')
 					})

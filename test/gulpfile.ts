@@ -58,7 +58,7 @@ gulp.task('karma', (done: Function) => {
   let karma: any = require('karma');
   let karmaOpts: {} = {
     configFile: join(process.cwd(), config.testDir, 'karma.config.js'),
-    singleRun: true,
+    singleRun: false,
   };
 
   new karma.Server(karmaOpts, done).start();
@@ -91,8 +91,8 @@ gulp.task('lint', () => {
 // build unit tests, run unit tests, remap and report coverage
 gulp.task('unit-test', (done: Function) => {
   runSequence(
-    ['lint', 'html'],
-    'karma',
+    ['html'],
+    'karma-debug',
     (<any>done)
   );
 });

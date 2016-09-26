@@ -60,6 +60,13 @@ export class SqlCacheService implements CacheService{
     	let param = {type:"select", table:table, obj:null, cond:null}
     	return this.sqlService.query(param)
     }
+
+	selectAllByUserIds(table:string, ids:Array<number>):Observable<any>{
+		let cond = { and: { user_id: { cond: 'in', value: ids } } };
+    	let param = {type:"select", table:table, obj:null, cond:cond}
+    	return this.sqlService.query(param)
+    }
+
     setKV(key:string, value:string):Observable<any>{
     	return this.sqlService.setKV(key, value)
     }

@@ -1,6 +1,8 @@
 import { Observable } from 'rxjs/Rx';
 import { DataService } from '../../services/data-service';
 import { Measure, Formula, Unit, Global, BaseResource } from '../../types/standard';
+import { ErrorHandler } from '../../types/standard';
+
 /*
 source:https://raw.githubusercontent.com/restlet/restlet-sample-angular2-forms/master/app/validators/custom.validators.ts
 
@@ -78,6 +80,8 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
                               resolve({uniqueness: true});
                             }
                           }, err=>{
+                              ErrorHandler.handle(err, "createUniqueNameValidator", true);
+
                               resolve({uniqueness: true});
                           }, () => resolve({uniqueness: true}))
             }, 600);
@@ -103,6 +107,7 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
                                 resolve({uniqueness: true});
                               }
                             }, err=>{
+                                ErrorHandler.handle(err, "createUniqueNameValidator", true);
                                 resolve({uniqueness: true});
                             }, () => resolve({uniqueness: true}))
             }, 600);

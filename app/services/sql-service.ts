@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import { RemoteService } from './remote-service';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { ErrorHandler } from '../types/standard';
 
 import {ResourceCollection, Unit, Property/*, Category, Formula*/} from '../types/standard';
 
@@ -180,7 +181,7 @@ export class SqlService {
 			this.storage.query(stmt).then((res) => {
 				if(or){
 					//Send the statement string with result
-					console.log('TEMMMMMM----------'+stmt)
+					res.res.length = 0;
 					if(res.res)
 						res.res.stmt = stmt;
 					or.next(res.res);
@@ -188,7 +189,7 @@ export class SqlService {
 				}
 			},(err) => {
 				//Send the stmt string with error
-				console.log('ERROR:TEMMMMMM----------'+stmt)
+				ErrorHandler.handle(err, "SqlService::query " + stmt, false);
 				if(err.err)
 					err.err.stmt = stmt;
 				or.error(err)
@@ -199,12 +200,11 @@ export class SqlService {
 	getKV(key:string):any {
 		return Observable.create(or => {
 			this.storage.get(key).then((res) => {
-				console.log('TEMMMMMM----getKV------'+key)
-
 				or.next(res)
 					or.complete();
 				},
 				err =>{
+					ErrorHandler.handle(err, "SqlService::getKV " + key, false);
 					or.error(err)
 				})
 		})
@@ -213,11 +213,11 @@ export class SqlService {
 	setKV(key:string, obj:any):Observable<any>{
 		return Observable.create(or => {
 				this.storage.set(key, obj).then(res => {
-					console.log('TEMMMMMM----setKV------'+key)
 					or.next(res)
 					or.complete();
 				},
 				err =>{
+					ErrorHandler.handle(err, "SqlService::setKV " + key, false);
 					or.error(err)
 				})
 		})

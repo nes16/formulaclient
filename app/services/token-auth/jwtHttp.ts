@@ -101,17 +101,19 @@ export class JwtHttp {
                 headers.set(header, ref[header]);
             }
         });
-        headers.set("token-type", "Bearer");
     }
 
     updateHeadersFromResponse(resp) {
-      var key, newHeaders, val, _ref;
+      var key, newHeaders, val;
       newHeaders = {};
-      _ref = this._auth.config.tokenFormat;
-      for (key in _ref) {
-        val = _ref[key];
+      let kvs = this._auth.config.tokenFormat;
+      for (key in kvs) {
+        let val = kvs[key];
         if (resp.headers.get(key)) {
           newHeaders[key] = resp.headers.get(key);
+        }
+        else if(resp.headers.get(val)){
+          newHeaders[val] = resp.headers.get(val);   
         }
       }
       if (this.tokenIsCurrent(newHeaders)) {

@@ -1,0 +1,57 @@
+Resetting database:
+Whenever restart the docker container reset the db
+
+
+Initialize database:
+In formulabook dir
+close docker instance
+clear all container(~/cld.sh)
+up web
+in another terminal
+run web bash
+rake db:migrate
+rake db:seed
+
+
+
+
+Connecting to database docker:
+start web docker using docker-compose up
+kill web docker
+attach to db docker using docker exec -t -i formulabook_db_1 bash
+su postgres
+cd /usr/lib/postgresql/9.5/bin
+dropdb postgres
+
+
+Testing server
+Seed:
+1.Create user(1 admin + 2 user)
+2.For admin add 2 property, 2 global, 2 formula
+3.For users: same as admin + 1 shared
+
+Names:{Res}_{index}_{user type}_{index}
+
+Client Testcase:
+1)No of items in each tab:
+1.Login as user1
+2.Check the no of properties in all
+3.Check the no of 
+
+Offline, Guest : Admin resource visible + Users resource invisible
+
+Online, User1 : Admin+User1 resource, 
+
+Offline - Library items should be hidden
+
+
+Online - Libray items should be visible
+
+
+Online - Share one item and check other user can see the item:
+
+
+
+Unshare one itm and check other user hidden
+
+

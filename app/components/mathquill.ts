@@ -63,14 +63,17 @@ export class MathQ {
 			if(this.editable){
 				this.mqService.curElem = this.mathelem;
 				this.mqService.showKeyboard = true;
-				this.uiStateService.content.resize();
-				this.scrollTo();
+				if(this.uiStateService.content){
+					this.uiStateService.content.resize();
+					this.scrollTo();
+				}
 			}
     	}));
 
 		this.listeners.push(this.renderer.listen(this.mathelem.el(), 'focusout', (event) => {
 			this.mqService.showKeyboard = false;
-			this.uiStateService.content.resize();
+			if(this.uiStateService.content)
+				this.uiStateService.content.resize();
     	}));
 	}
 

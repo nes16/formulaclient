@@ -25,7 +25,7 @@ export class BaseService{
 							let body = res.json();
 							return body.data || {};
 					 })
-					.catch(Util.handleError)
+					//.catch(Util.handleError)
 	}
 
 	

@@ -39,7 +39,7 @@ module.exports = function(config) {
       transform: [
         ['browserify-istanbul', {
           instrumenter: require('isparta'),
-          ignore: ['**/*.spec.ts','**/*.d.ts', '**/index.ts', '**/mocks.ts', '**/*.mock.ts'],
+          ignore: ['**/*.spec.ts','**/*.d.ts','**/*.ts', '**/index.ts', '**/mocks.ts', '**/*.mock.ts'],
         }]
       ],
       plugin: [
@@ -82,7 +82,7 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
-      'PhantomJS',
+      'Chrome',
     ],
 
     // https://github.com/lathonez/clicker/issues/82

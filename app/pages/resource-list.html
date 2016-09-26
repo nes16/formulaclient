@@ -3,17 +3,17 @@
 </ion-header>
 <ion-content>
 	<ion-segment [(ngModel)]="viewType" [attr.light]="isAndroid ? '' : null">
-	    <ion-segment-button value="All">
+	    <ion-segment-button value="All" (ionSelect)="selectedViewType('All')" >
 	        All
 	    </ion-segment-button>
-	    <ion-segment-button value="Favourites">
+	    <ion-segment-button value="Favourites" (ionSelect)="selectedViewType('Favourites')" >
 	        Favourites
 	    </ion-segment-button>
-	    <ion-segment-button value="Recent">
-	        Recent
+	    <ion-segment-button value="Library" (ionSelect)="selectedViewType('Library')" >
+	        Library
 	    </ion-segment-button>
 	</ion-segment>
-	 <ion-list *ngIf="resourceType == 'properties'" [virtualScroll]="resources">
-	    	<fl-property *virtualItem="let prop"  [resource]="prop" ></fl-property>
+	 <ion-list *ngIf="resourceType == 'properties'">
+	    	<fl-property *ngFor="let res of resources"  [resource]="res" ></fl-property>
 	 </ion-list>
 </ion-content>

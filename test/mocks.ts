@@ -14,6 +14,14 @@ export class ConfigMock {
   public getNumber(): number {
     return 1;
   }
+
+  public ready():any{
+    return new Promise(function(resolve: Function): void {
+      console.log('Inside ready');
+      setTimeout(resolve, 1000);
+      console.log('Outside ready')
+    });
+  }
 }
 
 export class NavMock {

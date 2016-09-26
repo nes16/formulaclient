@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { MyTokenAuth } from '../../services/token-auth/auth-service'
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { ErrorHandler } from '../../types/standard';
+
 
 @Component({
     templateUrl: 'build/pages/all-modals/all-modals.html',
@@ -54,7 +56,7 @@ export class AllModals {
         }
         this.login = new FormGroup({
             emailId: new FormControl("senthilr2007@gmail.com", Validators.required),
-            pwd: new FormControl("12345678", Validators.required)
+            pwd: new FormControl("rs#123456", Validators.required)
         })
 
         this.register = new FormGroup({
@@ -103,12 +105,19 @@ export class AllModals {
             this.auth.submitLogin(JSON.stringify({ email: value.emailId, password: value.pwd }), null)
                         .subscribe(
                                 () => this.dismiss(null),
-                                (error) => { this.error = error; })
+                                (error) => { 
+                                    this.error = error; 
+                                   ErrorHandler.handle(error, "AllModals::doLogin", true);
+
+                                })
         } else {
             this.auth.signOut()
                         .subscribe(
                             () => alert('logout success'),
-                            (error) => { this.error = error; })
+                            (error) => { 
+                                this.error = error; 
+                                ErrorHandler.handle(error, "AllModals::doLogin", true);
+                            })
         }
     }
 
@@ -118,7 +127,10 @@ export class AllModals {
             this.auth.submitRegistration(JSON.stringify({ email: value.emailId, password: value.pwd }), null)
                         .subscribe(
                                 () => alert('registration success'),
-                                (error) => { this.error = error; })
+                                (error) => { 
+                                    this.error = error; 
+                                    ErrorHandler.handle(error, "AllModals::doRegister", true);
+                                })
         }
      }
 
@@ -128,7 +140,10 @@ export class AllModals {
             this.auth.requestPasswordReset(JSON.stringify({ email: value.emailId }), null)
                         .subscribe(
                                 () => alert('password request success'),
-                                (error) => { this.error = error; })
+                                (error) => { 
+                                    this.error = error;
+                                    ErrorHandler.handle(error, "AllModals::doForgot", true);
+                                })
         }
     }
 
@@ -139,7 +154,11 @@ export class AllModals {
             this.auth.updatePassword(JSON.stringify({ pwd: value.pwd }))
                         .subscribe(
                                 () => alert('password change success'),
-                                (error) => { this.error = error; })
+                                (error) => { 
+                                    this.error = error; 
+                                    ErrorHandler.handle(error, "AllModals::doChpwd", true);
+                                    
+                                })
         }
     }
 
@@ -153,7 +172,10 @@ export class AllModals {
 
     oauthlogout(){
         this.auth.signOut().subscribe((res) => alert('signout success'),
-                                (error) => { this.error = error; })
+                                (error) => { 
+                                    this.error = error; 
+                                    ErrorHandler.handle(error, "AllModals::oauthlogout", true);
+                                })
     }
 
     userIsAuthenticated(){

@@ -21,7 +21,7 @@ export class ResourceCollection<T extends BaseResource>{
 
     offlineData: TableOfflineData;
     static all: { [id: string] : BaseResource; } = {};
-    constructor(public controller: DataService
+    constructor(public ds: DataService
         , public type: any)
     {
 
@@ -33,13 +33,13 @@ export class ResourceCollection<T extends BaseResource>{
             if(this.State == States.LOAD_COMPLETE)
                 or.next(this.resources);
             else
-                Observable.from([this.controller.init(), this.controller.loadListAndDepenent(this)])
+                Observable.from([this.ds.init(), this.ds.loadListAndDepenent(this)])
                           .map(i =>  i)
                           .concatAll()
                           .do(new LogHandler('Init DB'))
                           .subscribe(res=>{
                           },err=>{
-
+                            ErrorHandler.handle(err, "ResourceCollection::constructor->ole->ds.Init+this.ds.loadListAndDepenent", false);
                           },() => {
                                 or.next(this.resources);
                            })
@@ -76,13 +76,15 @@ export class ResourceCollection<T extends BaseResource>{
                 return;
             this.resources.push(r);
             ResourceCollection.all[r.id] = r;
-            if(!syncronizing)
+            //Only add item for sync when user logged in
+            if(!syncronizing && this.ds.uiService.authenticated)
                 this.offlineData.addResource(r, "added");
         }
     }
 
     onUpdate(r:T){
-        this.offlineData.addResource(r, "updated");
+        if(!this.ds.uiService.authenticated)
+            this.offlineData.addResource(r, "updated");
     }
 
 
@@ -93,7 +95,7 @@ export class ResourceCollection<T extends BaseResource>{
             r.deinit();
             delete ResourceCollection.all[r.id]
 
-            if(!syncronizing)
+            if(!syncronizing && this.ds.uiService.authenticated)
                 this.offlineData.addResource(r1, "deleted")
         }
     }
@@ -986,19 +988,12 @@ export class TableOfflineData {
         return this.added.concat(this.updated);
     }
 
-    clearResources(lastSync:string){
-        this.lastSync = lastSync;
-        this.lastSyncShared = lastSync;
-        this.added = new Array<string>();
-        this.updated = new Array<string>();
-        this.deleted = new Array<string>();
-    }
-
-    clearErrors(){
-        let all = this.added.concat(this.updated);
-        all.forEach(i => {
-            ResourceCollection.all[i].error_messages = null;
-        })
+    remove(item){
+        let list = [this.added,this.deleted, this.updated].find(a => a.indexOf(item) > -1)
+        if(list){
+            let index = list.indexOf(item)
+            list.splice(index, 1)
+        }
     }
 
     hasOfflineData():boolean{
@@ -1090,8 +1085,10 @@ export class SyncResponseHandler{
             li.offlineData.deleted = [];
             let table = this.ds.getTable(li); 
             i.deleted.forEach(j => {
+                let lr = ResourceCollection.all[j];
                 li.remove(ResourceCollection.all[j], true)
-                oles.push(this.cs.deleteItem(table, j));
+                if(!this.ds.isResourceShared(lr))
+                    oles.push(this.cs.deleteItem(table, j));
             })
         })
         this.offlineData.tables.forEach(i => {
@@ -1114,8 +1111,7 @@ export class SyncResponseHandler{
                             oles.push(this.cs.updateIds(t, refId_col, oldId, obj));
                         })
                         ResourceCollection.all[lr.id]=lr;
-                        let index = li.offlineData.added.indexOf(j);
-                        li.offlineData.added.splice(index, 1)
+                        let index = li.offlineData.remove(j);
                     }
                     else{
 
@@ -1126,7 +1122,7 @@ export class SyncResponseHandler{
                 }
                 else{
                     r.id = j;
-                    if(!this.ds.isResourceShared(lr))
+                    if(!this.ds.isResourceShared(r))
                         oles.push(this.cs.addItem(r));
                     li.add(r, true);
                 }
@@ -1147,8 +1143,9 @@ export class SyncResponseHandler{
                    if(index >= 0){
                        lr.error_messages = {} 
                        lr.lock_version = r.lock_version;
-                       oles.push(this.cs.updateItem(lr))
-                       li.offlineData.updated.splice(index, 1)
+                       if(!this.ds.isResourceShared(lr))
+                           oles.push(this.cs.updateItem(lr))
+                       li.offlineData.remove(j);
                    }
                    else{
                        r.id = j;
@@ -1162,6 +1159,7 @@ export class SyncResponseHandler{
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             li.offlineData.lastSync = i.lastSync;
+            li.offlineData.lastSyncShared = i.lastSyncShared;
             oles.push(this.ds.saveOfflineData(li));
         })
         this.offlineData.tables.forEach(t => {
@@ -1263,12 +1261,40 @@ export function pass(or){
     }
 }
 
+export class User{
+    uid:string;
+    id:number;
+    name:string;
+}
+
 export interface CacheService{
     deleteItem(table:string, id:string):Observable<any>;
     addItem(item:BaseResource):Observable<any>;
     updateItem(item:BaseResource):Observable<any>;
     updateIds(list:string, idField:string, oldId:string, newId:any  ):Observable<any>;
     selectAll(table:string):Observable<any>;
+    selectAllByUserIds(table:string, ids:Array<number>):Observable<any>;
     setKV(key:string, value:string):Observable<any>;
     getKV(key:string):Observable<any>;
+}
+
+export class ErrorHandler {
+
+    constructor(){
+
+    }
+
+    static handle(stack:any, msg:string, last:boolean=false){
+        if(last){
+            console.log('Error:'+msg);
+            console.log(JSON.stringify(stack));
+        }
+        else{
+            if(stack.stack)
+                stack.stack.push(msg);
+            else
+                stack.stack = new Array<string>();
+                stack.stack.push(msg);
+        }
+    }
 }

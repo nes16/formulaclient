@@ -9,8 +9,8 @@ import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Vari
 import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
 import { Favorite } from '../types/standard'
 import { UIStateService } from './ui-state-service'
-import { Platform } from 'ionic-angular';
 import { UUID } from 'angular2-uuid';
+import { ErrorHandler } from '../types/standard';
 
 @Injectable()
 export class DataService {
@@ -35,8 +35,7 @@ export class DataService {
 
     initComplete: boolean = false;
     
-    constructor(private platform: Platform
-      , public remoteService: RemoteService
+    constructor(public remoteService: RemoteService
       //Encapsulate cache into cache service
       , public cache: SqlCacheService
       , public uiService: UIStateService) {      
@@ -44,9 +43,7 @@ export class DataService {
       //Why log handler
       //When it is required, is it required in production?    
       this.logHandler = new LogHandler("Load items");
-      
-
-    }
+          }
 
     init():Observable<any> {
       //cache drop all tables.
@@ -60,13 +57,13 @@ export class DataService {
 
       return Observable.from(lists)
       .map(li => this.getTable(li))
-      .map(table => Observable.forkJoin(this.cache.selectAll(table)
+      .map(table => Observable.forkJoin(this.cache.selectAllByUserIds(table, [1, this.uiService.userId])
         , this.cache.getKV(`lastSync_${table}`)
         , this.cache.getKV(`offlineData_${table}`)))
       .concatAll()
       .map((res,i) =>{
         lists[i].addRows(res[0].rows);
-        lists[i].offlineData.clearResources(res[1]);
+        lists[i].offlineData.lastSync = res[1];
         lists[i].offlineData.loadFromCache(lists[i], res[2]) 
       })
       .map((n,i)=>{
@@ -77,12 +74,10 @@ export class DataService {
             this.initListItem(li)
             console.log('Info:Initializing list complete')
           })
-          this.sync(list).subscribe();
         }
       })
 
     }
-
 
     saveOfflineData(li:ResourceCollection<BaseResource>):Observable<any>{
         let table = this.getTable(li);
@@ -109,15 +104,7 @@ export class DataService {
     isUnique(table:string, field:string, value:string, id:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
       let li = this[table] as ResourceCollection<BaseResource>;
       let oles = new Array<Observable<any>>();
-      if(this.uiService.IsOnline)
-        oles.push(Observable.create(or => {
-          this.remoteService
-            .isUnique({table:table, field:field, value:value, id:id})
-            .subscribe(od => {
-              or.next(od);
-            }, err=>or.erro(err), ()=>or.complete())
-        }))
-
+      
        oles.push(Observable.create(or => {
           let r = this[table].find(predicate, null)
           if(r)
@@ -138,7 +125,10 @@ export class DataService {
                    if(res) {
                      result = false;
                      }
-                   },err => or.error(err)
+                   },err => {
+                     ErrorHandler.handle(err, "DataService::isUnique", false);
+                     or.error(err)
+                    }
                    ,() => {
                      or.next({unique:result}); or.complete()
                    });
@@ -159,9 +149,9 @@ export class DataService {
 
         .sync({syncInfo: offLineData.asJson(lists, this.uiService)})
         .subscribe(res=>{ 
-            this.uiService.showProgressModal("Syncronizing", "Please wait");
+            //this.uiService.showProgressModal("Syncronizing", "Please wait");
             if(res == 'offline'){
-              this.uiService.closeProgressModal();
+              //this.uiService.closeProgressModal();
               return or.complete();
             }
             console.log(JSON.stringify(res, null, 2));
@@ -173,17 +163,15 @@ export class DataService {
                   li.eor.next(li.findErrorItems())
               })
             },err=>{
+              ErrorHandler.handle(err, "DataService::sync->handleSyncResponse", false);
               or.error(err);
-              this.uiService.closeProgressModal();
             },()=>{
               or.complete()
-              this.uiService.closeProgressModal();
             })
           },
           err=>{
-            console.log(err);
+            ErrorHandler.handle(err, "DataService::sync", false);
             or.error(err);
-            this.uiService.closeProgressModal();
           })
       })
     }
@@ -203,6 +191,7 @@ export class DataService {
       //Update in memory objects in
       //Resource lists of each table
       return new SyncResponseHandler(offlineData, this,  this.cache).sync();
+      
     }
     
 
@@ -221,8 +210,6 @@ export class DataService {
       })
       oles.push(this.saveOfflineData(li))
 
-      oles.push(this.sync(this[r.getTable()]));
-
       return Observable.from(oles)
       .map(i => i)
       .concatAll();
@@ -232,6 +219,7 @@ export class DataService {
       let li = this[r.getTable()] as ResourceCollection<BaseResource>;
       if(r.id == null){
         r.id = UUID.UUID();
+        r.user_id = this.uiService.userId;
         li.add(r);
         return this.cache.addItem(r)
       }
@@ -275,9 +263,7 @@ export class DataService {
       .map(li => this.saveOfflineData(li))
       .concatAll()
 
-      let syncOle = this.sync(this[r.getTable()]);
-
-      return Observable.from([saveOle, saveOfflineOle, syncOle])
+      return Observable.from([saveOle, saveOfflineOle])
       .concatAll()
     }
 
@@ -294,7 +280,7 @@ export class DataService {
         let userId = this.uiService.userId; 
         if(!userId)
             return false;
-        if(res.user_id == nil || res.user_id == userId)
+        if(res.user_id == null || res.user_id == userId)
             return false;
         else
             return true;

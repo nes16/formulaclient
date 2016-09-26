@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/data-service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> data-service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">29.74% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>69/232</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">29.9% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>29/97</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.71% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>6/56</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">25.13% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>50/199</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">8 statements, 15 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { RemoteService } from './remote-service';
+import { SqlCacheService } from './sqlcache-service';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
+import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
+import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
+import { Favorite } from '../types/standard'
+import { UIStateService } from './ui-state-service'
+import { UUID } from 'angular2-uuid';
+&nbsp;
+@Injectable()
+export class DataService {
+&nbsp;
+    // categories: ResourceCollection;
+    properties: ResourceCollection&lt;Property&gt; = new ResourceCollection&lt;Property&gt;(this, Property);
+    globals: ResourceCollection&lt;Global&gt; = new ResourceCollection&lt;Global&gt;(this, Global);
+    units: ResourceCollection&lt;Unit&gt; = new ResourceCollection&lt;Unit&gt;(this, Unit);
+    formulas: ResourceCollection&lt;Formula&gt; = new ResourceCollection&lt;Formula&gt;(this, Formula);
+    variables: ResourceCollection&lt;Variable&gt; = new ResourceCollection&lt;Variable&gt;(this, Variable);;
+    fgs: ResourceCollection&lt;FG&gt; = new ResourceCollection&lt;FG&gt;(this, FG);
+    favorites: ResourceCollection&lt;Favorite&gt; = new ResourceCollection&lt;Favorite&gt;(this, Favorite);
+    categories: ResourceCollection&lt;Category&gt; = new ResourceCollection&lt;Category&gt;(this, Category);
+    logHandler:LogHandler;
+&nbsp;
+    static allOff = new OfflineData();
+&nbsp;
+    // formulas: ResourceCollection;
+    resourceTables: Array&lt;string&gt; = ['properties', 'units', 'globals'
+    , 'formula', 'variables', 'fgs'
+    , 'categories'];
+&nbsp;
+    initComplete: boolean = false;
+    
+    constructor(public remoteService: RemoteService
+      //Encapsulate cache into cache service
+      , public cache: SqlCacheService
+      , public uiService: UIStateService) {      
+      //What is this
+      //Why log handler
+      //When it is required, is it required in production?    
+      this.logHandler = new LogHandler("Load items");
+          }
+&nbsp;
+    init():Observable&lt;any&gt; {
+      //cache drop all tables.
+      return this.cache.init()
+      .map(i =&gt; {this.initComplete = true; return Observable.empty()})
+    }
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    loadListAndDepenent(l</span>ist:ResourceCollection&lt;BaseResource&gt;):Observable&lt;any&gt;{</span>
+<span class="cstat-no" title="statement not covered" >      let lists = t</span>his.getDepentent(list).filter(<span class="fstat-no" title="function not covered" >l</span>i =&gt; <span class="cstat-no" title="statement not covered" >l</span>i.State == States.CREATED);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      return Observable.from(lists)</span>
+      .map(<span class="fstat-no" title="function not covered" >l</span>i =&gt; <span class="cstat-no" title="statement not covered" >t</span>his.getTable(li))
+      .map(<span class="fstat-no" title="function not covered" >t</span>able =&gt; <span class="cstat-no" title="statement not covered" >O</span>bservable.forkJoin(this.cache.selectAll(table)
+        , this.cache.getKV(`lastSync_${table}`)
+        , this.cache.getKV(`offlineData_${table}`)))
+      .concatAll()
+      .map(<span class="fstat-no" title="function not covered" >(res,i</span>) =&gt;{
+<span class="cstat-no" title="statement not covered" >        lists[i].addRows(res[0].r</span>ows);
+<span class="cstat-no" title="statement not covered" >        lists[i].offlineData.clearResources(res[1</span>]);
+<span class="cstat-no" title="statement not covered" >        lists[i].offlineData.loadFromCache(lists[i], res[2</span>]) 
+      })
+      .map(<span class="fstat-no" title="function not covered" >(n,i</span>)=&gt;{
+<span class="cstat-no" title="statement not covered" >        if(i == lists.length-1){</span>
+<span class="cstat-no" title="statement not covered" >          console.log('</span>Info:Initializing lists...')
+<span class="cstat-no" title="statement not covered" >          lists.forEach(<span class="fstat-no" title="function not covered" >l</span>i =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            li.State = States.L</span>OAD_COMPLETE;
+<span class="cstat-no" title="statement not covered" >            this.initListItem(l</span>i)
+<span class="cstat-no" title="statement not covered" >            console.log('</span>Info:Initializing list complete')
+          })
+<span class="cstat-no" title="statement not covered" >          this.sync(list).s</span>ubscribe();
+        }
+      })
+&nbsp;
+    }
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    saveOfflineData(l</span>i:ResourceCollection&lt;BaseResource&gt;):Observable&lt;any&gt;{
+<span class="cstat-no" title="statement not covered" >        let table = this.getTable(l</span>i);
+<span class="cstat-no" title="statement not covered" >        return this.cache.setKV(`offlineData_${table}`, JSON.stringify(li.offlineData.a</span>sJSONForCache()))
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    initListItem(l</span>ist){
+<span class="cstat-no" title="statement not covered" >      list.initItems(this.getInitParameters(l</span>ist))
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getInitParameters(l</span>ist):any{
+      switch (list) {
+        case this.properties:
+<span class="cstat-no" title="statement not covered" >        return { ulist: this.u</span>nits };
+        case this.globals:
+<span class="cstat-no" title="statement not covered" >        return { ulist: this.u</span>nits};
+        case this.formulas:
+<span class="cstat-no" title="statement not covered" >        return { plist:this.properties, ulist: this.units, vlist:this.variables, glist:this.globals, fglist:this.f</span>gs};
+        default :
+<span class="cstat-no" title="statement not covered" >        return {</span>};
+      }
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    isUnique(table:string, field:string, value:string, id:string, p</span>redicate: (value: BaseResource, index: number) =&gt; boolean ):Observable&lt;any&gt;{</span>
+<span class="cstat-no" title="statement not covered" >      let li = this[t</span>able] as ResourceCollection&lt;BaseResource&gt;;
+<span class="cstat-no" title="statement not covered" >      let oles = new A</span>rray&lt;Observable&lt;any&gt;&gt;();
+<span class="cstat-no" title="statement not covered" >      if(this.uiService.<span class="cstat-no" title="statement not covered" >IsOnline)</span></span>
+        oles.push(Observable.create(<span class="fstat-no" title="function not covered" >o</span>r =&gt; {
+<span class="cstat-no" title="statement not covered" >          this.remoteService</span>
+            .isUnique({table:table, field:field, value:value, id:id})
+            .subscribe(<span class="fstat-no" title="function not covered" >o</span>d =&gt; {
+<span class="cstat-no" title="statement not covered" >              or.next(o</span>d);
+            }, <span class="fstat-no" title="function not covered" >e</span>rr=&gt;<span class="cstat-no" title="statement not covered" >o</span>r.erro(err), <span class="fstat-no" title="function not covered" >(</span>)=&gt;<span class="cstat-no" title="statement not covered" >o</span>r.complete())
+        }))
+&nbsp;
+<span class="cstat-no" title="statement not covered" >       oles.push(O</span>bservable.create(<span class="fstat-no" title="function not covered" >o</span>r =&gt; {
+<span class="cstat-no" title="statement not covered" >          let r = this[table].find(predicate, n</span>ull)
+<span class="cstat-no" title="statement not covered" >          if(r)</span>
+<span class="cstat-no" title="statement not covered" >            or.next({id:r.id}), or.c</span>omplete();
+          else
+<span class="cstat-no" title="statement not covered" >            or.next({id:id}), or.c</span>omplete();
+        }))
+&nbsp;
+<span class="cstat-no" title="statement not covered" >       let combined = Observable.from(oles)</span>
+           .map(<span class="fstat-no" title="function not covered" >i</span> =&gt; <span class="cstat-no" title="statement not covered" >i</span>)
+           .concatAll();
+&nbsp;
+<span class="cstat-no" title="statement not covered" >       return O</span>bservable.create(<span class="fstat-no" title="function not covered" >o</span>r =&gt; {
+<span class="cstat-no" title="statement not covered" >         let result = t</span>rue;
+<span class="cstat-no" title="statement not covered" >         combined.map(<span class="fstat-no" title="function not covered" >r</span>es =&gt; { </span>
+<span class="cstat-no" title="statement not covered" >           return res.id != i</span>d
+         }).subscribe(<span class="fstat-no" title="function not covered" >r</span>es =&gt; {
+<span class="cstat-no" title="statement not covered" >                   if(res) {</span>
+<span class="cstat-no" title="statement not covered" >                     result = f</span>alse;
+                     }
+                   },<span class="fstat-no" title="function not covered" >e</span>rr =&gt; <span class="cstat-no" title="statement not covered" >o</span>r.error(err)
+                   ,<span class="fstat-no" title="function not covered" >(</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                     or.next({unique:r</span>esult}); <span class="cstat-no" title="statement not covered" >or.c</span>omplete()
+                   });
+&nbsp;
+       }) 
+    }
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    sync(l</span>i):Observable&lt;any&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      var lists = this.getDepentent(l</span>i);
+<span class="cstat-no" title="statement not covered" >      return O</span>bservable.create(<span class="fstat-no" title="function not covered" >o</span>r =&gt; {
+<span class="cstat-no" title="statement not covered" >        var offLineData = DataService.a</span>llOff;
+<span class="cstat-no" title="statement not covered" >        console.log(JSON.stringify(offLineData.asJson(lists, this.uiService), null, 2</span>));
+        //or.complete()
+        //Handle response for sync opertaion
+<span class="cstat-no" title="statement not covered" >        var syncResponse = n</span>ull;
+<span class="cstat-no" title="statement not covered" >        this.remoteService</span>
+&nbsp;
+        .sync({syncInfo: offLineData.asJson(lists, this.uiService)})
+        .subscribe(<span class="fstat-no" title="function not covered" >r</span>es=&gt;{ 
+<span class="cstat-no" title="statement not covered" >            this.uiService.showProgressModal("Syncronizing", "</span>Please wait");
+<span class="cstat-no" title="statement not covered" >            if(res == 'offline'){</span>
+<span class="cstat-no" title="statement not covered" >              this.uiService.c</span>loseProgressModal();
+<span class="cstat-no" title="statement not covered" >              return or.c</span>omplete();
+            }
+<span class="cstat-no" title="statement not covered" >            console.log(JSON.stringify(res, null, 2</span>));
+<span class="cstat-no" title="statement not covered" >            this.handleSyncResponse(res)</span>
+            .subscribe(<span class="fstat-no" title="function not covered" >r</span>es=&gt;{
+<span class="cstat-no" title="statement not covered" >              or.next(r</span>es);
+<span class="cstat-no" title="statement not covered" >              lists.forEach(<span class="fstat-no" title="function not covered" >l</span>i =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if(li.eor)</span>
+<span class="cstat-no" title="statement not covered" >                  li.eor.next(li.f</span>indErrorItems())
+              })
+            },<span class="fstat-no" title="function not covered" >e</span>rr=&gt;{
+<span class="cstat-no" title="statement not covered" >              or.error(e</span>rr);
+<span class="cstat-no" title="statement not covered" >              this.uiService.c</span>loseProgressModal();
+            },<span class="fstat-no" title="function not covered" >(</span>)=&gt;{
+<span class="cstat-no" title="statement not covered" >              or.c</span>omplete()
+<span class="cstat-no" title="statement not covered" >              this.uiService.c</span>loseProgressModal();
+            })
+          },
+<span class="fstat-no" title="function not covered" >          e</span>rr=&gt;{
+<span class="cstat-no" title="statement not covered" >            console.log(e</span>rr);
+<span class="cstat-no" title="statement not covered" >            or.error(e</span>rr);
+<span class="cstat-no" title="statement not covered" >            this.uiService.c</span>loseProgressModal();
+          })
+      })
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    checkOnlineAndErrors(r</span>:BaseResource){</span>
+<span class="cstat-no" title="statement not covered" >      if(this.uiService.IsOnline &amp;&amp; this.resourceTables.some(<span class="fstat-no" title="function not covered" >i</span> =&gt; <span class="cstat-no" title="statement not covered" >t</span>his[i].hasErrorInfo()) &amp;&amp; !r.hasError())</span>
+      {
+<span class="cstat-no" title="statement not covered" >        console.log("</span>You are online and have items with server errors")
+<span class="cstat-no" title="statement not covered" >        return f</span>alse;
+      }
+      else
+<span class="cstat-no" title="statement not covered" >        return t</span>rue;
+    }
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    handleSyncResponse(o</span>fflineData:OfflineData): Observable&lt;any&gt;{
+      //Update in memory objects in
+      //Resource lists of each table
+<span class="cstat-no" title="statement not covered" >      return new SyncResponseHandler(offlineData, this,  this.cache).s</span>ync();
+    }
+    
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    removeItem(r</span>:BaseResource):Observable&lt;any&gt;{</span>
+<span class="cstat-no" title="statement not covered" >      let items = [r</span>];
+<span class="cstat-no" title="statement not covered" >      let oles = [</span>] as Observable&lt;any&gt;[];
+<span class="cstat-no" title="statement not covered" >      let li = this[r.g</span>etTable()] as ResourceCollection&lt;BaseResource&gt;;
+<span class="cstat-no" title="statement not covered" >      if(r.getTable() == 'properties'){</span>
+<span class="cstat-no" title="statement not covered" >        let prop = r</span> as Property;
+<span class="cstat-no" title="statement not covered" >        items = items.concat(prop.g</span>etChildItems());
+      }
+<span class="cstat-no" title="statement not covered" >      items.forEach(<span class="fstat-no" title="function not covered" >i</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        let li = this[i.g</span>etTable()] as ResourceCollection&lt;BaseResource&gt;;
+<span class="cstat-no" title="statement not covered" >        li.remove(i</span>);
+<span class="cstat-no" title="statement not covered" >        oles.push(this.cache.deleteItem(i.getTable(), i.i</span>d));
+      })
+<span class="cstat-no" title="statement not covered" >      oles.push(this.saveOfflineData(l</span>i))
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      oles.push(this.sync(this[r.g</span>etTable()]));
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      return Observable.from(oles)</span>
+      .map(<span class="fstat-no" title="function not covered" >i</span> =&gt; <span class="cstat-no" title="statement not covered" >i</span>)
+      .concatAll();
+    }
+    
+<span class="fstat-no" title="function not covered" >    _saveItem(r</span>:BaseResource):Observable&lt;any&gt;{
+<span class="cstat-no" title="statement not covered" >      let li = this[r.g</span>etTable()] as ResourceCollection&lt;BaseResource&gt;;
+<span class="cstat-no" title="statement not covered" >      if(r.id == null){</span>
+<span class="cstat-no" title="statement not covered" >        r.id = UUID.U</span>UID();
+<span class="cstat-no" title="statement not covered" >        li.add(r</span>);
+<span class="cstat-no" title="statement not covered" >        return this.cache.addItem(r</span>)
+      }<span class="cstat-no" title="statement not covered" ></span>
+      else <span class="cstat-no" title="statement not covered" >if(r.deleted){</span>
+<span class="cstat-no" title="statement not covered" >        li.remove(r</span>);
+<span class="cstat-no" title="statement not covered" >        return this.cache.deleteItem(r.getTable(), r.i</span>d);
+      }
+      else
+        if(r.isChanged()){
+<span class="cstat-no" title="statement not covered" >          li.onUpdate(r</span>);
+<span class="cstat-no" title="statement not covered" >          return this.cache.updateItem(r</span>)
+        }
+        else 
+<span class="cstat-no" title="statement not covered" >          return Observable.e</span>mpty();
+    }  
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    saveItemRecursive(r</span>:BaseResource):Observable&lt;any&gt;{</span>
+<span class="cstat-no" title="statement not covered" >      let cacheOles = new A</span>rray&lt;Observable&lt;any&gt;&gt;();
+<span class="cstat-no" title="statement not covered" >      let items = [r</span>] as Array&lt;BaseResource&gt;;
+<span class="cstat-no" title="statement not covered" >      if(r.getTable() == 'properties'){</span>
+<span class="cstat-no" title="statement not covered" >        let prop = r</span> as Property;
+<span class="cstat-no" title="statement not covered" >        items = items.concat(prop.D</span>efaultUnit);
+      }
+      else <span class="cstat-no" title="statement not covered" >if(r.getTable() == 'formulas'){</span>
+<span class="cstat-no" title="statement not covered" >        let r1 = r</span> as Formula;
+<span class="cstat-no" title="statement not covered" >        items = items.concat(r1.G</span>lobals);
+<span class="cstat-no" title="statement not covered" >        items = items.concat(r1.V</span>ariables)
+      }
+<span class="cstat-no" title="statement not covered" >      items.forEach(<span class="fstat-no" title="function not covered" >i</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        cacheOles.push(this._saveItem(i</span>))
+      })
+<span class="cstat-no" title="statement not covered" >      let lists = [</span>];
+<span class="cstat-no" title="statement not covered" >      items.forEach(<span class="fstat-no" title="function not covered" >i</span> =&gt; {<span class="cstat-no" title="statement not covered" >if(lists.indexOf(this[i.getTable()]) == -1) <span class="cstat-no" title="statement not covered" >lists.push(this[i.g</span></span>etTable()])})</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let saveOle =  Observable.from(cacheOles)</span>
+                               .map(<span class="fstat-no" title="function not covered" >i</span> =&gt; <span class="cstat-no" title="statement not covered" >i</span>)
+                               .concatAll()
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let saveOfflineOle = Observable.from(lists)</span>
+      .map(<span class="fstat-no" title="function not covered" >l</span>i =&gt; <span class="cstat-no" title="statement not covered" >t</span>his.saveOfflineData(li))
+      .concatAll()
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let syncOle = this.sync(this[r.g</span>etTable()]);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      return Observable.from([saveOle, saveOfflineOle, syncOle])</span>
+      .concatAll()
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getTable(l</span>ist: ResourceCollection&lt;BaseResource&gt;): string {
+<span class="cstat-no" title="statement not covered" >      return list.type.t</span>able;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    isDepententInSync(l</span>ist: ResourceCollection&lt;BaseResource&gt;){
+<span class="cstat-no" title="statement not covered" >      var deps = this.getDepentent(l</span>ist);
+<span class="cstat-no" title="statement not covered" >      return deps.filter(<span class="fstat-no" title="function not covered" >a</span> =&gt; <span class="cstat-no" title="statement not covered" >a</span>.offlineData.lastSync != list.offlineData.lastSync).length == 0</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    isResourceShared(r</span>es):boolean{
+<span class="cstat-no" title="statement not covered" >        let userId = this.uiService.u</span>serId; 
+<span class="cstat-no" title="statement not covered" >        if(!userId)</span>
+<span class="cstat-no" title="statement not covered" >            return f</span>alse;
+<span class="cstat-no" title="statement not covered" >        if(res.user_id == null || res.user_id == userId)</span>
+<span class="cstat-no" title="statement not covered" >            return f</span>alse;
+        else
+<span class="cstat-no" title="statement not covered" >            return t</span>rue;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getDepentent(l</span>ist):ResourceCollection&lt;BaseResource&gt;[]{
+      switch (list) {
+        case this.properties:
+        case this.units:
+<span class="cstat-no" title="statement not covered" >        return [this.properties, this.units, this.f</span>avorites];
+        case this.globals:
+<span class="cstat-no" title="statement not covered" >        return [this.properties, this.units, this.globals, this.f</span>avorites]
+        case this.formulas:
+        case this.variables:
+        case this.fgs:
+<span class="cstat-no" title="statement not covered" >        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables, this.f</span>avorites]
+        default:
+<span class="cstat-no" title="statement not covered" >        return [l</span>ist];
+      }
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getReferingList(l</span>ist):ResourceCollection&lt;BaseResource&gt;[]{
+      switch (list) {
+        case this.properties:
+<span class="cstat-no" title="statement not covered" >          return [this.units, this.formulas, this.v</span>ariables];
+        case this.units:
+<span class="cstat-no" title="statement not covered" >          return [this.globals, this.formulas, this.v</span>ariables];
+        case this.globals:
+<span class="cstat-no" title="statement not covered" >          return [this.f</span>gs]
+        case this.formulas:
+<span class="cstat-no" title="statement not covered" >          return [this.fgs, this.v</span>ariables]
+        case this.variables:
+        case this.fgs:
+        case this.favorites:
+<span class="cstat-no" title="statement not covered" >          return [</span>];
+      }
+    }
+<span class="fstat-no" title="function not covered" >    getRefIdColumn(l</span>ist):string{
+        switch (list) {
+          case this.properties:
+<span class="cstat-no" title="statement not covered" >            return '</span>property_id';
+          case this.units:
+<span class="cstat-no" title="statement not covered" >            return '</span>unit_id'
+          case this.globals:
+<span class="cstat-no" title="statement not covered" >            return '</span>global_id';
+          case this.formulas:
+<span class="cstat-no" title="statement not covered" >            return '</span>formula_id'
+          case this.fgs:
+<span class="cstat-no" title="statement not covered" >            return '</span>fg_id';
+          case this.variables:
+<span class="cstat-no" title="statement not covered" >            return '</span>variable_id';
+          case this.favorites:
+<span class="cstat-no" title="statement not covered" >            return '</span>favorite_id';
+          default:
+<span class="cstat-no" title="statement not covered" >            throw('</span>Dataserver:Invalid list passed to getRefIdColumn');
+        }
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    publishErrors(l</span>ist){
+      switch (list) {
+        case this.properties:
+<span class="cstat-no" title="statement not covered" >        this.properties.p</span>ublishErrors();
+<span class="cstat-no" title="statement not covered" >        b</span>reak;
+        case this.units:
+<span class="cstat-no" title="statement not covered" >        this.properties.p</span>ublishErrors();
+<span class="cstat-no" title="statement not covered" >        b</span>reak; 
+        case this.globals:
+<span class="cstat-no" title="statement not covered" >        this.globals.p</span>ublishErrors();
+<span class="cstat-no" title="statement not covered" >        b</span>reak;
+        case this.formulas:
+<span class="cstat-no" title="statement not covered" >        this.formulas.p</span>ublishErrors();
+<span class="cstat-no" title="statement not covered" >        b</span>reak;
+        default:
+      }
+    }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 21 2016 19:14:49 GMT+0530 (IST)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

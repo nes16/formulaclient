@@ -1,1 +1,44 @@
 Property.T_cleanAll;Property.T_addTestRows;require './lib/sync_info';a=SyncInfo.new().simulate;p=Property.first;p.user_id=3;p.shared=true;p.save;p.units[0].user_id=3;p.units[0].shared=true;p.units[0].save;app.put '/api/v1/sync', {data:{syncInfo:a}}
+
+Bugs when testing:
+1.common errors:- Common errors are generated while sync for resource. These errors should be reflected. currently the 
+solution use id field for collecting common errors.
+
+2.What is the use case when user create resource and then login and then sync
+When first user login
+a)Delete unsyncronized data/import
+When first user logout
+b)use guest user id
+when second user login
+keep the first user sync data and delete unsync data of first user.
+only fetch shared resources
+c)If no user logged in the offline data should not be populated.
+Currently, when sync without user, the offline data like added, deleted, updated in memory are cleared.
+but offline resource is sent.
+
+
+3.Consider other diff usecases like above
+
+4.The width of ion-item get reduced while using virtual itex`m
+
+5.Faouriable scenerio: Need to decide wether user has to be on-line or not.
+Then how to re make the association in server when resource id changes for new item
+
+6.user_id not set in local cache
+
+7.browser_adapter.js:84 TypeError: Cannot read property 'resize' of undefined
+    at mathquill.ts:73
+    unable to reproduce.
+
+8.lastSyncShared is always passed with ""
+
+9.THe sync call local update method
+
+10.The view not updated automatically.
+
+11.Disable editing of shared items
+
+12.Share child items recursively
+
+
+

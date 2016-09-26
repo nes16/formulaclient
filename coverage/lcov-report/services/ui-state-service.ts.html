@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/ui-state-service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> ui-state-service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">57.5% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>46/80</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">87.88% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>29/33</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">29.41% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">46.77% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>29/62</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">3 statements, 15 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {Injectable} from '@angular/core';
+import {Platform, Content, App} from 'ionic-angular';
+import { Observer } from 'rxjs/Observer';
+import { ConnectableObservable } from 'rxjs';
+import { Modal } from 'ionic-angular';
+import { AllModals } from '../pages/all-modals/all-modals';
+import { MyTokenAuth } from './token-auth/auth-service'
+@Injectable()
+export class UIStateService {
+    authenticated: boolean = false;
+    online:boolean = false;
+    content:Content;
+    modals:Modal;
+    sharedTab:boolean = false;
+    userId:number = null;
+    user:any = null;
+    static event_types = {
+        resource_save_complete:1,   //Successful save of an resource
+        service_error_occurred:2, //Publishing errors from services
+        resource_selected:3,
+        network_state_change:4
+    }
+&nbsp;
+    //Used for communicate async operation
+    //state
+    ole:ConnectableObservable&lt;any&gt;
+    or:Observer&lt;any&gt;;
+&nbsp;
+    inSelectMode:boolean;
+    constructor(public app:App, private platform: Platform, private auth:MyTokenAuth) {
+        this.ole = ConnectableObservable.create(or =&gt; {
+            this.or = or;
+        }).publish();
+        this.ole.connect();
+&nbsp;
+        this.authenticated = auth.userIsAuthenticated();
+        this.user = auth.getUser();
+        
+        auth.observable.subscribe(<span class="fstat-no" title="function not covered" >r</span>es =&gt; {
+<span class="cstat-no" title="statement not covered" >            this.authenticated = auth.u</span>serIsAuthenticated()
+<span class="cstat-no" title="statement not covered" >            this.user = auth.g</span>etUser();
+        })
+     
+    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    c</span>heckNetwork() {</span>
+<span class="cstat-no" title="statement not covered" >        this.platform.ready().then(<span class="fstat-no" title="function not covered" >(</span>) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            var networkState = navigator.connection.t</span>ype;
+<span class="cstat-no" title="statement not covered" >            document.addEventListener("online", this.onOnline.bind(this), f</span>alse);
+<span class="cstat-no" title="statement not covered" >            document.addEventListener("offline", this.onOffline.bind(this), f</span>alse);
+ 
+<span class="cstat-no" title="statement not covered" >            var states = {</span>};
+<span class="cstat-no" title="statement not covered" >            states[Connection.UNKNOWN]  = '</span>Unknown connection';
+<span class="cstat-no" title="statement not covered" >            states[Connection.ETHERNET] = '</span>Ethernet connection';
+<span class="cstat-no" title="statement not covered" >            states[Connection.WIFI]     = '</span>WiFi connection';
+<span class="cstat-no" title="statement not covered" >            states[Connection.CELL_2G]  = '</span>Cell 2G connection';
+<span class="cstat-no" title="statement not covered" >            states[Connection.CELL_3G]  = '</span>Cell 3G connection';
+<span class="cstat-no" title="statement not covered" >            states[Connection.CELL_4G]  = '</span>Cell 4G connection';
+<span class="cstat-no" title="statement not covered" >            states[Connection.NONE]     = '</span>No network connection';
+<span class="cstat-no" title="statement not covered" >            this.online = navigator.o</span>nLine; 
+            //this.online = false; 
+        });
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    showErrorModal(nav, e</span>rrorInfo){
+<span class="cstat-no" title="statement not covered" >        var data = {option:"error", errorInfo:e</span>rrorInfo}
+<span class="cstat-no" title="statement not covered" >        let modals = new Modal(this.app, AllModals, d</span>ata);
+<span class="cstat-no" title="statement not covered" >        modals.p</span>resent();
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    showProgressModal(title:string, m</span>essage:string){
+<span class="cstat-no" title="statement not covered" >        var data = {option:"progress", title:title, messsage:m</span>essage}
+<span class="cstat-no" title="statement not covered" >        this.modals = new Modal(this.app, AllModals, d</span>ata);
+<span class="cstat-no" title="statement not covered" >        this.modals.p</span>resent();
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    c</span>loseProgressModal(){
+<span class="cstat-no" title="statement not covered" >        if(this.modals)</span>
+<span class="cstat-no" title="statement not covered" >            this.modals.d</span>ismiss();
+    }
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    o</span>nOnline(){
+<span class="cstat-no" title="statement not covered" >        console.log('</span>=================Online=================');
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    o</span>nOffline(){
+<span class="cstat-no" title="statement not covered" >        console.log('</span>=================offline=================')
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    g</span>et IsOnline() {
+<span class="cstat-no" title="statement not covered" >        return this.o</span>nline;
+		//return navigator.onLine;
+    }
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    set IsOnline(s</span>tate:boolean) {
+<span class="cstat-no" title="statement not covered" >        this.online = s</span>tate;
+<span class="cstat-no" title="statement not covered" >        let value = "</span>offline";
+<span class="cstat-no" title="statement not covered" >        if(this.online) </span>
+<span class="cstat-no" title="statement not covered" >            value = "</span>online";
+<span class="cstat-no" title="statement not covered" >        this.or.next({type:UIStateService.event_types.network_state_change, value:v</span>alue})
+        //return navigator.onLine;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    set Content(c</span>ontent:Content){
+<span class="cstat-no" title="statement not covered" >        this.content = c</span>ontent;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    g</span>et Content(){
+<span class="cstat-no" title="statement not covered" >        return this.c</span>ontent;
+    }
+&nbsp;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 21 2016 19:14:49 GMT+0530 (IST)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

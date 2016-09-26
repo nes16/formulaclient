@@ -14,6 +14,7 @@ import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {ResourceListPage} from '../../pages/resource-list'
+import { ErrorHandler } from '../../types/standard';
 
 
 @Component({
@@ -90,8 +91,7 @@ export class UnitSelector {
 				subscribtion.unsubscribe();
 			}
 		}, error=>{
-			this.errorMessage = error
-			console.log('subscribtion error in')
+			ErrorHandler.handle(error, "UnitSelector::select", true);
 		}, ()=>{
 			console.log('Subscribtion completed in select')
 		});

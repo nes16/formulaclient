@@ -1,5 +1,5 @@
 exports.config = {
-    baseUrl: 'http://192.168.1.25:8100',
+    baseUrl: 'http://10.0.2.15:8100',
 
     specs: [
         '../www/build/test/**/*.e2e.js'

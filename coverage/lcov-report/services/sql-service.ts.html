@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/sql-service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> sql-service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">40.99% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>66/161</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">44.94% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>40/89</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">32.43% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>12/37</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">37.12% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>49/132</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">3 statements, 15 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span></td><td class="text"><pre class="prettyprint lang-js">import {App, Platform, Storage, SqlStorage} from 'ionic-angular';
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { RemoteService } from './remote-service';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+&nbsp;
+import {ResourceCollection, Unit, Property/*, Category, Formula*/} from '../types/standard';
+&nbsp;
+@Injectable()
+export class SqlService {
+	createTableStmts: string[] = [
+		'CREATE TABLE IF NOT EXISTS "properties" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "dims" varchar, "user_id" integer, "shared" boolean, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "units" ("id" varchar PRIMARY KEY NOT NULL, "property_id" varchar, "name" varchar, "system" varchar,  "symbol" varchar,  "description" varchar, "approx" boolean, "factor" varchar,  "user_id" integer, "shared" boolean, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "formulas" ("id" varchar PRIMARY KEY NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "favorites" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "user_id" integer, "favoritable_id" varchar, "favoritable_type" varchar, "lock_version" integer, "error_messages" varchar, "shared" boolean);',
+		'CREATE TABLE IF NOT EXISTS "globals" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "value" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "fgs" ("id" varchar PRIMARY KEY NOT NULL, "formula_id" varchar, "global_id" varchar, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "variables" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "formula_id" varchar, "property_id" varchar, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "categories" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "parent_id" varchar, "lock_version" integer, "error_messages" varchar);',
+	]
+	storage: Storage;
+	tables: string[] = ["properties", "units", "formulas", "favorites", "globals", "fgs", "variables", "categories"]
+	initComplete: boolean = false;
+	constructor(private platform: Platform) {
+	}
+&nbsp;
+	init(): Observable&lt;any&gt; {
+		
+		<span class="missing-if-branch" title="if path not taken" >I</span>if (this.initComplete)
+<span class="cstat-no" title="statement not covered" >			return Observable.e</span>mpty();
+		
+		<span class="missing-if-branch" title="if path not taken" >I</span>if(localStorage.getItem("dbInit") == null || localStorage.getItem("dbInit") == <span class="cstat-no" title="statement not covered" >"0")</span>
+			return Observable.from([this.initSql(), this.dropTables(), this.createTables()])
+							 .concatAll()
+							 .map(<span class="fstat-no" title="function not covered" >(r,i</span>) =&gt; <span class="cstat-no" title="statement not covered" >i</span>==3?this.saveInitState():i)
+&nbsp;
+		return this.initSql();
+	}
+&nbsp;
+	initSql():Observable&lt;any&gt;{
+		return Observable.fromPromise(this.platform.ready())
+							 .map(i =&gt; {this.storage = new Storage(SqlStorage);return Observable.empty()})
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	s</span>aveInitState(){
+<span class="cstat-no" title="statement not covered" >		localStorage.setItem("dbInit", "</span>1");
+	}
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >	d</span>ropTables():Observable&lt;any&gt;{</span>
+<span class="cstat-no" title="statement not covered" >		return Observable.from(this.tables)</span>
+						 .map(<span class="fstat-no" title="function not covered" >t</span> =&gt; <span class="cstat-no" title="statement not covered" >t</span>his._query('DROP TABLE ' + t))
+						 .concat([this._query('DELETE FROM kv')])
+						 .concatAll()
+						 .catch(<span class="fstat-no" title="function not covered" >e</span>rr =&gt; {<span class="cstat-no" title="statement not covered" >console.log('Drop failed' + err); <span class="cstat-no" title="statement not covered" >r</span>eturn Observable.e</span>mpty()})
+	}
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >	c</span>reateTables():Observable&lt;any&gt; {</span>
+<span class="cstat-no" title="statement not covered" >		return Observable.from(this.createTableStmts)</span>
+						 .map(<span class="fstat-no" title="function not covered" >t</span> =&gt; <span class="cstat-no" title="statement not covered" >t</span>his._query(t))
+						 .concatAll()
+	}
+	
+	
+&nbsp;
+	prepareQuery(type:string, table:string, obj, condition){
+		var andCond = ""
+		var orCond = ""
+		var query = ""
+		var where = "";
+		<span class="missing-if-branch" title="if path not taken" >I</span>if(condition){
+<span class="cstat-no" title="statement not covered" >			var k</span>eys1;
+<span class="cstat-no" title="statement not covered" >			if(condition.and){</span>
+<span class="cstat-no" title="statement not covered" >				keys1 = Object.keys(condition.a</span>nd);
+<span class="cstat-no" title="statement not covered" >				keys1.map(<span class="fstat-no" title="function not covered" >k</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >					andCond += k + ' '+ condition.and[k].cond +'</span> ';
+<span class="cstat-no" title="statement not covered" >					var condVal = condition.and[k].v</span>alue; 
+<span class="cstat-no" title="statement not covered" >					if(condVal){</span>
+<span class="cstat-no" title="statement not covered" >						if (Object.prototype.toString.call(condVal) == '[object Array]')</span>
+<span class="cstat-no" title="statement not covered" >							andCond += JSON.stringify(condVal).replace('[','(').replace(']', ')') + '</span> AND '
+						else 
+<span class="cstat-no" title="statement not covered" >							andCond +=  JSON.stringify(condVal) + '</span> AND '
+					}
+					else <span class="cstat-no" title="statement not covered" >if(condition.and[k].query){</span>
+<span class="cstat-no" title="statement not covered" >						andCond += condition.and[k].query + '</span> AND '
+					}
+				})
+			}
+<span class="cstat-no" title="statement not covered" >			if(condition.or){</span>
+<span class="cstat-no" title="statement not covered" >				keys1 = Object.keys(condition.o</span>r);
+<span class="cstat-no" title="statement not covered" >				keys1.map(<span class="fstat-no" title="function not covered" >k</span> =&gt; <span class="cstat-no" title="statement not covered" >o</span>rCond += k +' '+ condition.or[k].cond +' '+ JSON.stringify(condition.or[k].value) + ' OR ')</span>
+			}
+<span class="cstat-no" title="statement not covered" >			if (andCond.length)</span>
+<span class="cstat-no" title="statement not covered" >				andCond = andCond.slice(0, -4</span>);
+<span class="cstat-no" title="statement not covered" >			if (orCond.length)</span>
+<span class="cstat-no" title="statement not covered" >				orCond = orCond.slice(0, -3</span>)
+<span class="cstat-no" title="statement not covered" >			where = "</span> WHERE ";
+&nbsp;
+		}
+&nbsp;
+		<span class="missing-if-branch" title="if path not taken" >I</span>if(type == 'insert'){
+<span class="cstat-no" title="statement not covered" >			var keys = Object.keys(o</span>bj);
+<span class="cstat-no" title="statement not covered" >			var columns = "</span>";
+<span class="cstat-no" title="statement not covered" >			keys.map(<span class="fstat-no" title="function not covered" >c</span> =&gt; <span class="cstat-no" title="statement not covered" >c</span>olumns += c + ',')</span>;
+<span class="cstat-no" title="statement not covered" >			if(columns.length)</span>
+<span class="cstat-no" title="statement not covered" >				columns = columns.slice(0, -1</span>)
+<span class="cstat-no" title="statement not covered" >			var values = JSON.stringify(this.SQLStringify(keys.map(<span class="fstat-no" title="function not covered" >k</span> =&gt; <span class="cstat-no" title="statement not covered" >o</span>bj[k]))).slice(1).slice(0, -1</span>);
+<span class="cstat-no" title="statement not covered" >			query = `INSERT INTO ${table} (${columns}) VALUES (${values})`</span>
+		}
+&nbsp;
+		<span class="missing-if-branch" title="if path not taken" >I</span>if(type == 'insertorupdate'){
+<span class="cstat-no" title="statement not covered" >			var keys = Object.keys(o</span>bj);
+<span class="cstat-no" title="statement not covered" >			var columns = "</span>";
+<span class="cstat-no" title="statement not covered" >			keys.map(<span class="fstat-no" title="function not covered" >c</span> =&gt; <span class="cstat-no" title="statement not covered" >c</span>olumns += c + ',')</span>;
+<span class="cstat-no" title="statement not covered" >			if(columns.length)</span>
+<span class="cstat-no" title="statement not covered" >				columns = columns.slice(0, -1</span>)
+<span class="cstat-no" title="statement not covered" >			var values = JSON.stringify(this.SQLStringify(keys.map(<span class="fstat-no" title="function not covered" >k</span> =&gt; <span class="cstat-no" title="statement not covered" >o</span>bj[k]))).slice(1).slice(0, -1</span>);
+<span class="cstat-no" title="statement not covered" >			query = `INSERT OR REPLACE INTO ${table} (${columns}) VALUES (${values})`</span>
+		}
+&nbsp;
+		<span class="missing-if-branch" title="if path not taken" >I</span>if(type == 'update'){
+<span class="cstat-no" title="statement not covered" >			var keys = Object.keys(o</span>bj);
+<span class="cstat-no" title="statement not covered" >			var combined = "</span>";
+<span class="cstat-no" title="statement not covered" >			keys.map(<span class="fstat-no" title="function not covered" >k</span> =&gt; <span class="cstat-no" title="statement not covered" >c</span>ombined += k + ' = ' +this.SQLStringify(obj[k])+',')</span>
+<span class="cstat-no" title="statement not covered" >			if(combined.length)</span>
+<span class="cstat-no" title="statement not covered" >				combined = combined.slice(0, -1</span>)
+<span class="cstat-no" title="statement not covered" >			if(condition)</span>
+<span class="cstat-no" title="statement not covered" >				query = `UPDATE ${table} SET ${combined} WHERE ${andCond} ${o</span>rCond}`;
+			else
+<span class="cstat-no" title="statement not covered" >				query = `UPDATE ${table} SET ${c</span>ombined}`;
+&nbsp;
+		}
+&nbsp;
+		<span class="missing-if-branch" title="else path not taken" >E</span>if(type == 'select'){
+			var combined = "";
+			query = `SELECT * FROM ${table} ${where} ${andCond} ${orCond}`;
+		}
+&nbsp;
+		<span class="missing-if-branch" title="if path not taken" >I</span>if(type == 'delete'){
+<span class="cstat-no" title="statement not covered" >			query = `DELETE FROM ${table} WHERE ${andCond} ${o</span>rCond}`;
+		}
+		//replace "\"" with ""
+		query = query.replace("\\\"", "\"\"");
+		while(query.indexOf("\\\"") != -1)
+<span class="cstat-no" title="statement not covered" >			query = query.replace("\\\"", "</span>\"\"");
+&nbsp;
+		return query;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	SQLStringify(v</span>al){
+		//convert true or false to 1 and 0
+<span class="cstat-no" title="statement not covered" >		if (Object.prototype.toString.call(val) == '[object Array]'){</span>
+<span class="cstat-no" title="statement not covered" >			return v</span>al.map(<span class="fstat-no" title="function not covered" >(v, i</span>) =&gt; { 
+<span class="cstat-no" title="statement not covered" >					if (v === true || v === false) </span>
+<span class="cstat-no" title="statement not covered" >						return v ? 1 : 0</span>; 
+					else <span class="cstat-no" title="statement not covered" >return v</span>; 
+				})
+		}
+		else
+		{
+<span class="cstat-no" title="statement not covered" >			if(val === false){</span>
+<span class="cstat-no" title="statement not covered" >				return "</span>0"
+			}<span class="cstat-no" title="statement not covered" ></span>
+			else if(val === true){
+<span class="cstat-no" title="statement not covered" >				return "</span>1"
+			}
+			else{
+<span class="cstat-no" title="statement not covered" >				return JSON.stringify(v</span>al);
+			}
+		}
+	}
+&nbsp;
+	query(params) {
+		var queryStr = this.prepareQuery(params.type, params.table, params.obj, params.cond);
+		return this._query(queryStr);//Observable.create(or =&gt; {this.query1(queryStr, or)})
+	}
+&nbsp;
+	_query(stmt):Observable&lt;any&gt;{
+		return Observable.create(or =&gt; {
+			this.storage.query(stmt).then((res) =&gt; {
+				<span class="missing-if-branch" title="else path not taken" >E</span>if(or){
+					//Send the statement string with result
+					console.log('TEMMMMMM----------'+stmt)
+					console.log(JSON.stringify(res));
+<span class="cstat-no" title="statement not covered" >					res.res.length = 0</span>;
+<span class="cstat-no" title="statement not covered" >					if(res.res)</span>
+<span class="cstat-no" title="statement not covered" >						res.res.stmt = s</span>tmt;
+<span class="cstat-no" title="statement not covered" >					or.next(res.r</span>es);
+<span class="cstat-no" title="statement not covered" >					or.c</span>omplete();
+				}
+			},<span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
+				//Send the stmt string with error
+<span class="cstat-no" title="statement not covered" >				console.log('ERROR:TEMMMMMM----------'+s</span>tmt)
+<span class="cstat-no" title="statement not covered" >				if(err.err)</span>
+<span class="cstat-no" title="statement not covered" >					err.err.stmt = s</span>tmt;
+<span class="cstat-no" title="statement not covered" >				or.error(e</span>rr)
+			})
+		})
+	}
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >	getKV(k</span>ey:string):any {</span>
+<span class="cstat-no" title="statement not covered" >		return O</span>bservable.create(<span class="fstat-no" title="function not covered" >o</span>r =&gt; {
+<span class="cstat-no" title="statement not covered" >			this.storage.get(key).then(<span class="fstat-no" title="function not covered" >(r</span>es) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >				console.log('TEMMMMMM----getKV------'+k</span>ey)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				or.next(r</span>es)
+<span class="cstat-no" title="statement not covered" >					or.c</span>omplete();
+				},
+<span class="fstat-no" title="function not covered" >				e</span>rr =&gt;{
+<span class="cstat-no" title="statement not covered" >					or.error(e</span>rr)
+				})
+		})
+	}
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >	setKV(key:string, o</span>bj:any):Observable&lt;any&gt;{</span>
+<span class="cstat-no" title="statement not covered" >		return O</span>bservable.create(<span class="fstat-no" title="function not covered" >o</span>r =&gt; {
+<span class="cstat-no" title="statement not covered" >				this.storage.set(key, obj).then(<span class="fstat-no" title="function not covered" >r</span>es =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >					console.log('TEMMMMMM----setKV------'+k</span>ey)
+<span class="cstat-no" title="statement not covered" >					or.next(r</span>es)
+<span class="cstat-no" title="statement not covered" >					or.c</span>omplete();
+				},
+<span class="fstat-no" title="function not covered" >				e</span>rr =&gt;{
+<span class="cstat-no" title="statement not covered" >					or.error(e</span>rr)
+				})
+		})
+	}
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 21 2016 19:14:49 GMT+0530 (IST)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
