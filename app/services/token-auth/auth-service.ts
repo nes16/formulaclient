@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { JwtHttp } from "./jwtHttp";
 import { Util } from '../../lib/util';
-import { ErrorHandler,User } from '../../types/standard';
+import { ErrorHandler} from '../../types/standard';
 
 @Injectable()
 export class MyTokenAuth {
@@ -25,7 +25,7 @@ export class MyTokenAuth {
   timer: any = null;
   _hasSessionStorage:boolean = false;
   _hasLocalStorage:boolean = false;
-  guestUser:User = {uid:"guest@sangamsoftech.com", id:-1, name:'Guest'};
+  guestUser:any = {uid:"guest@sangamsoftech.com", id:-1, name:'Guest'};
   config:any = {
        // apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
         apiUrl: this.apiEndpoint,
@@ -428,9 +428,9 @@ export class MyTokenAuth {
     return obj;
   }
 
-  getUser():User{
+  getUser():any{
     let user = this.retrieveData('auth_user');
-    if(!user)
+    if(!user)1
       return this.guestUser;
   }
 

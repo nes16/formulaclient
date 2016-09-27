@@ -3,9 +3,10 @@ import { Platform, Content, App } from 'ionic-angular';
 import { Observer } from 'rxjs/Observer';
 import { ConnectableObservable } from 'rxjs';
 import { Modal } from 'ionic-angular';
+import { ErrorHandler } from '../types/standard';
+
 import { AllModals } from '../pages/all-modals/all-modals';
 import { MyTokenAuth } from './token-auth/auth-service';
-import { ErrorHandler } from '../types/standard';
 
 @Injectable()
 export class UIStateService {
@@ -14,7 +15,7 @@ export class UIStateService {
     content:Content;
     modals:Modal;
     sharedTab:boolean = false;
-    userId:number = null;
+    userId:number = -1;
     user:any = null;
     static event_types = {
         resource_save_complete:1,   //Successful save of an resource
@@ -42,6 +43,7 @@ export class UIStateService {
         auth.observable.subscribe(res => {
             this.authenticated = auth.userIsAuthenticated()
             this.user = auth.getUser();
+            this.userId = this.user.id;
         },err=>{
             ErrorHandler.handle(err, "UIStateService::constructor", false);
         }

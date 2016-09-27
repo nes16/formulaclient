@@ -1,9 +1,33 @@
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { DataService } from '../services/data-service';
-import { SqlService } from '../services/sql-service';
-import { RemoteService } from '../services/remote-service';
 import { UIStateService } from '../services/ui-state-service';
+
+export class OfflineData {
+    transactionId:string;
+    clientId:string;
+    user_id:number;
+    //For server data
+    resources:{[id:string]:BaseResource} = {};
+    tables:TableOfflineData[] = new Array<TableOfflineData>();
+    constructor(){
+        this.transactionId = "";
+        this.clientId = "";
+    }
+
+
+    asJson(tables:ResourceCollection<BaseResource>[], uiService:any){
+        var jsonData = {transactionId: this.transactionId, clientId: this.clientId, resources:{}, tables:[] }
+        tables.forEach(t => jsonData.tables.push(t.offlineData.asJSON(jsonData.resources, uiService.authenticated)))
+        return jsonData;
+    }
+
+    loadFromJson(jdata:any){
+
+    }
+
+
+}
 
 export class ResourceCollection<T extends BaseResource>{
     //Data stream
@@ -20,6 +44,7 @@ export class ResourceCollection<T extends BaseResource>{
     sor: Observer<any>;
 
     offlineData: TableOfflineData;
+    static allOff:OfflineData = new OfflineData();
     static all: { [id: string] : BaseResource; } = {};
     constructor(public ds: DataService
         , public type: any)
@@ -46,7 +71,7 @@ export class ResourceCollection<T extends BaseResource>{
         });
 
         this.offlineData = new TableOfflineData(type.table);
-        DataService.allOff.tables.push(this.offlineData);
+        ResourceCollection.allOff.tables.push(this.offlineData);
 
         this.eole = new Observable(eor => {
                 this.eor = eor;
@@ -783,12 +808,17 @@ export class Variable extends BaseResource {
         if(this._formula){
             this.formula_id = this._formula.id;
         }
-        return Object.assign(super.getState(), { 
+        let state = Object.assign(super.getState(), { 
           formula_id: this.formula_id,
           symbol: this.symbol,
           property_id: this.property_id?this.property_id:this._measure.PropertyId,
           unit_id: this.unit_id?this.unit_id: this._measure.UnitId
         });
+
+        delete state["shared"];
+        delete state["user_id"]
+        
+        return state;
     }
 
     loadState(state){
@@ -860,6 +890,8 @@ export class FG extends BaseResource {
          });
 
       delete state["name"];
+      delete state["shared"];
+      delete state["user_id"]
       return state;
     }
 
@@ -1038,31 +1070,6 @@ export class TableOfflineData {
     }
 }
 
-export class OfflineData {
-    transactionId:string;
-    clientId:string;
-    user_id:number;
-    //For server data
-    resources:{[id:string]:BaseResource} = {};
-    tables:TableOfflineData[] = new Array<TableOfflineData>();
-    constructor(){
-        this.transactionId = "";
-        this.clientId = "";
-    }
-
-
-    asJson(tables:ResourceCollection<BaseResource>[], uiService:UIStateService){
-        var jsonData = {transactionId: this.transactionId, clientId: this.clientId, resources:{}, tables:[] }
-        tables.forEach(t => jsonData.tables.push(t.offlineData.asJSON(jsonData.resources, uiService.authenticated)))
-        return jsonData;
-    }
-
-    loadFromJson(jdata:any){
-
-    }
-
-
-}
 
 export class SyncResponseHandler{
     constructor(public offlineData:OfflineData, public ds:DataService, public cs:CacheService){

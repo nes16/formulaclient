@@ -1,20 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable,forwardRef } from '@angular/core';
 import { Http } from '@angular/http';
+import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
+import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
+import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
+import { ErrorHandler } from '../types/standard';
+import { Favorite } from '../types/standard'
+
 import { RemoteService } from './remote-service';
 import { SqlCacheService } from './sqlcache-service';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
-import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
-import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
-import { Favorite } from '../types/standard'
+
 import { UIStateService } from './ui-state-service'
 import { UUID } from 'angular2-uuid';
-import { ErrorHandler } from '../types/standard';
 
 @Injectable()
 export class DataService {
 
+    
     // categories: ResourceCollection;
     properties: ResourceCollection<Property> = new ResourceCollection<Property>(this, Property);
     globals: ResourceCollection<Global> = new ResourceCollection<Global>(this, Global);
@@ -26,7 +29,7 @@ export class DataService {
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
     logHandler:LogHandler;
 
-    static allOff = new OfflineData();
+    
 
     // formulas: ResourceCollection;
     resourceTables: Array<string> = ['properties', 'units', 'globals'
@@ -42,7 +45,9 @@ export class DataService {
       //What is this
       //Why log handler
       //When it is required, is it required in production?    
+      
       this.logHandler = new LogHandler("Load items");
+      
           }
 
     init():Observable<any> {
@@ -52,12 +57,13 @@ export class DataService {
     }
 
 
+
     loadListAndDepenent(list:ResourceCollection<BaseResource>):Observable<any>{
       let lists = this.getDepentent(list).filter(li => li.State == States.CREATED);
 
       return Observable.from(lists)
       .map(li => this.getTable(li))
-      .map(table => Observable.forkJoin(this.cache.selectAllByUserIds(table, [1, this.uiService.userId])
+      .map(table => Observable.forkJoin(this.getSelectMethod(table)
         , this.cache.getKV(`lastSync_${table}`)
         , this.cache.getKV(`offlineData_${table}`)))
       .concatAll()
@@ -140,7 +146,7 @@ export class DataService {
     sync(li):Observable<any> {
       var lists = this.getDepentent(li);
       return Observable.create(or => {
-        var offLineData = DataService.allOff;
+        var offLineData = ResourceCollection.allOff;
         console.log(JSON.stringify(offLineData.asJson(lists, this.uiService), null, 2));
         //or.complete()
         //Handle response for sync opertaion
@@ -355,5 +361,12 @@ export class DataService {
         break;
         default:
       }
+    }
+
+    getSelectMethod(table:string):Observable<any>{
+      if(table == "fgs" || table == "variables")
+        return this.cache.selectAll(table);
+      else
+        return this.cache.selectAllByUserIds(table, [1, this.uiService.userId]);
     }
 }

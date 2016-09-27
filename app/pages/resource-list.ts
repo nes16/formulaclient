@@ -32,7 +32,7 @@ export class ResourceListPage implements  OnInit, OnDestroy {
               , public dataService:DataService
               , public uiService:UIStateService
               , public nav: NavController) {
-        this.resourceType = navParams.get("type") ? navParams.get("type") : "properties";
+        this.resourceType = navParams.get("type") || "properties";
         if(this.resourceType == "units"){
             this.prop = navParams.get("prop")
         }

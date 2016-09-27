@@ -16,4 +16,10 @@
 	 <ion-list *ngIf="resourceType == 'properties'">
 	    	<fl-property *ngFor="let res of resources"  [resource]="res" ></fl-property>
 	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'globals'">
+	    	<fl-global *ngFor="let res of resources"  [resource]="res" ></fl-global>
+	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'formulas'">
+	    	<fl-formula *ngFor="let res of resources"  [resource]="res" ></fl-formula>
+	 </ion-list>
 </ion-content>
