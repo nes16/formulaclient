@@ -14,6 +14,7 @@ import { BaseResource, Property, Formula, Global } from '../types/standard'
 import { FavFilterPipe } from '../components/fav-filter'
 import { ErrorHandler } from '../types/standard';
 
+
 @Component({
     templateUrl: 'build/pages/resource-list.html',
     directives:[FlNavBar, PropertyComponent, UnitComponent, GlobalComponent, FormulaComponent],
@@ -26,13 +27,14 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     prop:Property;
     uiSubscription:any;
     resources:Array<BaseResource> = new Array<BaseResource>();
-
+    tabsPage;any;
     viewType:string = 'All'
     constructor(public navParams: NavParams
               , public dataService:DataService
               , public uiService:UIStateService
               , public nav: NavController) {
         this.resourceType = navParams.get("type") || "properties";
+        this.tabsPage = navParams.get("tabs");
         if(this.resourceType == "units"){
             this.prop = navParams.get("prop")
         }
@@ -136,7 +138,8 @@ export class ResourceListPage implements  OnInit, OnDestroy {
                  resource = null;
         }
         if(resource){
-            this.nav.push(DetailPage, { currResource: resource })
+            this.tabsPage.setDetailTab(resource);
+            //this.nav.push(DetailPage, { currResource: resource })
         }
         evt.stopPropagation();
         evt.preventDefault();

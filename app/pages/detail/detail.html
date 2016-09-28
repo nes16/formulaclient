@@ -1,5 +1,5 @@
 <ion-header>
-<fl-nav-bar [title]="type" [menuButton]="false" [searchButton]="false" [moreButton]="false" (onCancel)="onFilterCancel()" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
+<fl-nav-bar [title]="'type'"  [menuButton]="false" [searchButton]="false" [moreButton]="false" (onCancel)="onFilterCancel()" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
 </ion-header>l
 <ion-content id="detail-page">
     <ion-list *ngIf="type == 'properties'">
