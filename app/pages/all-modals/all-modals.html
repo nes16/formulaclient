@@ -12,6 +12,9 @@
             <div *ngIf="!userIsAuthenticated()">
             <form  [formGroup]="login" (submit)="doLogin($event, login.value)">
                 <ion-list>
+                    <div class="logo">
+                        <img src="img/appicon.png">
+                    </div>
                     <ion-item>
                         <ion-label stacked>Emailid</ion-label>
                         <ion-input type="text" formControlName="emailId"></ion-input>
@@ -28,13 +31,13 @@
             </form>
             <ion-list>
                 <ion-item>
-                    <button class="button button-block button-positive" (click)="option ='register'">Register</button>
+                    <button full  (click)="option ='register'">Register</button>
                 </ion-item>
                 <ion-item>
-                    <button class="button button-block button-positive" (click)="oauthlogin('facebook')">Facebook Login</button>
+                    <button full (click)="oauthlogin('facebook')"><ion-icon large name="logo-facebook"></ion-icon>Facebook Login</button>
                 </ion-item>
                 <ion-item>
-                    <button class="button button-block button-assertive" (click)="oauthlogin('google')">Google Login</button>
+                    <button full (click)="oauthlogin('google')"><ion-icon large name="logo-google"></ion-icon>Google Login</button>
                 </ion-item>
             </ion-list>
             </div>

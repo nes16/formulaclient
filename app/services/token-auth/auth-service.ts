@@ -95,14 +95,7 @@ export class MyTokenAuth {
                 this.observer = observer;
     }).publish();
     this.observable.connect();
-    
-    //subscribe locally to create observer
-    this.observable.subscribe(res => {},err=>{
-      ErrorHandler.handle(err, "MyTokenAuth::constructor", false);
-
-    }
-    )
-    
+     
     if (this.config.validateOnPageLoad) {
       this.validateUser();
     }
@@ -429,9 +422,8 @@ export class MyTokenAuth {
   }
 
   getUser():any{
-    let user = this.retrieveData('auth_user');
-    if(!user)1
-      return this.guestUser;
+    let user = this.retrieveData('auth_user') || this.guestUser;
+    return user;
   }
 
   validateUser() {

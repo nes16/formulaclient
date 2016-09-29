@@ -10,7 +10,6 @@ import { ErrorHandler } from '../../types/standard';
 
 @Component({
     templateUrl: 'build/pages/all-modals/all-modals.html',
-    providers: [MyTokenAuth]
 })
 export class AllModals {
     option:any;
