@@ -24,7 +24,10 @@ import { ErrorHandler } from '../types/standard';
 export class ResourceListPage implements  OnInit, OnDestroy {
 	resourceType:string;
     args:any;
+    /*For listing units*/
     prop:Property;
+    /*For listing var values*/
+    formula:Formula;
     uiSubscription:any;
     resources:Array<BaseResource> = new Array<BaseResource>();
     tabsPage;any;
@@ -33,12 +36,12 @@ export class ResourceListPage implements  OnInit, OnDestroy {
               , public dataService:DataService
               , public uiService:UIStateService
               , public nav: NavController) {
-        this.resourceType = navParams.get("type") || "properties";
-        this.tabsPage = navParams.get("tabs");
-        if(this.resourceType == "units"){
-            this.prop = navParams.get("prop")
-        }
-        this.args = navParams.get("args");
+        // this.resourceType = navParams.get("type") || "properties";
+        this.tabsPage = uiService.tabsPage;
+        // if(this.resourceType == "units"){
+        //     this.prop = navParams.get("prop")
+        // }
+        // this.args = navParams.get("args");
     }
 
     ngOnInit(){
@@ -46,6 +49,11 @@ export class ResourceListPage implements  OnInit, OnDestroy {
         if(this.resourceType == "units"){
             this.prop = this.navParams.get("prop")
         }
+
+        if(this.resourceType == 'varvals'){
+            this.formula = this.navParams.get("formula");
+        }
+        
         this.args = this.navParams.get("args");
         this.uiService.sharedTab = false;
         
@@ -71,27 +79,37 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     selectedViewType(type){
         if(type == 'All'){
             this.dataService[this.resourceType].ole.subscribe(res => {
-                this.resources = res
+                this.resources = this.filterParent(res)
             },(error) => { 
             ErrorHandler.handle(error, "ResourceListPage::selectedViewType", true);
         })
         }
         else if(type == 'Favourites'){
              this.dataService[this.resourceType].ole.subscribe(res => {
-                 this.resources = res.filter(item => item.Favorite)
+                 this.resources = this.filterParent(res.filter(item => item.Favorite))
              },(error) => { 
             ErrorHandler.handle(error, "ResourceListPage::selectedViewType", true);
         })
         }
         else if(type == 'Library'){
              this.dataService[this.resourceType].ole.subscribe(res => {
-                 this.resources = res.filter(item => this.dataService.isResourceShared(item))
+                 this.resources = this.filterParent(res.filter(item => this.dataService.isResourceShared(item)))
              },(error) => { 
             ErrorHandler.handle(error, "ResourceListPage::selectedViewType", true);
         })   
         }
     }
 
+    filterParent(res){
+        if(this.resourceType == 'units'){
+            return res.filter(i => i.property_id == this.prop.id)
+        }
+        else if(this.resourceType == 'varvals'){
+            return res.filter(i => i.formula_id == this.formula.id)
+        }
+        else
+            return res;
+    }
     ngOnDestroy(){
         this.uiSubscription.unsubscribe();
     }
@@ -111,6 +129,10 @@ export class ResourceListPage implements  OnInit, OnDestroy {
                 return "Globals";
             case "formulas":
                 return "Formulas";
+            case "varvals":
+                return "Run Formula " + this.formula.name;
+            case "units":
+                return "Units for " + this.prop.name;
             default:
                 return null;
         }	
@@ -133,6 +155,9 @@ export class ResourceListPage implements  OnInit, OnDestroy {
                 break;
             case "formulas":
                 resource = new Formula();
+                break;
+            case "varvals":
+                resource = this.formula.newVarval();
                 break;
              default:
                  resource = null;

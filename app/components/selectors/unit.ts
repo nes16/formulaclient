@@ -2,7 +2,6 @@ import {Component, ElementRef, Renderer, Input, Output, EventEmitter} from '@ang
 import {IONIC_DIRECTIVES, Modal, ViewController, NavController} from 'ionic-angular';
 
 import {MathKeypad} from '../keys/keypad'
-import {AllModals} from '../../pages/all-modals/all-modals'
 import {MQService} from '../../services/mq-service'
 import {DataService} from '../../services/data-service'
 import {UIStateService} from '../../services/ui-state-service'

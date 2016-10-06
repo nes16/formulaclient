@@ -1,13 +1,25 @@
+
 import { Injectable, Inject} from '@angular/core';
+
 import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response } from '@angular/http';
+
 import { ConnectableObservable } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { Events, LocalStorage, Storage } from 'ionic-angular';
+
 import { JwtHttp } from "./jwtHttp";
 import { Util } from '../../lib/util';
 import { ErrorHandler} from '../../types/standard';
+
+export interface AuthData {
+  action:string;
+  result:string;
+  error:string;
+  user:any;
+}
 
 @Injectable()
 export class MyTokenAuth {
@@ -17,8 +29,6 @@ export class MyTokenAuth {
   listener:any = null;
   observable: ConnectableObservable<any> = null;
   observer: Observer<any> = null;
-  providerObserver: Observer<any> = null;
-  providerObservable: Observable<any> = null;
   requestCredentialsPollingTimer: any = null;
   firstTimeLogin:any = null;
   oauthRegistration:any = null;
@@ -86,15 +96,12 @@ export class MyTokenAuth {
         }
       }
 
-  constructor(public http: JwtHttp
+  constructor(public http: JwtHttp, public events: Events
     , @Inject('ApiEndpoint') private apiEndpoint: string
     ) {
     this.http.setAuth(this);
     this.initializeListeners();
-    this.observable = ConnectableObservable.create(observer => { 
-                this.observer = observer;
-    }).publish();
-    this.observable.connect();
+    
      
     if (this.config.validateOnPageLoad) {
       this.validateUser();
@@ -124,9 +131,7 @@ export class MyTokenAuth {
       clearTimeout(this.requestCredentialsPollingTimer);
     }
     this.cancelOmniauthInAppBrowserListeners();
-    if (this.observer != null) {
-      this.observer.complete();
-    }
+    
     setTimeout(() => {
       this.requestCredentialsPollingTimer = null;
     }, 0);
@@ -139,10 +144,10 @@ export class MyTokenAuth {
       oauthRegistration = ev.data.oauth_registration;
       delete ev.data.oauth_registration;
       this.handleValidAuth(ev.data, true);
-      this.observer.next({ event: 'auth:login-success', data: ev.data });
-      if (oauthRegistration) {
-        this.observer.next({ event: 'auth:oauth-registration', data: ev.data });
-      }
+      this.events.publish('login', {action:'login', result:'success'});
+      // if (oauthRegistration) {
+      //   this.observer.next({ event: 'auth:oauth-registration', data: ev.data });
+      // }
     }
     if (ev.data.message === 'authFailure') {
       error = {
@@ -150,12 +155,12 @@ export class MyTokenAuth {
         errors: [ev.data.error]
       };
       this.cancel(error);
-      return this.observer.next({ event: 'auth:login-error', data: error });
+      this.events.publish('login', {action:'login', result:'failed'});
     }
   }
 
   //service interfaces
-  submitRegistration(params, opts) {
+  signup(params, opts) {
     var successUrl;
     if (opts == null) {
       opts = {};
@@ -167,18 +172,15 @@ export class MyTokenAuth {
     params = JSON.stringify(param1);
     return this.http.post(this.config.apiUrl + this.config.emailRegistrationPath, params, null)
       .map(resp => {
-        this.observer.next({
-          event: 'auth:registration-email-success',
-          data:  params})})
+        this.events.publish('auth', {action:'signup', result:'success'});
+        })
       .catch(error => {
-        this.observer.next({
-          event: 'auth:registration-email-error',
-          data: error})
+        ('auth', {action:'signup', result:'failed'});
         return Observable.throw(error);
-      })
+      }).subscribe();
   }
 
-  submitLogin(params, opts) {
+  login(params, opts) {
     if (opts == null) {
       opts = {};
     }
@@ -192,27 +194,28 @@ export class MyTokenAuth {
         var authData;
         authData = this.config.handleLoginResponse(resp.json().data);
         this.handleValidAuth(authData, null);
-        this.observer.next({ event: 'auth:login-success', data: this.user });})
-      .catch(error => {
-        this.observer.next({ event: 'auth:login-error', data: error });
-        return Observable.throw(error);
+        this.events.publish('auth', {action:'login', result:'success'});
       })
+      .catch(error => {
+        this.events.publish('auth', {action:'login', result:'failed'});
+        return Observable.throw(error);
+      }).subscribe();
   }
 
   
-  signOut() {
+  logout() {
     var headers = {headers : new Headers({
       'Content-Type': 'application/json'
     })}
     return this.http["delete"](this.config.apiUrl + this.config.signOutUrl,  headers)
       .map(resp => {
         this.invalidateTokens();
-        this.observer.next({event: 'auth:logout-success', data:resp});
+        this.events.publish('auth', {action:'logout', result:'success'});
        })
       .catch(error => {
         console.log(JSON.stringify(error));
         this.invalidateTokens();
-        this.observer.next({event: 'auth:logout-error', data:error});
+        this.events.publish('auth', {action:'logout', result:'failed'});
         return Observable.throw(error);
        })
   }
@@ -226,26 +229,24 @@ export class MyTokenAuth {
     params.redirect_url = successUrl;
     return this.http.post(this.config.apiUrl + this.config.passwordResetPath, params, null)
       .map(resp => {
-        this.observer.next({ event: 'auth:password-reset-request-success', data: params })})
-      .catch(error => {
-        this.observer.next({ event: 'auth:password-reset-request-error', data: error })
-        return Observable.throw(error);
+        this.events.publish('auth', {action:'forgotpwd', result:'success'});
+      
       })
+      .catch(error => {
+        this.events.publish('auth', {action:'forgotpwd', result:'failed'});
+        return Observable.throw(error);
+      }).subscribe();
   }
 
   updatePassword(params) {
     return this.http.put(this.config.apiUrl + this.config.passwordUpdatePath, params, null)
       .map(resp => {
-        this.observer.next({
-          event: 'auth:password-change-success',
-          data: resp});
-        this.mustResetPassword = false;})
-      .catch(error => {
-        this.observer.next({
-        event: 'auth:password-change-error',
-        data: error})
-        return Observable.throw(error);
+        this.events.publish('auth', {action:'chpwd', result:'success'});
       })
+      .catch(error => {
+        this.events.publish('auth', {action:'chpwd', result:'failed'});
+        return Observable.throw(error);
+      }).subscribe();
   }
 
 
@@ -268,30 +269,24 @@ export class MyTokenAuth {
           }
           this.setAuthHeaders(newHeaders);
         }
-        this.observer.next({
-          event: 'auth:account-update-success',
-          data: resp});})
+        this.events.publish('auth', {action:'account', result:'success'});
+        })
       .catch(error => {
-        this.observer.next({
-          event: 'auth:account-update-error',
-          data: error});
+        this.events.publish('auth', {action:'account', result:'failed'});
         return Observable.throw(error);
-      })
+      }).subscribe();
   }
 
   destroyAccount(params) {
     return this.http["delete"](this.config.apiUrl + this.config.accountUpdatePath, params)
       .map(resp => {
         this.invalidateTokens();
-        this.observer.next({
-          event: 'auth:account-destroy-success',
-          data: resp});})
+        this.events.publish('auth', {action:'delete', result:'success'});
+      })
       .catch(error => {
-        this.observer.next({
-          event: 'auth:account-destroy-error',
-          data: error});
+        this.events.publish('auth', {action:'delete', result:'failed'});
         return Observable.throw(error);
-      });
+      }).subscribe();
   }
 
   authenticate(provider, opts) {
@@ -299,16 +294,15 @@ export class MyTokenAuth {
       opts = {};
     }
     this.openAuthWindow(provider, opts);
-    this.providerObservable = Observable.create(observer => this.providerObserver = observer);
-    return this.providerObservable;
   }
   
-  //Helper function
+  
   userIsAuthenticated() {
     //return this.retrieveData('auth_headers') && this.user.signedIn && !this.tokenHasExpired();
     return (this.retrieveData('auth_headers') != null) && !this.tokenHasExpired();
   }
 
+  //Helper function
   openAuthWindow(provider, opts){
     var authUrl, omniauthWindowType;
     omniauthWindowType = this.config.omniauthWindowType;
@@ -387,7 +381,6 @@ export class MyTokenAuth {
       errors: ['User canceled login']
     });
     this.cancelOmniauthInAppBrowserListeners();
-    this.observer.next({ event: 'auth:window-closed', data: {} });
   }
 
   buildQueryString(param, prefix) {
@@ -462,13 +455,13 @@ export class MyTokenAuth {
         this.validateToken(null);
       } else if (!this.isEmpty(this.retrieveData('auth_headers'))) {
         if (this.tokenHasExpired()) {
-          this.observer.next({
-              event: 'auth:session-expired'});
+          //this.observer.next({
+          //    event: 'auth:session-expired'});
         } else {
           this.validateToken(null);
         }
       } else {
-        this.observer.next({event: 'auth:invalid', data:{}});
+        //this.observer.next({event: 'auth:invalid', data:{}});
       }
     }
   }
@@ -483,30 +476,30 @@ export class MyTokenAuth {
           var authData;
           authData = JSON.parse(this.config.handleTokenValidationResponse(resp));
           this.handleValidAuth(authData, null);
-          if (this.firstTimeLogin) {
-            this.observer.next({
-              event: 'auth:email-confirmation-success',
-              data:   this.user});
-          }
-          if (this.oauthRegistration) {
-            this.observer.next({ event: 'auth:oauth-registration', data: this.user });
-          }
-          if (this.mustResetPassword) {
-            this.observer.next({ event: 'auth:password-reset-confirm-success', data: this.user });
-          }
-          this.observer.next({ event: 'auth:validation-success', data: this.user });})
+          // if (this.firstTimeLogin) {
+          //   this.observer.next({
+          //     event: 'auth:email-confirmation-success',
+          //     data:   this.user});
+          // }
+          // if (this.oauthRegistration) {
+          //   this.observer.next({ event: 'auth:oauth-registration', data: this.user });
+          // }
+          // if (this.mustResetPassword) {
+          //   this.observer.next({ event: 'auth:password-reset-confirm-success', data: this.user });
+          // }
+          // this.observer.next({ event: 'auth:validation-success', data: this.user });
+        })
         .catch(error => {
           if (this.firstTimeLogin) {
-            this.observer.next({
-              event: 'auth:email-confirmation-error',
-              data: error
-            });
-
+            // this.observer.next({
+            //   event: 'auth:email-confirmation-error',
+            //   data: error
+            // });
           }
-          if (this.mustResetPassword) {
-            this.observer.next({ event: 'auth:password-reset-confirm-error data:', error });
-          }
-          this.observer.next({ event: 'auth:validation-error', data: error });
+          // if (this.mustResetPassword) {
+          //   this.observer.next({ event: 'auth:password-reset-confirm-error data:', error });
+          // }
+          // this.observer.next({ event: 'auth:validation-error', data: error });
           return Observable.throw(error);
         })
           

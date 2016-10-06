@@ -3,6 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NavParams, Tabs } from 'ionic-angular';
 
 import { ResourceListPage } from '../resource-list';
+import { UIStateService } from '../../services/ui-state-service';
 import { DetailPage } from '../detail/detail';
 
 
@@ -15,15 +16,16 @@ export class TabsPage {
   tab2Root: any = ResourceListPage;
   tab3Root: any = ResourceListPage;
   tab4Root: any = DetailPage;
-  param1:any ={type:"properties", tabs:this};
-  param2:any ={type:"globals", tabs:this};
-  param3:any ={type:"formulas", tabs:this};
+  param1:any ={type:"properties"};
+  param2:any ={type:"globals"};
+  param3:any ={type:"formulas"};
   param4:any = {tabs:this}
   mySelectedIndex: number;
   resource:any;
 
-  constructor(navParams: NavParams) {
+  constructor(navParams: NavParams, public uiStateService:UIStateService) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
+    this.uiStateService.tabsPage = this;
   }
 
   @ViewChild('myTabs') tabRef: Tabs;

@@ -1,3 +1,4 @@
+import { ValueProvider } from './value'
 export class MathNode {
     type: any;
     isMathNode: boolean;
@@ -5,6 +6,7 @@ export class MathNode {
     token: string;
     args: any;
     val: any;
+    vp:ValueProvider;
     constructor(type, args){
         this.type = type;
         this.args = args;
@@ -219,7 +221,8 @@ export class MathNode {
     };
 
     doVar() {
-        return 1;
+        if(this.vp)
+            this.val = this.vp.getValue(this.token);
     };
 
     isAssign(){

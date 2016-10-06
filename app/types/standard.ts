@@ -2,31 +2,31 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { DataService } from '../services/data-service';
 import { UIStateService } from '../services/ui-state-service';
+import { ValueProvider } from '../lib/math-node/value'
+import { MathNode } from '../lib/math-node/math-node'
+import { LatexParserService } from '../services/latex-parser-service'
 
 export class OfflineData {
-    transactionId:string;
-    clientId:string;
-    user_id:number;
+    transactionId: string;
+    clientId: string;
+    user_id: number;
     //For server data
-    resources:{[id:string]:BaseResource} = {};
-    tables:TableOfflineData[] = new Array<TableOfflineData>();
-    constructor(){
+    resources: { [id: string]: BaseResource } = {};
+    tables: TableOfflineData[] = new Array<TableOfflineData>();
+    constructor() {
         this.transactionId = "";
         this.clientId = "";
     }
 
-
-    asJson(tables:ResourceCollection<BaseResource>[], uiService:any){
-        var jsonData = {transactionId: this.transactionId, clientId: this.clientId, resources:{}, tables:[] }
+    asJson(tables: ResourceCollection<BaseResource>[], uiService: any) {
+        var jsonData = { transactionId: this.transactionId, clientId: this.clientId, resources: {}, tables: [] }
         tables.forEach(t => jsonData.tables.push(t.offlineData.asJSON(jsonData.resources, uiService.authenticated)))
         return jsonData;
     }
 
-    loadFromJson(jdata:any){
+    loadFromJson(jdata: any) {
 
     }
-
-
 }
 
 export class ResourceCollection<T extends BaseResource>{
@@ -37,49 +37,48 @@ export class ResourceCollection<T extends BaseResource>{
 
     eole: Observable<any>;
     eor: Observer<any>;
-    
+
     //State stream
     state: number;
     sole: Observable<any>;
     sor: Observer<any>;
 
     offlineData: TableOfflineData;
-    static allOff:OfflineData = new OfflineData();
-    static all: { [id: string] : BaseResource; } = {};
+    static allOff: OfflineData = new OfflineData();
+    static all: { [id: string]: BaseResource; } = {};
     constructor(public ds: DataService
-        , public type: any)
-    {
+        , public type: any) {
 
         this.resources = new Array<T>();
         this.state = States.CREATED;
 
         this.ole = new Observable(or => {
             this.or = or;
-            if(this.State == States.LOAD_COMPLETE)
+            if (this.State == States.LOAD_COMPLETE)
                 or.next(this.resources);
             else
                 Observable.from([this.ds.init(), this.ds.loadListAndDepenent(this)])
-                          .map(i =>  i)
-                          .concatAll()
-                          .do(new LogHandler('Init DB'))
-                          .subscribe(res=>{
-                          },err=>{
-                            ErrorHandler.handle(err, "ResourceCollection::constructor->ole->ds.Init+this.ds.loadListAndDepenent", false);
-                          },() => {
-                                or.next(this.resources);
-                           })
+                    .map(i => i)
+                    .concatAll()
+                    .do(new LogHandler('Init DB'))
+                    .subscribe(res => {
+                    }, err => {
+                        ErrorHandler.handle(err, "ResourceCollection::constructor->ole->ds.Init+this.ds.loadListAndDepenent", false);
+                    }, () => {
+                        or.next(this.resources);
+                    })
         });
 
         this.offlineData = new TableOfflineData(type.table);
         ResourceCollection.allOff.tables.push(this.offlineData);
 
         this.eole = new Observable(eor => {
-                this.eor = eor;
-                eor.next(this.findErrorItems());
+            this.eor = eor;
+            eor.next(this.findErrorItems());
         });
     }
 
-    findErrorItems(){
+    findErrorItems() {
         var errorItems = this.offlineData.getAll().map(i => ResourceCollection.all[i]).filter(i => i.hasError());
         var childItems = this.resources.filter(i => i.getChildItems().some(j => j.hasError()));
         errorItems = errorItems.concat(childItems.filter(i => errorItems.indexOf(i) == -1))
@@ -94,44 +93,44 @@ export class ResourceCollection<T extends BaseResource>{
         return this.resources.find(r => r[key] == val)
     }
 
-       
-    add(r:T, syncronizing:boolean =false){
-        if(r.id){
-            if(this.getItem("id", r.id))
+
+    add(r: T, syncronizing: boolean = false) {
+        if (r.id) {
+            if (this.getItem("id", r.id))
                 return;
             this.resources.push(r);
             ResourceCollection.all[r.id] = r;
             //Only add item for sync when user logged in
-            if(!syncronizing && this.ds.uiService.authenticated)
+            if (!syncronizing && this.ds.uiService.authenticated)
                 this.offlineData.addResource(r, "added");
         }
     }
 
-    onUpdate(r:T){
-        if(!this.ds.uiService.authenticated)
+    onUpdate(r: T) {
+        if (!this.ds.uiService.authenticated)
             this.offlineData.addResource(r, "updated");
     }
 
 
-    remove(r1:T, syncronizing:boolean =false){
+    remove(r1: T, syncronizing: boolean = false) {
         var r = this.getItem("id", r1.id)
-        if(r){
+        if (r) {
             this.resources.splice(this.resources.indexOf(r), 1)
             r.deinit();
             delete ResourceCollection.all[r.id]
 
-            if(!syncronizing && this.ds.uiService.authenticated)
+            if (!syncronizing && this.ds.uiService.authenticated)
                 this.offlineData.addResource(r1, "deleted")
         }
     }
 
-    
-    set State(state){
+
+    set State(state) {
         this.state = state;
         console.log('Set state - ' + state)
     }
 
-    get State(){
+    get State() {
         console.log('Get state - ' + this.state)
         return this.state;
     }
@@ -148,30 +147,30 @@ export class ResourceCollection<T extends BaseResource>{
         return this.resources.find(predicate, thisArg)
     }
 
-    get length():number{
+    get length(): number {
         return this.resources.length;
     }
 
-    hasErrorInfo(){
+    hasErrorInfo() {
         var errorItems = this.findErrorItems();
         return errorItems.length > 0;
     }
 
 
-    publishErrors(){
-        if(!this.eor)
+    publishErrors() {
+        if (!this.eor)
             return;
         this.eor.next(this.findErrorItems());
     }
 
 
 
-    addRows(rows){
-       let i;
-       for(i=0; i< rows.length; i++){
-         var obj = new this.type(rows.item(i))
-         this.add(obj)
-       }
+    addRows(rows) {
+        let i;
+        for (i = 0; i < rows.length; i++) {
+            var obj = new this.type(rows.item(i))
+            this.add(obj)
+        }
     }
 
 }
@@ -179,307 +178,286 @@ export class ResourceCollection<T extends BaseResource>{
 export class BaseResource {
     id: string;
     name: string;
-    lock_version:number;
-    error_messages:any;
-    user_id:number=null;
-    shared:boolean = false;
-
-
-    static errors_messages:any = {
-        0:"Success",
-        1:"Validation error",
-        2:"This item was not found in server",
-        3:"Your change not syncronized since the new version was already in server.",
-        100:"Unknown error"
-    }
-
-    static errors_codes:any= {
-        success:0,
-        validation_error:1,
-        item_not_found:2,
-        stale_object:3,
-        unknown_error:100
-    }
-
+    lock_version: number;
+    error_messages: any;
+    user_id: number;
+    shared: boolean;
 
     //Internal
-    deleted:string;
-    oldState:any;
-    favorite:Favorite = null;
-    constructor(state){
+    deleted: string;
+    oldState: any;
+    favorite: Favorite = null;
+    constructor(state = null) {
         this.loadState(state);
+    }   
+    
+    static errors_messages: any = {
+        0: "Success",
+        1: "Validation error",
+        2: "This item was not found in server",
+        3: "Your change not syncronized since the new version was already in server.",
+        100: "Unknown error"
     }
 
-    init(obj:any = null) {
+    static errors_codes: any = {
+        success: 0,
+        validation_error: 1,
+        item_not_found: 2,
+        stale_object: 3,
+        unknown_error: 100
+    }
+
+    init(obj: any = null) {
 
     }
 
-    deinit(){
+    deinit() {
 
     }
-
-    loadState(state){
-        this.id = state.id;
-        this.name = state.name;
-        this.deleted = state.deleted;
-        this.lock_version = state.lock_version;
-        if(state.user_id)
-            this.user_id = state.user_id;
-        if(state.shared)
-            this.shared = state.shared;
-        if(state.error_messages){
-            if(typeof state.error_messages == 'string')
-                this.error_messages = JSON.parse(state.error_messages);
-            else
-                this.error_messages = state.error_messages;
-        }
-        else
-            this.error_messages = {}
-
-        if(this.lock_version == null)
-            this.lock_version = 0;
-    }
-
-
-    getState(){
-        let error_messages:string;
-        if(this.hasError()){
-            error_messages = JSON.stringify(this.error_messages); 
-        }
-        else
-            error_messages = null;
-        return { 
-                 id: this.id, 
-                 name: this.name,
-                 lock_version:this.lock_version,
-                 error_messages:error_messages,
-                 user_id:this.user_id,
-                 shared:this.shared
-                };
+    loadState(state) {
+        state = state || {};
+        this.id = state.id || null;
+        this.name = state.name || null;
+        this.lock_version = state.lock_version || 0;
+        this.user_id = state.user_id || -1;
+        this.shared = state.shared || false;
+        this.error_messages = JSON.parse(state.error_messages || "null");
     }
 
 
-    isChanged(){
-        if(!this.oldState)
+    getState() {
+        return {
+            id: this.id,
+            name: this.name,
+            lock_version: this.lock_version,
+            error_messages: JSON.stringify(this.error_messages),
+            user_id: this.user_id,
+            shared: this.shared
+        };
+    }
+
+
+    isChanged() {
+        if (!this.oldState)
             return true;
         var curState = this.getState(), O
         var keys = Object.keys(curState);
         var k = keys.find(k => curState[k] != this.oldState[k])
-        if(k)
+        if (k)
             return true;
         else
             return false;
     }
 
-    getTable(){
+    getTable() {
         return "";
     }
-    
-    static initMeasure(info:any, property_id:string, unit_id:string):Measure{
-        if(property_id){
+
+    static initMeasure(info: any, property_id: string, unit_id: string): Measure {
+        if (property_id) {
             var plist = info.plist.resources as Array<Property>;
             var p = plist.find(p => p.id == property_id)
             return new Measure(p);
         }
-        if(unit_id){
+        if (unit_id) {
             var ulist = info.ulist.resources as Array<Unit>;
             var u = ulist.find(u => u.id == unit_id)
-            return  new Measure(u);
+            return new Measure(u);
         }
         return new Measure(null);
     }
 
-    destroy(){
+    destroy() {
 
     }
 
-    getChildWithErrors():Array<BaseResource>{
+    getChildWithErrors(): Array<BaseResource> {
         return this.getChildItems().filter(i => i.hasError())
     }
 
-    getChildItems():Array<BaseResource>{
+    getChildItems(): Array<BaseResource> {
         return [];
     }
 
-    enterEdit(){
+    enterEdit() {
         this.oldState = this.getState();
     }
-    
-    hasError():boolean{
-        return Object.keys(this.error_messages).length != 0
+
+    hasError(): boolean {
+        return this.error_messages != null;
     }
 
-    getErrorMessages(){
-        if(this.hasError())
+    getErrorMessages() {
+        if (this.hasError())
             return this.error_messages;
         else
             return null;
     }
 
-    get Favorite(){
+    get Favorite() {
         return this.favorite;
     }
 
-    set Favorite(f:Favorite){
+    set Favorite(f: Favorite) {
         this.favorite = f;
     }
 
 }
-    
+
 export class Unit extends BaseResource {
     static table: string = 'units';
-    
+
     system: string;
     symbol: string;
     description: string;
     approx: boolean;
     factor: string;
     property_id: string;
-    
+
 
     //local members
     _property: Property;
     _latex: string;
 
-    constructor(state: any = {}) {
-        super(state);
-        if (!this.factor)
-            this.factor = "5";
-        if (!this.name)
-            this.name = "New Unit"
-        if (!this.symbol)
-            this.symbol = "ss"
-        if(!this.system)
-            this.system = "SI"
-        if(!this.approx)
-            this.approx = false;
-    }
-
-    init(info){
-        if(info.property){
-            this._property = info.property;
-            this._latex = this.parseLatex(this.symbol); 
+    constructor(state: any = null) {
+        super(state || {});
+        if (!state) {
+            this.setDefault();
         }
     }
-    
+
+    setDefault() {
+        this.factor = "1";
+        this.name = "New Unit"
+        this.symbol = "ss"
+        this.system = "SI"
+        this.approx = false;
+    }
+
+    init(info) {
+        if (info.property) {
+            this._property = info.property;
+            this._latex = this.parseLatex(this.symbol);
+        }
+    }
 
 
-    getState(){
-        if(this.Property)
-          this.property_id = this.Property.id;
-        return Object.assign(super.getState(), { 
-          system: this.system,
-          symbol: this.symbol,
-          description: this.description,
-          approx: this.approx,
-          factor: this.factor,
-          property_id: this.property_id
+
+    getState() {
+        return Object.assign(super.getState(), {
+            system: this.system,
+            symbol: this.symbol,
+            description: this.description,
+            approx: this.approx,
+            factor: this.factor,
+            property_id: this.Property.id
         });
     }
 
-    loadState(state){
+    loadState(state) {
+        state = state || {};
         super.loadState(state);
-        this.system = state.system;
-        this.symbol = state.symbol;
-        this.description = state.description;
-        this.approx = state.approx;
-        this.factor = state.factor;
-        this.property_id = state.property_id;
+        this.system = state.system || "SI";
+        this.symbol = state.symbol || null;
+        this.description = state.description || null;
+        this.approx = state.approx || false;
+        this.factor = state.factor || null;
+        this.property_id = state.property_id || null;
     }
 
-    getTable():string{
+    getTable(): string {
         return Unit.table;
     }
 
-    get Latex():string{
+    get Latex(): string {
         return this._latex;
     }
 
-    set Symbol(val:string){
+    set Symbol(val: string) {
         this.symbol = val;
-         this._latex = this.parseLatex(this.symbol);   
+        this._latex = this.parseLatex(this.symbol);
     }
 
-    get Symbol():string {
+    get Symbol(): string {
         return this.symbol;
     }
 
-    parseLatex(symbol):string {
+    parseLatex(symbol): string {
         var s1 = ''
         var s = symbol
-        if(s){
-            if(s.length == 1){
+        if (s) {
+            if (s.length == 1) {
                 if (s == '_')
                     return this._latex = "\\text{" + this.name + "}";
-                return this._latex = "\\text{" + s +"}";
+                return this._latex = "\\text{" + s + "}";
             }
             //replace H2o as H_2o
             s1 = s.replace('H2O', 'H_2O');
             //replace ([a-zA-A])([1-9]) with g1^g2
-            var p=/([A-Za-z])([1-9])/
-            var s2='';
-            while (s1 != s2){
+            var p = /([A-Za-z])([1-9])/
+            var s2 = '';
+            while (s1 != s2) {
                 s2 = s1;
                 s1 = s1.replace(p, "$1^$2")
             }
             //replace ((a-zA-A )*) with \text{g1}
-            var p2=/([A-Za-z /]+)/
-            var s2=''
-            var part1='';
-            while (s1 != s2){
+            var p2 = /([A-Za-z /]+)/
+            var s2 = ''
+            var part1 = '';
+            while (s1 != s2) {
                 s2 = s1;
                 s1 = s1.replace(p2, "\\text{$1}")
-                if(s1 != s2){
-                    part1 += s1.slice(0,s1.lastIndexOf('}')+1)
-                    s1 = s1.slice(s1.lastIndexOf('}')+1);
+                if (s1 != s2) {
+                    part1 += s1.slice(0, s1.lastIndexOf('}') + 1)
+                    s1 = s1.slice(s1.lastIndexOf('}') + 1);
                 }
-                else{
+                else {
                     part1 += s1;
                 }
             }
             s1 = part1;
             return this._latex = s1;
         }
-         return this._latex = s1
+        return this._latex = s1
     }
 
-    
-    get IsDefaultUnit(){
+
+    get IsDefaultUnit() {
         return this.Factor == 1;
     }
 
-    get Property(){
+    get Property() {
         return this._property;
     }
 
-    get Factor(){
+    get Factor() {
         if (!this.factor || this.IsFormulaFactor)
             return null;
-        else 
+        else
             return parseFloat(this.factor);
     }
 
-    get FormulaFactor(){
-        if (this.IsFormulaFactor) 
+    get FormulaFactor() {
+        if (this.IsFormulaFactor)
             return this.factor;
-        else 
+        else
             return null;
     }
 
-    get IsFormulaFactor(){
-        if(!this.factor)
+    get IsFormulaFactor() {
+        if (!this.factor)
             return false;
         return this.factor.indexOf('x') != -1;
     }
 
 
-    newFormula():Formula{
+    newFormula(): Formula {
         var formula = new Formula()
         formula._measure = new Measure(this);
         return formula;
     }
 
-    newGlobal(state):Global{
+    newGlobal(state): Global {
         var global = new Global(state)
         global.Measure = new Measure(this);
         return global;
@@ -488,69 +466,75 @@ export class Unit extends BaseResource {
 
 export class Property extends BaseResource {
     static table: string = 'properties';
+   
+   
     _defaultUnit: Unit;
     _units: Unit[] = new Array<Unit>();
-    
-    constructor(state: any = {}) {
+
+    constructor(state: any = null) {
         super(state);
-        if(!this.name)
-            this.name = "New Property"
+        if (!state)
+            this.setDefault();
+    }
+
+    setDefault() {
+        this.name = "New Property"
     }
 
     //called first time after loading
-    init(info:any){
+    init(info: any) {
         var ulist = info.ulist;
         ulist.resources.forEach(u => {
-            if(u.property_id == this.id){
-                u.init({property:this})
+            if (u.property_id == this.id) {
+                u.init({ property: this })
                 let u1 = this._units.some(i => i.id == u.id);
-                if(!u1)
+                if (!u1)
                     this._units.push(u)
-                if(u.Factor == 1)
-                    this._defaultUnit = u 
+                if (u.Factor == 1)
+                    this._defaultUnit = u
             }
         })
     }
 
-    getTable(){
+    getTable() {
         return Property.table;
     }
-    
-    get DefaultUnit(){
+
+    get DefaultUnit() {
         return this._defaultUnit;
     }
 
 
-    updateChildIds(){
-        this._units.forEach(u => u.property_id = this.id)   
+    updateChildIds() {
+        this._units.forEach(u => u.property_id = this.id)
     }
 
-    newUnit(isDefault: boolean = false):Unit{
+    newUnit(isDefault: boolean = false): Unit {
         var unit = new Unit();
-        unit.init({property:this});
+        unit.init({ property: this });
         this._units.push(unit);
-        if (isDefault){
-             unit.factor = "1";
-             this._defaultUnit = unit;
+        if (isDefault) {
+            unit.factor = "1";
+            this._defaultUnit = unit;
         }
         return unit;
     }
 
-    get Units():any{
-            return this._units;
+    get Units(): any {
+        return this._units;
     }
 
-    newFormula():Formula{
-        var formula = new Formula({property_id: this.id})
+    newFormula(): Formula {
+        var formula = new Formula({ property_id: this.id })
         return formula;
     }
 
 
-    getChildItems(){
+    getChildItems() {
         return this._units;
     }
 
-    enterEdit(){
+    enterEdit() {
         super.enterEdit();
         this.DefaultUnit.enterEdit();
     }
@@ -561,115 +545,119 @@ export class Global extends BaseResource {
     unit_id: string;
     value: string;
     symbol: string;
-    static table:string = "globals";
+    static table: string = "globals";
 
     //private
     _measure: Measure = new Measure(null);
-    constructor(state:any = {}) {
+ 
+    constructor(state: any = null) {
         super(state);
-        if (!this.name)
-            this.name = "New Global";
-        if(!this.unit_id)
-            this.unit_id = null;
-        if(!this.symbol)
-            this.symbol = "";
+        if (!state)
+            this.setDefault();
     }
 
-    init(info:any){
+    setDefault() {
+        this.name = "New Global";
+        this.unit_id = null;
+        this.symbol = "";
+    }
+
+    init(info: any) {
         this._measure = BaseResource.initMeasure(info, null, this.unit_id)
     }
 
-    getTable(){
+    getTable() {
         return Global.table;
     }
 
-    getState(){
-        return Object.assign(super.getState(), { 
-          unit_id: this.unit_id?this.unit_id:this._measure.UnitId,
-          value: this.value,
-          symbol: this.symbol,
+    getState() {
+        return Object.assign(super.getState(), {
+            unit_id: this._measure.UnitId,
+            value: this.value,
+            symbol: this.symbol,
         });
     }
 
-    loadState(state){
+    loadState(state) {
+        state = state || {};
         super.loadState(state);
-        this.unit_id = state.unit_id;
-        this.value = state.value;
-        this.symbol = state.symbol;
+        this.unit_id = state.unit_id || null;
+        this.value = state.value || null;
+        this.symbol = state.symbol || null;
     }
 
-    get Measure(){
+    get Measure() {
         return this._measure;
     }
 
-    set Measure(measure){
+    set Measure(measure) {
         this._measure = measure;
         this.unit_id = measure.UnitId;
     }
 }
 
 export class Measure {
-    _name:string;
-    _latex:string;
-    constructor(public measure:Property | Unit){
-        if(measure){
+    _name: string;
+    _latex: string;
+    constructor(public measure: Property | Unit) {
+        if (measure) {
             this._name = measure.name;
-            if(this.isUnit()){
+            if (this.isUnit()) {
                 this._latex = (measure as Unit).Latex;
             }
             else
                 this._latex = "";
         }
-        else{
+        else {
             this._name = "None";
             this._latex = "";
         }
     }
 
-    isMeasure():boolean{
+    isMeasure(): boolean {
         return (this.isProperty() || this.isUnit())
     }
 
-    isProperty():boolean {
+    isProperty(): boolean {
         if (this.measure)
             return !this.measure.hasOwnProperty("property_id");
         else
             return false;
     }
 
-    isUnit():boolean{
-        if(this.measure)
+    isUnit(): boolean {
+        if (this.measure)
             return this.measure.hasOwnProperty("property_id");
         else
             return false;
     }
 
-    get UnitId(){
-        if(this.measure){
-            if(this.isUnit()) 
+    get UnitId() {
+        if (this.measure) {
+            if (this.isUnit())
                 return this.measure.id;
-            else 
+            else
                 return null;
 
         }
         return null;
     }
 
-    get PropertyId(){
-        if(this.measure){
-            if(this.isProperty()) 
+    get PropertyId() {
+        if (this.measure) {
+            if (this.isProperty())
                 return this.measure.id;
-            else 
+            else
                 return null;
         }
         return null;
     }
 
-    get Name(){
+    get Name() {
         return this._name;
     }
 
-    get Latex(){
+    get Latex() {
         return this._latex;
     }
 }
@@ -687,114 +675,333 @@ export class Formula extends BaseResource {
     deletedVars: Array<Variable>;
     _globals: Array<FG>;
     deletedGlobals: Array<FG>;
+    parsed:boolean = false;
+    rootNode:MathNode = null;
+
     constructor(state: any = {}) {
         super(state);
         this._variables = [];
         this._globals = [];
         this.deletedVars = [];
         this.deletedGlobals = [];
-        if(!this.latex)
-            this.latex = "";
-        if(!this.name)
-            this.name = "New Formula"
-        if(!this.symbol)
-            this.symbol = "f"
-        if(!this.property_id)
-            this.property_id = null;
-        if(!this.unit_id)
-            this.unit_id = null;
+        if (!state)
+            this.setDefault();
+    }
+    setDefault() {
+        this.latex = "";
+        this.name = "New Formula"
+        this.symbol = "f"
+        this.property_id = null;
+        this.unit_id = null;
     }
 
-    init(info:any){
+    init(info: any) {
         this._measure = BaseResource.initMeasure(info, this.property_id, this.unit_id);
         this._variables = info.vlist.resources.filter(i => i.formula_id == this.id)
         this._variables.forEach(i => {
-            i.init({formula:this, ulist:info.ulist, plist:info.plist});
+            i.init({ formula: this, ulist: info.ulist, plist: info.plist });
         })
         this._globals = info.fglist.resources.filter(i => i.formula_id == this.id)
         this._globals.forEach(i => {
-            i.init({formula:this, global:info.glist.getItem("id", i.global_id)});
+            i.init({ formula: this, global: info.glist.getItem("id", i.global_id) });
         })
     }
 
-    getTable(){
+    getTable() {
         return Formula.table;
     }
 
-    get Variables(){
+    get Variables() {
         return this._variables;
     }
 
-    get Globals(){
+    get Globals() {
         return this._globals;
     }
-    set Variables(val){
+    set Variables(val) {
         this._variables = val;
     }
 
-    set Globals(val){
+    set Globals(val) {
         this._globals = val;
     }
 
 
-    enterEdit(){
+    enterEdit() {
         super.enterEdit();
         this.Variables.forEach(v => v.enterEdit());
         this.Globals.forEach(g => g.enterEdit());
     }
 
+    newVarval(){
+        return Varval.forFormula(this);
+    }
 
     getState() {
 
         return Object.assign(
-                super.getState(), { 
+            super.getState(), {
                 symbol: this.symbol,
                 latex: this.latex,
-                property_id: this.property_id?this.property_id:this._measure.PropertyId,
-                unit_id:this.unit_id?this.unit_id:this._measure.UnitId
+                property_id: this._measure.PropertyId,
+                unit_id: this._measure.UnitId
             });
     }
 
     loadState(state) {
+        state = state || {};
         super.loadState(state);
-        this.symbol = state.symbol;
-        this.latex = state.latex;
-        this.property_id = state.property_id;
-        this.unit_id = state.unit_id;
+        this.symbol = state.symbol || null;
+        this.latex = state.latex  || null;
+        this.property_id = state.property_id  || null;
+        this.unit_id = state.unit_id  || null;
     }
 
-    get Measure(){
+    get Measure() {
         return this._measure;
     }
 
-    set Measure(val){
+    set Measure(val) {
         this.property_id = val.PropertyId;
         this.unit_id = val.UnitId;
         this._measure = val;
     }
 
+    parse(){
+
+    }
+
+    addSymbols(symbols:string[], globals:any){
+        this.Variables.forEach(v => v.deleted = "true");
+        this.Globals.forEach(g => g.deleted = "true");
+        symbols.forEach(a => {
+            let index, itemfg, itemv;
+            itemv = this.Variables.find((item, i) => {
+                index=i; 
+                return (a == item.symbol)
+            })
+            if(itemv){
+                itemv.deleted = null;
+            }
+            else if(itemfg = this._globals.find((g, i) => {
+                index = i;
+                return a == g.Global.symbol;
+            })){
+                itemfg.deleted = null;
+            }
+            else{
+                var g = globals.getItem("symbol", a);
+                if(g)
+                    this.addFG(g);
+                else
+                    this.addVar(a)
+            }
+        });
+    }
+
+    addVarval():Varval{
+        let vv = Varval.forFormula(this);
+        if(!this.parsed)
+            this.parse();
+        return vv;
+    }
+
+    addFG(g:Global){
+        let fg = new FG();
+        fg._formula = this;
+        fg._global = g;
+        this._globals.push(fg);
+        return fg;
+    }
+
+    addVar(symbol:string){
+        let v = new Variable();
+        v._formula = this;
+        v.symbol = symbol;
+        this._variables.push(v);
+        return v;
+    }
+
+}
+
+//Class represents number with unit
+export class ValueU {
+    input:string;
+    val: number;
+    measure: Measure;
+
+    constructor( val:string){
+        this.input = val;
+        this.parse()
+    }
+
+    parse(){
+        this.val = +this.input;
+    }
+
+    setValue(val:string){
+        this.input = val;
+        this.parse();
+    }
+
+    getValue(unit:Measure):number{
+        return this.convert(unit);
+    }
+
+    //Convert the value in given symbol
+    convert(unit:Measure):number{
+        return this.val;
+    }
+}
+
+export class Varval extends BaseResource implements ValueProvider{
+    static table: string = "varvals";
+    /*Formula id*/
+    formula_id:string;
+    /*String version of variable and value */
+    /*"["var1", "var2"],["5 in","10 in"]" */
+    variables:string;
+
+
+    _formula: Formula;
+    _values: {[key:string]: ValueU} = {};
+    _nodes: {[key:string] : MathNode} = {};
+    
+    _result:ValueU;
+    _rootNode:MathNode = null;
+    static ps:LatexParserService = new LatexParserService();
+
+    constructor(state:any = null){
+        super(state);
+        if(!state)
+            this.setDefault();
+        this._result = new ValueU("");
+    }
+
+    setDefault(){
+
+    }
+
+    static forFormula(formula:Formula):Varval{
+        let val = new Varval();
+        val.Formula = formula;
+        val.Formula.Variables.forEach(v=> {
+            let sym = v.symbol;
+            val._values[sym] = new ValueU("");
+        })
+        return val;
+    }
+
+    set Formula(f:Formula){
+        this.formula_id = f.id;
+        this._formula = f;
+    }
+    get Formula():Formula{
+        return this._formula;
+    }
+    init(formula:Formula){
+        let toks_vals =  JSON.parse(this.variables);
+        let toks = toks_vals[0];
+        let vals = toks_vals[1];
+        this.formula_id = formula.id;
+        this._formula = formula;
+        this._formula.Variables.forEach((v)=> {
+            toks.forEach((t,i)=>{
+                if(v.symbol == t){
+                    this._values[t] = new ValueU(vals[i])
+                }
+            })
+        })
+    }
+
+    getState() {
+        return Object.assign(
+            super.getState(), {
+                formula_id: this._formula.id,
+                variables: JSON.stringify(this._formula.Variables.forEach(v => {this._values[v.symbol].input})),
+            });
+    }
+
+    loadState(state) {
+        state = state || {};
+        super.loadState(state);
+        this.formula_id = state.formula_id || null;
+        this.variables = state.variables || null;
+    }
+
+    evaluate(){
+        //If all variable has value
+        let varsWithNoValue = this._formula._variables.filter(v => this._values[v.symbol].input.length == 0)
+        if(varsWithNoValue.length > 0)
+            return null;
+        
+        this._formula._variables.forEach(v => this._values[v.symbol].parse())
+        
+        //Set the nodes of each variable this as value provider
+        try{
+            if(!this._rootNode){
+                this._rootNode = Varval.ps.parse(this._formula.latex); 
+            }
+            Varval.ps.setValueProviderForVarNodes(this._rootNode, this);
+            this._rootNode.type() as number;
+            this._result.setValue(this._rootNode.val.toString());
+        }
+        catch(exp){
+            return null;
+        }
+
+    }
+
+    getValue(token:string):number{
+        let val = 1;
+
+        let v = this._formula._variables.find(v => v.symbol == token);
+        if(v){
+            return this._values[token].getValue(v._measure)
+
+        }
+        else{
+            let g = this._formula._globals.find(g => g._global.symbol == token)
+            if(g)
+                return +g._global.value;
+        }
+        return val;
+    }
+
+    setValue(v:string, value:string){
+        this.evaluate();
+    }
+
+    getTable(){
+        return Varval.table;
+    }
+
 }
 
 export class Variable extends BaseResource {
-    unit_id: string = null;
+    unit_id: string;
     property_id: string;
     formula_id: string;
     symbol: string;
-    static table:string = "variables";
-    
+    static table: string = "variables";
+
     //private
     _formula: Formula;
     _measure: Measure = new Measure(null);
-    constructor(state:any = {}) {
+
+    constructor(state: any = null) {
         super(state);
-        if(!this.property_id)
-            this.property_id = null;
-        if(!this.unit_id)
-            this.unit_id = null;
+        if (!state)
+            this.setDefault()
     }
 
-    init(info){
-        if(info.formula){
+    setDefault() {
+        this.property_id = null;
+        this.unit_id = null;
+    }
+
+    init(info) {
+        if (info.formula) {
             this._formula = info.formula;
             this._measure = BaseResource.initMeasure(info, this.property_id, this.unit_id);
         }
@@ -804,72 +1011,70 @@ export class Variable extends BaseResource {
         return Variable.table;
     }
 
-    getState(){
-        if(this._formula){
-            this.formula_id = this._formula.id;
-        }
-        let state = Object.assign(super.getState(), { 
-          formula_id: this.formula_id,
-          symbol: this.symbol,
-          property_id: this.property_id?this.property_id:this._measure.PropertyId,
-          unit_id: this.unit_id?this.unit_id: this._measure.UnitId
+    getState() {
+        let state = Object.assign(super.getState(), {
+            formula_id: this._formula.id,
+            symbol: this.symbol,
+            property_id: this._measure.PropertyId,
+            unit_id: this._measure.UnitId
         });
 
         delete state["shared"];
         delete state["user_id"]
-        
+
         return state;
     }
 
-    loadState(state){
+    loadState(state) {
+        state = state || {};
         super.loadState(state);
-        this.unit_id = state.unit_id;
-        this.formula_id = state.formula_id;
-        this.property_id = state.property_id;
-        this.symbol = state.symbol;
+        this.unit_id = state.unit_id || null;
+        this.formula_id = state.formula_id || null;
+        this.property_id = state.property_id || null;
+        this.symbol = state.symbol || null;
     }
 
-    get Formula(){
+    get Formula() {
         return this._formula;
     }
-    
-    set Formula(val){
+
+    set Formula(val) {
         this._formula = val;
     }
 
-    get Measure(){
+    get Measure() {
         return this._measure;
     }
 
-    set Measure(val){
+    set Measure(val) {
         this._measure = val;
         this.property_id = val.PropertyId;
         this.unit_id = val.UnitId;
-        
+
     }
 }
-
-
-
 
 export class FG extends BaseResource {
     formula_id: string;
     global_id: string;
-    static table:string = "fgs"
+    static table: string = "fgs"
 
     _formula: Formula;
     _global: Global;
-    constructor(state:any) {
+    constructor(state: any = null) {
         super(state)
-        this.loadState(state);
-        if(!this.formula_id)
-            this.formula_id = null;
-        if(!this.global_id)
-            this.global_id = null;
+        if (!state)
+            this.setDefault();
     }
 
-    init(info){
-        if(info.formula){
+
+    setDefault() {
+        this.formula_id = null;
+        this.global_id = null;
+    }
+
+    init(info) {
+        if (info.formula) {
             this._formula = info.formula;
             this._global = info.global;
         }
@@ -880,109 +1085,206 @@ export class FG extends BaseResource {
     }
 
 
-    getState(){
-      this.formula_id = this._formula?this._formula.id:this.formula_id,
-      this.global_id = this._global?this._global.id:this.global_id
-      var state = Object.assign(super.getState(), 
-        { 
-            formula_id: this.formula_id,
-            global_id: this.global_id
-         });
+    getState() {
+        this.formula_id = this._formula.id
+        this.global_id = this._global.id
+        var state = Object.assign(super.getState(),
+            {
+                formula_id: this.formula_id,
+                global_id: this.global_id
+            });
 
-      delete state["name"];
-      delete state["shared"];
-      delete state["user_id"]
-      return state;
+        delete state["name"];
+        delete state["shared"];
+        delete state["user_id"]
+        return state;
     }
 
-    loadState(state){
+    loadState(state) {
+        state = state || {};
         super.loadState(state);
-        this.formula_id = state.formula_id;
-        this.global_id = state.global_id;
+        this.formula_id = state.formula_id || null;
+        this.global_id = state.global_id || null;
     }
 
-    get Formula(){
+    get Formula() {
         return this._formula;
     }
 
-    set Formula(f){
+    set Formula(f) {
         this._formula = f;
     }
 
 
-    get Global(){
+    get Global() {
         return this._global;
     }
 
-    set Global(g){
+    set Global(g) {
         this._global = g;
     }
 }
 
+
 export class Favorite extends BaseResource {
     static table: string = "favorites";
 
-    favoritable_id:string;
+    favoritable_id: string;
 
-    constructor(state:any) {
+    constructor(state: any = null) {
         super(state);
+        if(!state){
+            this.setDefault()
+        }
     }
 
-    init(){
+    setDefault(){
+
+    }
+
+    init() {
         ResourceCollection.all[this.favoritable_id].Favorite = this;
     }
 
-    deinit(){
+    deinit() {
         ResourceCollection.all[this.favoritable_id].Favorite = null;
     }
 
-    getTable():string{
+    getTable(): string {
         return Favorite.table;
     }
 
-    getState(){
-        return Object.assign(super.getState(), { 
+    getState() {
+        return Object.assign(super.getState(), {
             favoritable_id: this.favoritable_id
         })
     }
 
-    loadState(state){
+    loadState(state) {
+        state = state || {}
         super.loadState(state);
-        this.favoritable_id = state.favoritable_id;
+        this.favoritable_id = state.favoritable_id || null;
     }
 }
 
 export class Category extends BaseResource {
     parent_id: number;
-    
+
     _parent: Category;
     children: Category[];
-    
+    code: number;
+
     static table: string = "categories";
 
-    constructor(state:any) {
+    constructor(state: any = null) {
         super(state);
+        if(!state){
+            this.setDefault()
+        }
     }
 
-    init(info){
+    setDefault(){
 
     }
 
-    getTable():string{
+    init(info) {
+        if (info.clist) {
+            this.children = info.clist.filter(i => i.parent_id == this.id);
+            this._parent = info.clist.find(i => i.id == this.parent_id);
+        }
+    }
+
+    getTable(): string {
         return Category.table;
     }
 
-    getState(){
-        return Object.assign(super.getState(), { parent_id: this._parent?this._parent.id:this.parent_id });
+    getState() {
+        return Object.assign(super.getState(),
+            {
+                parent_id: this._parent ? this._parent.id : null,
+                code: this.code || null
+            });
     }
 
-    loadState(state){
+    loadState(state) {
+        state = state || {};
         super.loadState(state);
-        this.parent_id = state.parent_id;
+        this.parent_id = state.parent_id || null;
+        this.code = state.code || null;
     }
 
-    onListLoadComplete(){
-        
+    onListLoadComplete() {
+
+    }
+}
+
+export class CR extends BaseResource {
+    category_id: string;
+    categorizable_id: string;
+    categorizable_type: string;
+    static table: string = "crs"
+
+    _category: Category;
+    _resource: BaseResource;
+    constructor(state: any = null) {
+        super(state)
+        if(!state){
+            this.setDefault()
+        }
+    }
+
+    setDefault(){
+        this.category_id = null;
+        this.categorizable_id = null;
+    }
+    init() {
+        this._category = ResourceCollection.all[this.category_id] as Category;
+        this._resource = ResourceCollection.all[this.categorizable_id];
+        this.categorizable_type = this._resource.getTable();
+    }
+
+    getTable() {
+        return CR.table;
+    }
+
+
+    getState() {
+        var state = Object.assign(super.getState(),
+            {
+                categorizable_id: this._resource.id,
+                categorizable_type: this._resource.getTable(),
+                category_id: this._category.id,
+            });
+
+        delete state["name"];
+        delete state["shared"];
+        delete state["user_id"]
+        return state;
+    }
+
+    loadState(state) {
+        state = state || {}
+        super.loadState(state);
+        this.category_id = state.category_id;
+        this.categorizable_id = state.categorizable_id;
+        this.categorizable_type = state.categorizable_type;
+    }
+
+    get Category() {
+        return this._category;
+    }
+
+    set Category(c) {
+        this._category = c;
+    }
+
+
+    get Resource() {
+        return this._resource;
+    }
+
+    set Resource(r) {
+        this._resource = r;
     }
 }
 
@@ -990,50 +1292,50 @@ export class TableOfflineData {
     added: Array<string> = new Array<string>();
     updated: Array<string> = new Array<string>();
     deleted: Array<string> = new Array<string>();
-    lastSync:string="";
-    lastSyncShared:string = "";
-    
-    constructor(public name:string){
+    lastSync: string = "";
+    lastSyncShared: string = "";
+
+    constructor(public name: string) {
     }
 
 
-    addResource(res:BaseResource, op:string){
-        if(op == 'added'){
+    addResource(res: BaseResource, op: string) {
+        if (op == 'added') {
             this.added.push(res.id);
-        }else if(op == 'updated'){
-            if(this.added.indexOf(res.id) >= 0)
+        } else if (op == 'updated') {
+            if (this.added.indexOf(res.id) >= 0)
                 return;
             this.updated.push(res.id);
-        }else{
+        } else {
             let i = this.added.indexOf(res.id);
             if (i >= 0)
                 this.added.splice(i, 1);
-            else{
+            else {
                 i = this.updated.indexOf(res.id);
-                this.updated.splice(i, 1); 
+                this.updated.splice(i, 1);
             }
             this.deleted.push(res.id);
         }
     }
 
-    getAll():Array<string>{
+    getAll(): Array<string> {
         return this.added.concat(this.updated);
     }
 
-    remove(item){
-        let list = [this.added,this.deleted, this.updated].find(a => a.indexOf(item) > -1)
-        if(list){
+    remove(item) {
+        let list = [this.added, this.deleted, this.updated].find(a => a.indexOf(item) > -1)
+        if (list) {
             let index = list.indexOf(item)
             list.splice(index, 1)
         }
     }
 
-    hasOfflineData():boolean{
-        return (this.added.length != 0 ||this.updated.length != 0 || this.deleted.length != 0)
+    hasOfflineData(): boolean {
+        return (this.added.length != 0 || this.updated.length != 0 || this.deleted.length != 0)
     }
 
-    loadFromCache(li:ResourceCollection<BaseResource>, jdata:string){
-        if(jdata){
+    loadFromCache(li: ResourceCollection<BaseResource>, jdata: string) {
+        if (jdata) {
             let jobj = JSON.parse(jdata);
             this.added = jobj.added;
             this.updated = jobj.updated;
@@ -1042,44 +1344,45 @@ export class TableOfflineData {
         }
     }
 
-    asJSONForCache():any{
+    asJSONForCache(): any {
         return this;
     }
 
-    asJSON(resources, authenticated:boolean = false):any{
-         this.added.concat(this.updated).forEach(id => {
-           let state = ResourceCollection.all[id].getState();
-           delete state.id;
-           delete state.error_messages;
-           resources[id] = state;
-         })
-         if(authenticated){
-             let tinfo = {name: this.name
-                    ,lastSync:this.lastSync
-                    ,lastSyncShared:this.lastSyncShared
-                    ,added: this.added
-                    ,updated: this.updated
-                    ,deleted: this.deleted
-                };
-              
-              return tinfo;
+    asJSON(resources, authenticated: boolean = false): any {
+        this.added.concat(this.updated).forEach(id => {
+            let state = ResourceCollection.all[id].getState();
+            delete state.id;
+            delete state.error_messages;
+            resources[id] = state;
+        })
+        if (authenticated) {
+            let tinfo = {
+                name: this.name
+                , lastSync: this.lastSync
+                , lastSyncShared: this.lastSyncShared
+                , added: this.added
+                , updated: this.updated
+                , deleted: this.deleted
+            };
 
-         }
-         else
-             return {name: this.name, lastSync:this.lastSync};
+            return tinfo;
+
+        }
+        else
+            return { name: this.name, lastSync: this.lastSync };
     }
 }
 
 
-export class SyncResponseHandler{
-    constructor(public offlineData:OfflineData, public ds:DataService, public cs:CacheService){
-    
+export class SyncResponseHandler {
+    constructor(public offlineData: OfflineData, public ds: DataService, public cs: CacheService) {
+
     }
-    sync():Observable<any>{
+    sync(): Observable<any> {
         return this.syncMem()
     }
 
-    private syncMem(){
+    private syncMem() {
         //Delete exting added items because we will add items
         //from newly created in server
         let oles = [] as Array<Observable<any>>;
@@ -1090,11 +1393,11 @@ export class SyncResponseHandler{
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             li.offlineData.deleted = [];
-            let table = this.ds.getTable(li); 
+            let table = this.ds.getTable(li);
             i.deleted.forEach(j => {
                 let lr = ResourceCollection.all[j];
                 li.remove(ResourceCollection.all[j], true)
-                if(!this.ds.isResourceShared(lr))
+                if (!this.ds.isResourceShared(lr))
                     oles.push(this.cs.deleteItem(table, j));
             })
         })
@@ -1103,33 +1406,33 @@ export class SyncResponseHandler{
             let table = this.ds.getTable(li);
             i.added.forEach(j => {
                 let r = new li.type(resources[j]) as BaseResource;
-                let lr = li.getItem("id",j) 
-                if(lr){
+                let lr = li.getItem("id", j)
+                if (lr) {
                     let oldId = j;
-                    if(!r.hasError()){
+                    if (!r.hasError()) {
                         lr.id = r.id;
                         lr.error_messages = {}
-                        oles.push(this.cs.updateIds(table, "id", j, {id:lr.id, error_messages:null}))
+                        oles.push(this.cs.updateIds(table, "id", j, { id: lr.id, error_messages: null }))
                         let dts = this.ds.getReferingList(li);
                         let refId_col = this.ds.getRefIdColumn(li);
                         dts.map(t => this.ds.getTable(t)).forEach(t => {
                             let obj = {}
-                            obj[refId_col]=r.id;
+                            obj[refId_col] = r.id;
                             oles.push(this.cs.updateIds(t, refId_col, oldId, obj));
                         })
-                        ResourceCollection.all[lr.id]=lr;
+                        ResourceCollection.all[lr.id] = lr;
                         let index = li.offlineData.remove(j);
                     }
-                    else{
+                    else {
 
                         lr.error_messages = r.error_messages;
                         oles.push(this.cs.updateItem(lr));
                     }
-                    
+
                 }
-                else{
+                else {
                     r.id = j;
-                    if(!this.ds.isResourceShared(r))
+                    if (!this.ds.isResourceShared(r))
                         oles.push(this.cs.addItem(r));
                     li.add(r, true);
                 }
@@ -1139,28 +1442,28 @@ export class SyncResponseHandler{
         this.offlineData.tables.forEach(i => {
             let li = this.ds[i.name] as ResourceCollection<BaseResource>;
             i.updated.forEach(j => {
-               let r = new li.type(resources[j]) as BaseResource;
-               let lr = li.getItem("id", j) as BaseResource;
-               if(r.hasError()){
-                   lr.error_messages = r.error_messages;
-                   oles.push(this.cs.updateItem(lr))         
-               }
-               else{
-                   let index = li.offlineData.updated.indexOf(j);
-                   if(index >= 0){
-                       lr.error_messages = {} 
-                       lr.lock_version = r.lock_version;
-                       if(!this.ds.isResourceShared(lr))
-                           oles.push(this.cs.updateItem(lr))
-                       li.offlineData.remove(j);
-                   }
-                   else{
-                       r.id = j;
-                       lr.loadState(r.getState());
-                       if(!this.ds.isResourceShared(lr))
-                           oles.push(this.cs.updateItem(lr))
-                   }
-               }
+                let r = new li.type(resources[j]) as BaseResource;
+                let lr = li.getItem("id", j) as BaseResource;
+                if (r.hasError()) {
+                    lr.error_messages = r.error_messages;
+                    oles.push(this.cs.updateItem(lr))
+                }
+                else {
+                    let index = li.offlineData.updated.indexOf(j);
+                    if (index >= 0) {
+                        lr.error_messages = {}
+                        lr.lock_version = r.lock_version;
+                        if (!this.ds.isResourceShared(lr))
+                            oles.push(this.cs.updateItem(lr))
+                        li.offlineData.remove(j);
+                    }
+                    else {
+                        r.id = j;
+                        lr.loadState(r.getState());
+                        if (!this.ds.isResourceShared(lr))
+                            oles.push(this.cs.updateItem(lr))
+                    }
+                }
             })
         })
         this.offlineData.tables.forEach(i => {
@@ -1177,72 +1480,71 @@ export class SyncResponseHandler{
                 ResourceCollection.all[i].init(param);
             })
         })
-       
+
         return Observable.from(oles).map(i => i).concatAll();
     }
 }
 
-export class LogHandler{
-    processId:number = 0;
-    constructor(private process:string = ""){
+export class LogHandler {
+    processId: number = 0;
+    constructor(private process: string = "") {
 
     }
     //Log the stream events
-    next(res){
-      this.handleSqlResult(res);
+    next(res) {
+        this.handleSqlResult(res);
     }
 
-    error(err){
-      this.handleSqlError(err);
+    error(err) {
+        this.handleSqlError(err);
     }
 
-    complete(){
-      console.log('The process completed - '+ this.process +' - ' + this.processId++)
+    complete() {
+        console.log('The process completed - ' + this.process + ' - ' + this.processId++)
     }
 
-    handleSqlResult(res){
-      if(!res || !res.res)
-      {
-        console.log("INFO: Next result " + JSON.stringify(res, null, 2))
-        return;
-      }
-      res = res.res;
-      if(res.stmt)
-        console.log(res.stmt);
-      if(res.rowsAffected)
-        console.log("No of rows affected - " + res.rowsAffected);
+    handleSqlResult(res) {
+        if (!res || !res.res) {
+            console.log("INFO: Next result " + JSON.stringify(res, null, 2))
+            return;
+        }
+        res = res.res;
+        if (res.stmt)
+            console.log(res.stmt);
+        if (res.rowsAffected)
+            console.log("No of rows affected - " + res.rowsAffected);
     }
 
-    handleSqlError(err){
-      if(!err || !err.err){
-         console.log('ERROR: '+ JSON.stringify(err));
-         return;
-      }
-      err = err.err;
-      if(err.stmt)
-        console.log(err.stmt)
-      if(err.code)
-        console.log('Error code - ' +  err.code)
-      if(err.message)
-        console.log('Error message - ' +  err.message)
-    } 
+    handleSqlError(err) {
+        if (!err || !err.err) {
+            console.log('ERROR: ' + JSON.stringify(err));
+            return;
+        }
+        err = err.err;
+        if (err.stmt)
+            console.log(err.stmt)
+        if (err.code)
+            console.log('Error code - ' + err.code)
+        if (err.message)
+            console.log('Error message - ' + err.message)
+    }
 
 
 }
 
-export class AsyncSync{
-    constructor(public async: (li:any, i:number) => Observable<any>, public sync:(res:any, i:number) => any){
+export class AsyncSync {
+    constructor(public async: (li: any, i: number) => Observable<any>, public sync: (res: any, i: number) => any) {
     }
 }
 export class States {
-    static CREATED:number = 0
-    static  LOAD_STARTED:number = 1;
-    static  LOAD_COMPLETE:number = 2;
+    static CREATED: number = 0
+    static LOAD_STARTED: number = 1;
+    static LOAD_COMPLETE: number = 2;
     static INIT_STARTED: number = 3;
     static INIT_COMPLETE: number = 4;
     static FETCH_STARTED: number = 5;
     static FETCH_COMPLETE: number = 6;
-    static  SYNC_STARTED:number = 7;
+    static SYNC_STARTED: number = 7;
     static SYNC_COMPLETE: number = 8;
 }
 
@@ -1260,48 +1562,48 @@ export class OpCodes {
     static MAX_OP: number = 3;
 }
 
-export function pass(or){
+export function pass(or) {
     return {
-        next:res=>or.next(res),
-        err:err=>or.error(err),
-        complete:()=>or.complete()
+        next: res => or.next(res),
+        err: err => or.error(err),
+        complete: () => or.complete()
     }
 }
 
-export class User{
-    uid:string;
-    id:number;
-    name:string;
+export class User {
+    uid: string;
+    id: number;
+    name: string;
 }
 
-export interface CacheService{
-    deleteItem(table:string, id:string):Observable<any>;
-    addItem(item:BaseResource):Observable<any>;
-    updateItem(item:BaseResource):Observable<any>;
-    updateIds(list:string, idField:string, oldId:string, newId:any  ):Observable<any>;
-    selectAll(table:string):Observable<any>;
-    selectAllByUserIds(table:string, ids:Array<number>):Observable<any>;
-    setKV(key:string, value:string):Observable<any>;
-    getKV(key:string):Observable<any>;
+export interface CacheService {
+    deleteItem(table: string, id: string): Observable<any>;
+    addItem(item: BaseResource): Observable<any>;
+    updateItem(item: BaseResource): Observable<any>;
+    updateIds(list: string, idField: string, oldId: string, newId: any): Observable<any>;
+    selectAll(table: string): Observable<any>;
+    selectAllByUserIds(table: string, ids: Array<number>): Observable<any>;
+    setKV(key: string, value: string): Observable<any>;
+    getKV(key: string): Observable<any>;
 }
 
 export class ErrorHandler {
 
-    constructor(){
+    constructor() {
 
     }
 
-    static handle(stack:any, msg:string, last:boolean=false){
-        if(last){
-            console.log('Error:'+msg);
+    static handle(stack: any, msg: string, last: boolean = false) {
+        if (last) {
+            console.log('Error:' + msg);
             console.log(JSON.stringify(stack));
         }
-        else{
-            if(stack.stack)
+        else {
+            if (stack.stack)
                 stack.stack.push(msg);
             else
                 stack.stack = new Array<string>();
-                stack.stack.push(msg);
+            stack.stack.push(msg);
         }
     }
 }

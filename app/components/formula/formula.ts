@@ -134,7 +134,6 @@ export class FormulaComponent extends BaseComponent {
 		return list.filter(i => i.deleted != "true");
 	}
 
-
 	updateVariables(latex) {
 	    try {
 			this.rootNode = this.parser.parse(latex);
@@ -143,7 +142,9 @@ export class FormulaComponent extends BaseComponent {
 	        this.rootNode = null;
 	        //throw (e);
 	    }
+	}
 
+	evaluate(){
 
 	}
 

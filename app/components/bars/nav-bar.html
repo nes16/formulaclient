@@ -5,8 +5,8 @@
             </button>
         </ion-buttons>
         <ion-buttons left>
-            <button royal [class.fl-hidden]="!switchButton" (click)="switchState($event)">
-                <ion-icon [name]="Online ? 'arrow-up' : 'arrow-down'"></ion-icon>
+            <button royal [class.fl-hidden]="!switchButton" [disabled]="!Online" (click)="sync($event)">
+                <ion-icon name="sync" ></ion-icon>
             </button>
         </ion-buttons>
         <ion-title>{{title}}</ion-title>

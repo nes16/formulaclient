@@ -5,7 +5,7 @@ import { ConnectableObservable } from 'rxjs';
 import { Modal } from 'ionic-angular';
 import { ErrorHandler } from '../types/standard';
 
-import { AllModals } from '../pages/all-modals/all-modals';
+import { ModalsPage } from '../pages/modals/modals';
 import { MyTokenAuth } from './token-auth/auth-service';
 
 @Injectable()
@@ -17,12 +17,14 @@ export class UIStateService {
     sharedTab:boolean = false;
     userId:number = -1;
     user:any = null;
+    tabsPage:any = null;
     static event_types = {
         resource_save_complete:1,   //Successful save of an resource
         service_error_occurred:2, //Publishing errors from services
         resource_selected:3,
         network_state_change:4,
-        syncronize:5
+        syncronize:5,
+        auth:6
     }
 
     //Used for communicate async operation
@@ -39,16 +41,7 @@ export class UIStateService {
 
         this.authenticated = auth.userIsAuthenticated();
         this.user = auth.getUser();
-        
-        auth.observable.subscribe(res => {
-            this.authenticated = auth.userIsAuthenticated()
-            this.user = auth.getUser();
-            this.userId = this.user.id;
-        },err=>{
-            ErrorHandler.handle(err, "UIStateService::constructor", false);
-        }
-        )
-     
+        this.listenToLoginEvents();
     }
 
 
@@ -73,13 +66,13 @@ export class UIStateService {
 
     showErrorModal(nav, errorInfo){
         var data = {option:"error", errorInfo:errorInfo}
-        let modals = new Modal(this.app, AllModals, data);
+        let modals = new Modal(this.app, ModalsPage, data);
         modals.present();
     }
 
     showProgressModal(title:string, message:string){
         var data = {option:"progress", title:title, messsage:message}
-        this.modals = new Modal(this.app, AllModals, data);
+        this.modals = new Modal(this.app, ModalsPage, data);
         this.modals.present();
     }
 
@@ -87,8 +80,6 @@ export class UIStateService {
         if(this.modals)
             this.modals.dismiss();
     }
-
-
 
     onOnline(){
         console.log('=================Online=================');
@@ -99,20 +90,19 @@ export class UIStateService {
     }
 
     get IsOnline() {
-        return this.online;
-		//return navigator.onLine;
+        //return this.online;
+		return navigator.onLine;
     }
 
 
     set IsOnline(state:boolean) {
         this.online = state;
-        let value = "offline";
-        if(this.online) 
-            value = "online";
-        this.or.next({type:UIStateService.event_types.syncronize, value:value})
-        //return navigator.onLine;
     }
 
+    fireSync(){
+        let value="online";
+        this.or.next({type:UIStateService.event_types.syncronize, value:value})
+    }
     set Content(content:Content){
         this.content = content;
     }
@@ -120,5 +110,18 @@ export class UIStateService {
     get Content(){
         return this.content;
     }
+
+    listenToLoginEvents() {
+    this.auth.events.subscribe('auth', (evt) => {
+      if(evt.action == 'login' && evt.result == 'success'){
+        this.authenticated = this.auth.userIsAuthenticated();
+        this.user = this.auth.getUser();
+      }
+      if(evt.action == 'logout' && evt.result == 'success'){
+        this.authenticated = this.auth.userIsAuthenticated();
+        this.user = this.auth.getUser();
+      }
+    });
+  }
 
 }

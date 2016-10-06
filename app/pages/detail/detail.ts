@@ -8,6 +8,7 @@ import { PropertyComponent } from '../../components/property/property';
 import { UnitComponent } from '../../components/unit/unit';
 import { GlobalComponent } from '../../components/global/global';
 import { FormulaComponent } from '../../components/formula/formula';
+import { VarvalComponent } from '../../components/varval/varval';
 import { VarComponent } from '../../components/variable/variable';
 import { MathKeypad } from '../../components/keys/keypad';
 import { FlNavBar } from '../../components/bars/nav-bar';
@@ -18,7 +19,7 @@ import {MQService} from '../../services/mq-service'
     //templateUrl: 'build/pages/unit/unit-test.html',
     templateUrl: 'build/pages/detail/detail.html',
     directives: [GlobalComponent, FormulaComponent
-    , forwardRef(() => UnitComponent), forwardRef(() => PropertyComponent), VarComponent, FlNavBar, MathKeypad]
+    , forwardRef(() => UnitComponent), forwardRef(() => PropertyComponent), VarComponent, VarvalComponent, FlNavBar, MathKeypad]
     
 })
 
@@ -28,8 +29,12 @@ export class DetailPage {
     title:string;
     master: any;
     tabsPage:any;
+    navMode:boolean = false;
     constructor(public app:App, public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService, public mq:MQService) {
-        this.tabsPage = navParams.get('tabs');
+        this.tabsPage = uiStateService.tabsPage;
+        this.currResource = navParams.get('currResource');
+        if(this.currResource)
+            this.navMode =true;
     }
 
     @ViewChild(Content) content: Content;
@@ -40,18 +45,21 @@ export class DetailPage {
     }
 
     ngOnInit() {
+        if(this.currResource)
+            this.setDetail(true);
     }
 
     ngAfterViewInit(){
-        this.setDetail()
+        if(!this.currResource)
+            this.setDetail()
     }
 
-    setDetail(){
+    setDetail(init:boolean = false){
         this.uiStateService.Content = this.content;
         if(!this.tabsPage.resource)
             return;
-
-        this.currResource = this.tabsPage.resource;
+        if(!this.navMode)
+            this.currResource = this.tabsPage.resource;
         this.type = this.currResource.getTable();
         if(this.type == 'properties')
             this.title = 'Property - ' + this.currResource.name;
@@ -63,6 +71,8 @@ export class DetailPage {
             this.title = 'Variable - ' + this.currResource.name;
         else if (this.type == 'formulas')
             this.title = 'Formula - ' + this.currResource.name;
+         else if (this.type == 'varvals')
+            this.title = 'Run Formula - ' + this.currResource.name;
     }
    
     ionViewDidEnter() {

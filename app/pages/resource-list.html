@@ -22,4 +22,7 @@
 	 <ion-list *ngIf="resourceType == 'formulas'">
 	    	<fl-formula *ngFor="let res of resources"  [resource]="res" ></fl-formula>
 	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'varvals'">
+	    	<fl-varval *ngFor="let res of resources"  [resource]="res" ></fl-varval>
+	 </ion-list>
 </ion-content>

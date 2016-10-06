@@ -1,8 +1,8 @@
 import {Component, ElementRef, Input, Output, EventEmitter} from '@angular/core';
-import {IONIC_DIRECTIVES, Modal, ModalOptions, NavController, App} from 'ionic-angular';
+import {IONIC_DIRECTIVES, NavController, App} from 'ionic-angular';
 import {MoreOptions} from '../../pages/more-options/more-options';
-import {AllModals} from '../../pages/all-modals/all-modals';
 import {UIStateService} from '../../services/ui-state-service';
+import { PopoverController } from 'ionic-angular';
 
 @Component({
 	selector: 'fl-nav-bar',
@@ -14,11 +14,11 @@ export class FlNavBar {
 	searchBar: boolean = false;
 	searchDelay: number = 2000;
 	
-	a:ModalOptions;
 	constructor(public app: App
 			    , public el: ElementRef
 				, public nav: NavController
-				, public uiStateService:UIStateService) {
+				, public uiStateService:UIStateService
+				, public popoverCtrl: PopoverController) {
 
 	}
 	//left
@@ -48,17 +48,10 @@ export class FlNavBar {
 		this.onFilterChange.emit(this.searchQuery);
 	}
 
-
-
 	more(evt){
-	    let moreOptions = new Modal(this.app, MoreOptions, { 'authenticated': this.uiStateService.authenticated }, this.a);
-
-	     moreOptions.onDidDismiss(data => {
-	       let modals = new Modal(this.app, AllModals, data, this.a);
-	       modals.present();
-	     });
-	     moreOptions.present();
-	  }
+	    let opts = this.popoverCtrl.create(MoreOptions)
+	     opts.present();
+	}
 
 	add(evt){
 		this.onAdd.emit(evt)
@@ -68,7 +61,7 @@ export class FlNavBar {
 		return this.uiStateService.IsOnline;
 	}
 
-	switchState(evt){
-		this.uiStateService.IsOnline = !this.uiStateService.IsOnline
+	sync(evt){
+		this.uiStateService.fireSync();
 	}
 }

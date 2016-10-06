@@ -1,8 +1,8 @@
 import { Injectable,forwardRef } from '@angular/core';
 import { Http } from '@angular/http';
 import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
-import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable } from '../types/standard';
-import { SyncResponseHandler, Category, States, OpCodes, ItemSyncState } from '../types/standard'
+import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, Varval } from '../types/standard';
+import { SyncResponseHandler, Category, CR,  States, OpCodes, ItemSyncState } from '../types/standard'
 import { ErrorHandler } from '../types/standard';
 import { Favorite } from '../types/standard'
 
@@ -27,6 +27,8 @@ export class DataService {
     fgs: ResourceCollection<FG> = new ResourceCollection<FG>(this, FG);
     favorites: ResourceCollection<Favorite> = new ResourceCollection<Favorite>(this, Favorite);
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
+    crs: ResourceCollection<CR> = new ResourceCollection<CR>(this, CR);
+    varvals: ResourceCollection<Varval> = new ResourceCollection<Varval>(this, Varval);
     logHandler:LogHandler;
 
     
@@ -34,7 +36,7 @@ export class DataService {
     // formulas: ResourceCollection;
     resourceTables: Array<string> = ['properties', 'units', 'globals'
     , 'formula', 'variables', 'fgs'
-    , 'categories'];
+    , 'categories', 'crs'];
 
     initComplete: boolean = false;
     
@@ -102,6 +104,8 @@ export class DataService {
         return { ulist: this.units};
         case this.formulas:
         return { plist:this.properties, ulist: this.units, vlist:this.variables, glist:this.globals, fglist:this.fgs};
+        case this.categories:
+        return { clist:this.categories }
         default :
         return {};
       }
@@ -296,13 +300,15 @@ export class DataService {
       switch (list) {
         case this.properties:
         case this.units:
-        return [this.properties, this.units, this.favorites];
+        return [this.properties, this.units, this.favorites, this.categories, this.crs];
         case this.globals:
-        return [this.properties, this.units, this.globals, this.favorites]
+        return [this.properties, this.units, this.globals, this.favorites, this.categories, this.crs]
         case this.formulas:
         case this.variables:
         case this.fgs:
-        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables, this.favorites]
+        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables, this.favorites, this.categories, this.crs, this.varvals]
+        case this.categories:
+        return [this.crs]
         default:
         return [list];
       }
@@ -340,6 +346,10 @@ export class DataService {
             return 'variable_id';
           case this.favorites:
             return 'favorite_id';
+          case this.categories:
+            return 'category_id';
+          case this.crs:
+            return 'cr_id'
           default:
             throw('Dataserver:Invalid list passed to getRefIdColumn');
         }
@@ -359,12 +369,15 @@ export class DataService {
         case this.formulas:
         this.formulas.publishErrors();
         break;
+        case this.categories:
+        this.categories.publishErrors();
+        break;
         default:
       }
     }
 
     getSelectMethod(table:string):Observable<any>{
-      if(table == "fgs" || table == "variables")
+      if(table == "fgs" || table == "variables" || table == "categories" || table == "crs" || table == "varvals")
         return this.cache.selectAll(table);
       else
         return this.cache.selectAllByUserIds(table, [1, this.uiService.userId]);

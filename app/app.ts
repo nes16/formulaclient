@@ -1,6 +1,6 @@
 
 import { Component, ViewChild, provide } from '@angular/core';
-import { App, Events, ionicBootstrap, MenuController, Nav, Platform } from 'ionic-angular';
+import { App, Events, ionicBootstrap, MenuController, Nav, Platform, Modal } from 'ionic-angular';
 import { Splashscreen, StatusBar } from 'ionic-native';
 import {PLATFORM_DIRECTIVES} from '@angular/core';
 import {disableDeprecatedForms, provideForms, REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
@@ -13,12 +13,9 @@ import {DataService} from './services/data-service';
 import {MQService} from './services/mq-service';
 import {RemoteService} from './services/remote-service';
 import {SqlService} from './services/sql-service';
-import {SqlCacheService} from './services/sqlcache-service';
+import { SqlCacheService } from './services/sqlcache-service';
+import { UserPage } from './pages/user/user';
 
-import { UserData } from './providers/user-data';
-import { AccountPage } from './pages/account/account';
-import { LoginPage } from './pages/login/login';
-import { SignupPage } from './pages/signup/signup';
 import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
 
@@ -27,6 +24,7 @@ interface PageObj {
   component: any;
   icon: string;
   index?: number;
+  params?:any;
 }
 
 @Component({
@@ -43,22 +41,24 @@ class FormulaApp {
   appPages: PageObj[] = [
     { title: 'Properties & Units', component: TabsPage, icon: 'calendar' },
     { title: 'Globals', component: TabsPage, index: 1, icon: 'contacts' },
-    { title: 'Formulas', component: TabsPage, index: 2, icon: 'map' }
+    { title: 'Formulas', component: TabsPage, index: 2, icon: 'map' },
   ];
   loggedInPages: PageObj[] = [
-    { title: 'Account', component: AccountPage, icon: 'person' },
+    { title: 'change Passwrod', component: UserPage, icon: 'person', params:{option:'chpwd'} },
     { title: 'Logout', component: TabsPage, icon: 'log-out' }
   ];
   loggedOutPages: PageObj[] = [
-    { title: 'Login', component: LoginPage, icon: 'log-in' },
-    { title: 'Signup', component: SignupPage, icon: 'person-add' }
+    { title: 'Login', component: UserPage, icon: 'log-in', params:{option:'login'} },
+    { title: 'Signup', component: UserPage, icon: 'person-add', params:{option:'signup'} }
   ];
+
   rootPage: any = TutorialPage;
 
   constructor(
+    public apsignup: App,
     public events: Events,
-    public userData: UserData,
     public menu: MenuController,
+    public auth: MyTokenAuth,
     platform: Platform
   ) {
     // Call any initial plugins when ready
@@ -67,13 +67,8 @@ class FormulaApp {
       Splashscreen.hide();
     });
 
-    // load the conference data
-    //confData.load();
-
     // decide which menu items should be hidden by current login status stored in local storage
-    this.userData.hasLoggedIn().then((hasLoggedIn) => {
-      this.enableMenu(hasLoggedIn === 'true');
-    });
+    this.enableMenu(this.auth.userIsAuthenticated());
 
     this.listenToLoginEvents();
   }
@@ -86,28 +81,26 @@ class FormulaApp {
       this.nav.setRoot(page.component, {tabIndex: page.index});
 
     } else {
-      this.nav.setRoot(page.component);
+      this.nav.setRoot(page.component, page.params);
     }
 
     if (page.title === 'Logout') {
       // Give the menu time to close before changing to logged out
       setTimeout(() => {
-        this.userData.logout();
+        this.auth.logout().subscribe();
       }, 1000);
     }
   }
 
+  
   listenToLoginEvents() {
-    this.events.subscribe('user:login', () => {
-      this.enableMenu(true);
-    });
-
-    this.events.subscribe('user:signup', () => {
-      this.enableMenu(true);
-    });
-
-    this.events.subscribe('user:logout', () => {
-      this.enableMenu(false);
+    this.auth.events.subscribe('auth', (evt) => {
+      if(evt.action == 'login' && evt.result == 'success'){
+        this.enableMenu(true);
+      }
+      if(evt.action == 'logout' && evt.result == 'success'){
+        this.enableMenu(false);
+      }
     });
   }
 
@@ -128,7 +121,6 @@ class FormulaApp {
 // http://ionicframework.com/docs/v2/theming/platform-specific-styles/
 
 ionicBootstrap(FormulaApp, [
-  UserData,
   disableDeprecatedForms(),
   provideForms(),
   {

@@ -2,10 +2,10 @@ import { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from
 import { MathQ } from './mathquill';
 import { DataService } from '../services/data-service'
 import { UIStateService } from '../services/ui-state-service'
-import { ResourceCollection, Unit, States, Favorite } from '../types/standard';
+import { ResourceCollection, Unit, States, Favorite, Formula } from '../types/standard';
 import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular';
-import { AllModals } from '../pages/all-modals/all-modals';
 import { ErrorHandler } from '../types/standard';
+import { ResourceListPage } from '../pages/resource-list'
 
 export class BaseComponent {
 	submitButtonName: string;
@@ -13,12 +13,14 @@ export class BaseComponent {
 	errorMessage: string;
 	expand: boolean = false;
 	detailPage: any;
+	tabsPage:any;
 
 
 	constructor(public app: App,
 		public dataService: DataService
 		, public nav: NavController
 		, public uiStateService: UIStateService = null) {
+			 this.tabsPage = uiStateService.tabsPage;
 
 	}
 
@@ -58,7 +60,7 @@ export class BaseComponent {
 		this.resource.enterEdit();
 
 		//Load the page
-		this.nav.push(this.detailPage, { 'currResource': this.resource })
+		this.openDetailsTab(this.resource);
 	}
 
 	onErrorCmd(evt) {
@@ -191,7 +193,21 @@ export class BaseComponent {
 				}, () => { })
 	}
 
+	onHistory(evt){
+		this.nav.push(ResourceListPage, { type:'varvals', formula: this.resource })
+	}
 
+	onRun(evt){
+		let val = (this.resource as Formula).newVarval();
+		this.openDetailsTab(val)
+	}
+
+	openDetailsTab(res){
+		if(res.getTable() == 'variables')
+			this.nav.push(this.detailPage, { 'currResource': this.resource })
+		else		
+			this.tabsPage.setDetailTab(res);
+	}
 	presentActionSheet(evt) {
 		if (this.onSelect(evt)) //If in select mode this will be handled by the above function
 			return;
@@ -227,6 +243,13 @@ export class BaseComponent {
 		if (this.resource.Favorite)
 			fav = "Unfavorite";
 
+
+		var runButton = {
+			text: 'Run',
+			handler: () => {
+				this.onRun(evt);
+			}
+		}
 
 		var actionSheetItems = {
 			title: 'Select item command',
@@ -271,6 +294,9 @@ export class BaseComponent {
 				actionSheetItems.buttons.splice(0, 0, shareButton)
 			else if (this.resource.user_id)
 				actionSheetItems.buttons.splice(0, 0, unshareButton)
+		}
+		if (this.resource.getTable() == 'formulas'){
+			actionSheetItems.buttons.splice(0,0,runButton);
 		}
 		let actionSheet = new ActionSheet(this.app, actionSheetItems);
 

@@ -17,6 +17,9 @@
     <ion-list *ngIf="type == 'variables'">
         <fl-var  [mode]="'edit'" [resource]="currResource"></fl-var>
     </ion-list>
+    <ion-list *ngIf="type == 'varvals'">
+        <fl-varval  [mode]="'edit'" [resource]="currResource"></fl-varval>
+    </ion-list>
 </ion-content>
 <ion-footer [class.fl-hidden]="!mq.showKeyboard">
 <keypad></keypad>
