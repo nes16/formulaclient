@@ -14,20 +14,19 @@ export class ModalsPage {
     constructor(params: NavParams, public nav:NavController, public viewCtrl:ViewController) {
         this.option = params.get('option');
         switch(this.option){
+            case 'about':
+                this.title = "About";
+                break;
             case 'error' :
                 this.title="Error";
+                this.errorInfo = params.get("errorInfo");
                 break;
             case 'progress':
                 this.title = this.option.title;
-        }
-        if(this.option == "error"){
-            this.title = "Errors"
-            this.errorInfo = params.get("errorInfo");
-        }
-
-        if(this.option == "progress"){
-            this.title = params.get("title");
-            this.message = params.get("message");
+                this.message = params.get("message");
+                break;
+            default:
+                throw('Invalid option in ModalsPage')
         }
     }
 

@@ -3,7 +3,7 @@
         <ion-item-divider *ngIf="index == 0" danger>
               Syncronize Errors
         </ion-item-divider>
-        <ion-item *ngIf="!query" (dbltap)="showUnits($event)" (click)="presentActionSheet($event)">
+        <ion-item *ngIf="!query" (dbltap)="showChildren($event)" (click)="presentActionSheet($event)">
             <fl-base [resource]="resource"></fl-base>
             {{resource.name}}
             <ion-buttons right>
@@ -26,7 +26,7 @@
         </ion-item-divider>
     </template>
     <template [ngSwitchCase]="'edit'">
-            <form [formGroup]="form" (submit)="edit($event, propertyForm.value)">
+            <form [formGroup]="form" (submit)="edit($event)">
 	            <ion-list>
                     <ion-item>
                     <ion-label>Name</ion-label> 
@@ -38,7 +38,7 @@
                         <fl-unit  [mode]="'edit'" [updateButton]="false" [resource]="resource.DefaultUnit"></fl-unit>
                     </ion-item>
 	                <ion-item>
-	                    <button type="button" name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid || !unitForm || !unitForm.first.form.valid">{{submitButtonName}}</button>
+	                    <button type="button" name="submit" (click)="edit($event)" [disabled]="!form.valid || !unitForm || !unitForm.first.form.valid">{{submitButtonName}}</button>
 	                </ion-item>
 	            </ion-list>
 	        </form>

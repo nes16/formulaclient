@@ -229,7 +229,10 @@ export class DataService {
       let li = this[r.getTable()] as ResourceCollection<BaseResource>;
       if(r.id == null){
         r.id = UUID.UUID();
-        r.user_id = this.uiService.userId;
+        if(r.getTable() == 'categories')
+          r.user_id = 1;
+        else
+          r.user_id = this.uiService.userId;
         li.add(r);
         return this.cache.addItem(r)
       }
@@ -297,16 +300,23 @@ export class DataService {
     }
 
     getDepentent(list):ResourceCollection<BaseResource>[]{
+      let list1 = this.getDepententCore(list);
+      if(list == this.crs)
+        return list1;
+      return list1.concat([this.favorites, this.categories, this.crs])
+    }
+
+    getDepententCore(list):ResourceCollection<BaseResource>[]{
       switch (list) {
         case this.properties:
         case this.units:
-        return [this.properties, this.units, this.favorites, this.categories, this.crs];
+        return [this.properties, this.units];
         case this.globals:
-        return [this.properties, this.units, this.globals, this.favorites, this.categories, this.crs]
+        return [this.properties, this.units, this.globals]
         case this.formulas:
         case this.variables:
         case this.fgs:
-        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables, this.favorites, this.categories, this.crs, this.varvals]
+        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables]
         case this.categories:
         return [this.crs]
         default:

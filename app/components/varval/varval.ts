@@ -86,10 +86,6 @@ export class VarvalComponent extends BaseComponent {
 
 	}
 
-	edit(evt, value){
-		
-	}
-
 	getVariables(){
 		let r = this.resource as Varval;
 		return r._formula._variables;

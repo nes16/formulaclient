@@ -12,12 +12,14 @@ export class MoreOptions {
 		this.authenticated = params.get('authenticated');
 	}
 
-	about(option){
-		let about = new Modal(this.app, ModalsPage, { 'option': 'about' });
-
-	     about.onDidDismiss(data => {
-	       
-	     });
-	     about.present();
+	about(evt){
+		this.viewCtrl.dismiss().then(val => {
+			let about = new Modal(this.app, ModalsPage, { 'option': 'about' });
+			about.onDidDismiss(data => {
+			
+			});
+			about.present();
+		})
+		 
 	}
 }

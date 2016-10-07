@@ -1,10 +1,49 @@
-<ion-item>
-    <ion-buttons right>
-        <a (click)="onExpand($event)"><ion-icon royal [class.fl-hidden]="expand" name="arrow-down"></ion-icon></a>
-        <a (click)="onExpand($event)"><ion-icon  royal [class.fl-hidden]="!expand" name="arrow-up"></ion-icon></a>
-    </ion-buttons>
-    <div>
-        <h3>{{resource.name}}</h3>
-    </div>
-<ion-item>
-<fl-category *ngFor="let c of children"  [resource]="c"></fl-category>
+<div [ngSwitch]="mode">
+    <template [ngSwitchCase]="'list'">
+        <ion-item (dbltap)="showChildren($event)" (click)="presentActionSheet($event)">
+            <ion-buttons right>
+                <a (click)="onExpand($event)">
+                    <a (click)="onExpand($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
+                </a>
+                <a (click)="onAddCategory($event)">
+                    <ion-icon royal  name="add"></ion-icon>
+                </a>
+            </ion-buttons>
+            <div>
+                <h3>{{resource.name}}</h3>
+            </div>
+        </ion-item>
+        <template [ngIf]="add">
+            <form [formGroup]="childForm" (submit)="onAddSubmit($event)">
+            
+            <ion-item>
+
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="childResource.name"></ion-input>
+                <fb-error [fcontrol]="childForm.controls.name"></fb-error>
+            </ion-item>
+            </form>
+
+        </template>
+
+        <template [ngIf]="expand">
+            <fl-category *ngFor="let c of children" [resource]="c"></fl-category>
+        </template>
+    </template>
+    <template [ngSwitchCase]="'edit'">
+        <form [formGroup]="form" (submit)="edit($event)">
+            <ion-list>
+                <ion-list-header>
+                    Subcategory of {{resource._parent.name}}
+                </ion-list-header>
+                <ion-item>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                </ion-item>
+                <fb-error [fcontrol]="form.controls.name"></fb-error>
+                <ion-item>
+                    <button type="button" name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid">{{submitButtonName}}</button>
+                </ion-item>
+            </ion-list>
+        </form>
+    </template>

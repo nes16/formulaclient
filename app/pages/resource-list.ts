@@ -6,18 +6,19 @@ import { PropertyComponent } from '../components/property/property';
 import { UnitComponent } from '../components/unit/unit';
 import { FormulaComponent } from '../components/formula/formula';
 import { GlobalComponent } from '../components/global/global';
+import { CategoryComponent } from '../components/category/category';
 import { FlNavBar } from '../components/bars/nav-bar';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { DetailPage } from '../pages/detail/detail';
-import { BaseResource, Property, Formula, Global } from '../types/standard'
+import { BaseResource, Property, Formula, Global, Category } from '../types/standard'
 import { FavFilterPipe } from '../components/fav-filter'
 import { ErrorHandler } from '../types/standard';
 
 
 @Component({
     templateUrl: 'build/pages/resource-list.html',
-    directives:[FlNavBar, PropertyComponent, UnitComponent, GlobalComponent, FormulaComponent],
+    directives:[FlNavBar, PropertyComponent, UnitComponent, CategoryComponent, GlobalComponent, FormulaComponent],
     pipes:      [FavFilterPipe]
 })
 
@@ -28,6 +29,7 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     prop:Property;
     /*For listing var values*/
     formula:Formula;
+    category:Category;
     uiSubscription:any;
     resources:Array<BaseResource> = new Array<BaseResource>();
     tabsPage;any;
@@ -48,6 +50,9 @@ export class ResourceListPage implements  OnInit, OnDestroy {
         this.resourceType = this.navParams.get("type") ? this.navParams.get("type") : "properties";
         if(this.resourceType == "units"){
             this.prop = this.navParams.get("prop")
+        }
+        if(this.resourceType == "categories"){
+            this.category = Category._root;
         }
 
         if(this.resourceType == 'varvals'){
@@ -107,7 +112,9 @@ export class ResourceListPage implements  OnInit, OnDestroy {
         else if(this.resourceType == 'varvals'){
             return res.filter(i => i.formula_id == this.formula.id)
         }
-        else
+        else if(this.resourceType == 'categories'){
+            return res.filter(i => i.parent_id == this.category.id)
+        }
             return res;
     }
     ngOnDestroy(){
@@ -133,6 +140,8 @@ export class ResourceListPage implements  OnInit, OnDestroy {
                 return "Run Formula " + this.formula.name;
             case "units":
                 return "Units for " + this.prop.name;
+            case "categories":
+                return "Categories";
             default:
                 return null;
         }	
@@ -159,12 +168,14 @@ export class ResourceListPage implements  OnInit, OnDestroy {
             case "varvals":
                 resource = this.formula.newVarval();
                 break;
+            case "categories":
+                resource = Category._root.addCategory("New Category");
+                break;
              default:
                  resource = null;
         }
         if(resource){
             this.tabsPage.setDetailTab(resource);
-            //this.nav.push(DetailPage, { currResource: resource })
         }
         evt.stopPropagation();
         evt.preventDefault();

@@ -2,7 +2,7 @@ import {Component, ElementRef, Input, Output, EventEmitter} from '@angular/core'
 import {IONIC_DIRECTIVES, NavController, App} from 'ionic-angular';
 import {MoreOptions} from '../../pages/more-options/more-options';
 import {UIStateService} from '../../services/ui-state-service';
-import { PopoverController } from 'ionic-angular';
+import { PopoverController, PopoverOptions } from 'ionic-angular';
 
 @Component({
 	selector: 'fl-nav-bar',
@@ -50,7 +50,7 @@ export class FlNavBar {
 
 	more(evt){
 	    let opts = this.popoverCtrl.create(MoreOptions)
-	     opts.present();
+	     opts.present({ev:evt});
 	}
 
 	add(evt){

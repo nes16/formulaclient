@@ -9,6 +9,7 @@ import { UnitComponent } from '../../components/unit/unit';
 import { GlobalComponent } from '../../components/global/global';
 import { FormulaComponent } from '../../components/formula/formula';
 import { VarvalComponent } from '../../components/varval/varval';
+import { CategoryComponent } from '../../components/category/category';
 import { VarComponent } from '../../components/variable/variable';
 import { MathKeypad } from '../../components/keys/keypad';
 import { FlNavBar } from '../../components/bars/nav-bar';
@@ -19,7 +20,8 @@ import {MQService} from '../../services/mq-service'
     //templateUrl: 'build/pages/unit/unit-test.html',
     templateUrl: 'build/pages/detail/detail.html',
     directives: [GlobalComponent, FormulaComponent
-    , forwardRef(() => UnitComponent), forwardRef(() => PropertyComponent), VarComponent, VarvalComponent, FlNavBar, MathKeypad]
+    , forwardRef(() => UnitComponent), forwardRef(() => PropertyComponent), VarComponent
+    , VarvalComponent, FlNavBar, MathKeypad, CategoryComponent]
     
 })
 
@@ -73,6 +75,12 @@ export class DetailPage {
             this.title = 'Formula - ' + this.currResource.name;
          else if (this.type == 'varvals')
             this.title = 'Run Formula - ' + this.currResource.name;
+        else if (this.type == 'varvals')
+            this.title = 'Run Formula - ' + this.currResource.name;
+        else if (this.type == 'categories')
+            this.title = 'category';
+        else
+            throw("Invalid type detail page");
     }
    
     ionViewDidEnter() {

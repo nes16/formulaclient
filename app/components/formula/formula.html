@@ -19,7 +19,7 @@
         </ion-item-divider>
     </template>
     <template [ngSwitchCase]="'edit'">
-        <form [formGroup]="form" (submit)="edit($event, form.value)">
+        <form [formGroup]="form" (submit)="edit($event)">
             <ion-list>
                 <ion-item>
                     <ion-label>Name</ion-label>

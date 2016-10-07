@@ -148,7 +148,7 @@ export class FormulaComponent extends BaseComponent {
 
 	}
 
-	edit(evt, value){
+	edit(evt){
 		//Ser formula reference in child object		
 		this.resource.Globals.forEach(fg => fg.Formula = this.resource);
 		this.resource.Variables.forEach(v => v.Formula = this.resource);
@@ -160,7 +160,7 @@ export class FormulaComponent extends BaseComponent {
 		this.resource.Variables = 
 		this.resource.Variables.filter(v => !(v.deleted && !v.id))
 
-		super.edit(evt, value);
+		super.edit(evt);
 	}
 
 }

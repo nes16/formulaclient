@@ -225,8 +225,8 @@ export class BaseResource {
     }
 
 
-    getState() {
-        return {
+    getState():any{
+        let state = {
             id: this.id,
             name: this.name,
             lock_version: this.lock_version,
@@ -234,6 +234,15 @@ export class BaseResource {
             user_id: this.user_id,
             shared: this.shared
         };
+        if(!this.isUserResource()){
+            delete state.user_id;
+            delete state.shared
+        }
+        let tn = this.getTable();
+        if(tn == 'fgs' || tn == 'crs' || tn == 'favorites'){
+            delete state.name;
+        }
+        return state;
     }
 
 
@@ -294,6 +303,12 @@ export class BaseResource {
             return null;
     }
 
+    makeFavorite():Favorite{
+        let f = new Favorite();
+        f._favoritable = this;
+        return f;
+    }
+
     get Favorite() {
         return this.favorite;
     }
@@ -302,6 +317,9 @@ export class BaseResource {
         this.favorite = f;
     }
 
+    isUserResource(){
+        return true;
+    }
 }
 
 export class Unit extends BaseResource {
@@ -976,6 +994,10 @@ export class Varval extends BaseResource implements ValueProvider{
         return Varval.table;
     }
 
+    isUserResource():boolean{
+        return false;
+    }
+
 }
 
 export class Variable extends BaseResource {
@@ -1018,9 +1040,6 @@ export class Variable extends BaseResource {
             property_id: this._measure.PropertyId,
             unit_id: this._measure.UnitId
         });
-
-        delete state["shared"];
-        delete state["user_id"]
 
         return state;
     }
@@ -1093,10 +1112,6 @@ export class FG extends BaseResource {
                 formula_id: this.formula_id,
                 global_id: this.global_id
             });
-
-        delete state["name"];
-        delete state["shared"];
-        delete state["user_id"]
         return state;
     }
 
@@ -1123,6 +1138,10 @@ export class FG extends BaseResource {
     set Global(g) {
         this._global = g;
     }
+
+    isUserResource():boolean{
+        return false;
+    }
 }
 
 
@@ -1130,6 +1149,9 @@ export class Favorite extends BaseResource {
     static table: string = "favorites";
 
     favoritable_id: string;
+    favoritable_type:string;
+
+    _favoritable:BaseResource;
 
     constructor(state: any = null) {
         super(state);
@@ -1143,11 +1165,19 @@ export class Favorite extends BaseResource {
     }
 
     init() {
-        ResourceCollection.all[this.favoritable_id].Favorite = this;
+        if(this._favoritable)
+            return;
+        let r = ResourceCollection.all[this.favoritable_id];
+        if(r){ 
+            r.Favorite = this;
+            this._favoritable = r;
+        }
     }
+    
 
     deinit() {
-        ResourceCollection.all[this.favoritable_id].Favorite = null;
+        if(this._favoritable)
+            this._favoritable.Favorite = null;
     }
 
     getTable(): string {
@@ -1156,7 +1186,8 @@ export class Favorite extends BaseResource {
 
     getState() {
         return Object.assign(super.getState(), {
-            favoritable_id: this.favoritable_id
+            favoritable_id: this._favoritable.id,
+            favoritable_type: this._favoritable.getTable()
         })
     }
 
@@ -1164,16 +1195,19 @@ export class Favorite extends BaseResource {
         state = state || {}
         super.loadState(state);
         this.favoritable_id = state.favoritable_id || null;
+        this.favoritable_type = state.favoritable_type || null;
     }
 }
 
 export class Category extends BaseResource {
     parent_id: number;
-
+    isRoot: boolean;
     _parent: Category;
     children: Category[];
-    code: number;
 
+    _level:number;
+
+    static _root:Category = Category.root();
     static table: string = "categories";
 
     constructor(state: any = null) {
@@ -1181,16 +1215,29 @@ export class Category extends BaseResource {
         if(!state){
             this.setDefault()
         }
+        this.children = [];
     }
 
     setDefault(){
 
     }
 
+    static root():Category{
+        let c = new Category();
+        c.name = "Root"
+        c.isRoot = true;
+        return c;
+    }
+
     init(info) {
         if (info.clist) {
             this.children = info.clist.filter(i => i.parent_id == this.id);
-            this._parent = info.clist.find(i => i.id == this.parent_id);
+            if(this.parent_id)
+                this._parent = info.clist.find(i => i.id == this.parent_id);
+            else{
+                this._parent = Category._root;
+                this._parent.children.push(this);
+            }
         }
     }
 
@@ -1198,11 +1245,17 @@ export class Category extends BaseResource {
         return Category.table;
     }
 
+    addCategory(name:string):Category{
+        let c = new Category();
+        c.name = name;
+        c._parent = this;
+        this.children.push(c);
+        return c;
+    }
     getState() {
         return Object.assign(super.getState(),
             {
                 parent_id: this._parent ? this._parent.id : null,
-                code: this.code || null
             });
     }
 
@@ -1210,11 +1263,14 @@ export class Category extends BaseResource {
         state = state || {};
         super.loadState(state);
         this.parent_id = state.parent_id || null;
-        this.code = state.code || null;
     }
 
     onListLoadComplete() {
 
+    }
+
+    isUserResource(){
+        return false;
     }
 }
 
@@ -1255,10 +1311,6 @@ export class CR extends BaseResource {
                 categorizable_type: this._resource.getTable(),
                 category_id: this._category.id,
             });
-
-        delete state["name"];
-        delete state["shared"];
-        delete state["user_id"]
         return state;
     }
 
@@ -1285,6 +1337,11 @@ export class CR extends BaseResource {
 
     set Resource(r) {
         this._resource = r;
+    }
+
+
+    isUserResource():boolean{
+        return false;
     }
 }
 

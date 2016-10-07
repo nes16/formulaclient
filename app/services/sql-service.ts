@@ -14,11 +14,11 @@ export class SqlService {
 		'CREATE TABLE IF NOT EXISTS "properties" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "dims" varchar, "user_id" integer, "shared" boolean, "lock_version" integer, "error_messages" varchar);',
 		'CREATE TABLE IF NOT EXISTS "units" ("id" varchar PRIMARY KEY NOT NULL, "property_id" varchar, "name" varchar, "system" varchar,  "symbol" varchar,  "description" varchar, "approx" boolean, "factor" varchar,  "user_id" integer, "shared" boolean, "lock_version" integer, "error_messages" varchar);',
 		'CREATE TABLE IF NOT EXISTS "formulas" ("id" varchar PRIMARY KEY NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "favorites" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "user_id" integer, "favoritable_id" varchar, "favoritable_type" varchar, "lock_version" integer, "error_messages" varchar, "shared" boolean);',
+		'CREATE TABLE IF NOT EXISTS "favorites" ("id" varchar PRIMARY KEY NOT NULL,  "user_id" integer, "favoritable_id" varchar, "favoritable_type" varchar, "lock_version" integer, "error_messages" varchar, "shared" boolean);',
 		'CREATE TABLE IF NOT EXISTS "globals" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "value" varchar, "user_id" integer, "shared" boolean,  "lock_version" integer, "error_messages" varchar);',
 		'CREATE TABLE IF NOT EXISTS "fgs" ("id" varchar PRIMARY KEY NOT NULL, "formula_id" varchar, "global_id" varchar, "lock_version" integer, "error_messages" varchar);',
 		'CREATE TABLE IF NOT EXISTS "variables" ("id" varchar PRIMARY KEY NOT NULL, "symbol" varchar, "name" varchar, "unit_id" varchar, "formula_id" varchar, "property_id" varchar, "lock_version" integer, "error_messages" varchar);',
-		'CREATE TABLE IF NOT EXISTS "categories" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar, "code" integer, "parent_id" varchar, "lock_version" integer, "error_messages" varchar);',
+		'CREATE TABLE IF NOT EXISTS "categories" ("id" varchar PRIMARY KEY NOT NULL, "name" varchar,  "parent_id" varchar, "lock_version" integer, "error_messages" varchar);',
 		'CREATE TABLE IF NOT EXISTS "crs" ("id" varchar PRIMARY KEY NOT NULL, "category_id" varchar, "categorizable_id" varchar, "categorizable_type" varchar, "lock_version" integer, "error_messages" varchar);',
 		//stores the formula variables values in comma seperated string.
 		'CREATE TABLE IF NOT EXISTS "varvals" ("id" varchar PRIMARY KEY NOT NULL,"name" varchar, "formula_id" varchar, "variables" varchar, "result" varchar, "lock_version" integer);',

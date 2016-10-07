@@ -104,15 +104,14 @@ export class BaseComponent {
 
 	}
 
-	showUnits(evt) {
+	showChildren(evt) {
 
 	}
 
 	onFavorite(evt) {
 		if (this.resource.Favorite)
 			return this.onUnfavorite(evt);
-		let f = new Favorite({ favoritable_id: this.resource.id, favoritable_type: this.resource.getTable() });
-		f.init();
+		let f = this.resource.makeFavorite()
 		this.dataService
 			.saveItemRecursive(f)
 			.subscribe(
@@ -182,7 +181,7 @@ export class BaseComponent {
 		this.nav.pop();
 	}
 
-	edit(evt, value) {
+	edit(evt) {
 		this.dataService
 			.saveItemRecursive(this.resource)
 			.subscribe(
@@ -221,7 +220,7 @@ export class BaseComponent {
 		var newButton = {
 			text: 'Units',
 			handler: () => {
-				this.showUnits(evt);
+				this.showChildren(evt);
 			}
 		}
 

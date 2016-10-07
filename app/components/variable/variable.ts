@@ -55,7 +55,7 @@ export class VarComponent extends BaseComponent {
 		}
 	}
 
-	edit(evt, value) {
+	edit(evt) {
 		this.nav.pop();
 	}
 

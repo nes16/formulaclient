@@ -42,6 +42,7 @@ class FormulaApp {
     { title: 'Properties & Units', component: TabsPage, icon: 'calendar' },
     { title: 'Globals', component: TabsPage, index: 1, icon: 'contacts' },
     { title: 'Formulas', component: TabsPage, index: 2, icon: 'map' },
+    { title: 'Categories', component: TabsPage, index: 4, icon: 'map' },
   ];
   loggedInPages: PageObj[] = [
     { title: 'change Passwrod', component: UserPage, icon: 'person', params:{option:'chpwd'} },

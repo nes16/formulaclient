@@ -16,10 +16,12 @@ export class TabsPage {
   tab2Root: any = ResourceListPage;
   tab3Root: any = ResourceListPage;
   tab4Root: any = DetailPage;
-  param1:any ={type:"properties"};
-  param2:any ={type:"globals"};
-  param3:any ={type:"formulas"};
-  param4:any = {tabs:this}
+  tab5Root: any = ResourceListPage;
+  param1:any = {type:"properties"};
+  param2:any = {type:"globals"};
+  param3:any = {type:"formulas"};
+  param4:any = {tabs:this};
+  param5:any = {type:"categories"};
   mySelectedIndex: number;
   resource:any;
 
@@ -34,5 +36,4 @@ export class TabsPage {
     this.resource = res;
     this.tabRef.select(3);
   }
-
 }

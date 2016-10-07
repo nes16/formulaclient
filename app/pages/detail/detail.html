@@ -20,6 +20,9 @@
     <ion-list *ngIf="type == 'varvals'">
         <fl-varval  [mode]="'edit'" [resource]="currResource"></fl-varval>
     </ion-list>
+    <ion-list *ngIf="type == 'categories'">
+        <fl-category  [mode]="'edit'" [resource]="currResource"></fl-category>
+    </ion-list>
 </ion-content>
 <ion-footer [class.fl-hidden]="!mq.showKeyboard">
 <keypad></keypad>

@@ -25,4 +25,7 @@
 	 <ion-list *ngIf="resourceType == 'varvals'">
 	    	<fl-varval *ngFor="let res of resources"  [resource]="res" ></fl-varval>
 	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'categories'">
+	    	<fl-category *ngFor="let res of resources"  [resource]="res" ></fl-category>
+	 </ion-list>
 </ion-content>
