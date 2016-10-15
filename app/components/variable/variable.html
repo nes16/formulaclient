@@ -1,6 +1,6 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-            <ion-row (click)="presentActionSheet($event)">
+            <ion-row (click)="onClick($event)">
                 <ion-col >
                     <span>{{resource.name}}</span>
                 </ion-col>

@@ -2,7 +2,7 @@ import {Component, ElementRef, Input, Output, EventEmitter} from '@angular/core'
 import { REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators } from '@angular/forms';
 import {DataService} from '../../services/data-service';
 import {UIStateService} from '../../services/ui-state-service';
-import {App, IONIC_DIRECTIVES, NavController} from 'ionic-angular';
+import {App, IONIC_DIRECTIVES, NavController, ViewController} from 'ionic-angular';
 import {BaseResource} from '../base-resource';
 import {BaseComponent} from '../base-component'
 import {FormulaComponent} from '../formula/formula';
@@ -53,12 +53,14 @@ export class CategoryComponent extends BaseComponent {
 			     app: App,
 				 nav: NavController,
 				 public el: ElementRef,
-				 public uiStateService: UIStateService
+				 public uiStateService: UIStateService,
+				 public viewController: ViewController
 				 ) {
 		super(app, dataService, nav, uiStateService);
 		this.detailPage = DetailPage;
 	}
 
+	
 
 	ngOnInit() {
 		super.ngOnInit();
@@ -112,6 +114,24 @@ export class CategoryComponent extends BaseComponent {
 		})
 	}
 
+	getPrefix():number{
+		return this.resource.getPrefix();
+	}
 
+	getIndentedName():number{
+		return this.resource.name;
+	}
+
+	getStyle(){
+		let styles ={
+			'padding-left' : this.getPrefix() + "px"
+		}
+
+		return styles;
+	}
+
+	dismissView(){
+		return this.viewController.dismiss();
+	}
 	
 }

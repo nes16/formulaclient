@@ -84,25 +84,34 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     selectedViewType(type){
         if(type == 'All'){
             this.dataService[this.resourceType].ole.subscribe(res => {
-                this.resources = this.filterParent(res)
+                this.resources = this.filterCategoryAndParent(res);
             },(error) => { 
             ErrorHandler.handle(error, "ResourceListPage::selectedViewType", true);
         })
         }
         else if(type == 'Favourites'){
              this.dataService[this.resourceType].ole.subscribe(res => {
-                 this.resources = this.filterParent(res.filter(item => item.Favorite))
+                 this.resources = this.filterCategoryAndParent(res.filter(item => item.Favorite))
              },(error) => { 
             ErrorHandler.handle(error, "ResourceListPage::selectedViewType", true);
         })
         }
         else if(type == 'Library'){
              this.dataService[this.resourceType].ole.subscribe(res => {
-                 this.resources = this.filterParent(res.filter(item => this.dataService.isResourceShared(item)))
+                 this.resources = this.filterCategoryAndParent(res.filter(item => this.dataService.isResourceShared(item)))
              },(error) => { 
             ErrorHandler.handle(error, "ResourceListPage::selectedViewType", true);
         })   
         }
+    }
+
+    filterCategoryAndParent(res){
+        let res1 = this.filterParent(res);
+        if(this.uiService.category != null){
+                        return res1.filter(i => {return i.crs  && this.uiService.category.isSubCategory(i.crs._category)}
+            )
+        }
+        return res1;
     }
 
     filterParent(res){
@@ -189,4 +198,10 @@ export class ResourceListPage implements  OnInit, OnDestroy {
 
     }
 
+    ngAfterViewInit(){
+    }
+
+    ionViewDidEnter() {
+        this.selectedViewType(this.viewType);
+    }
 }

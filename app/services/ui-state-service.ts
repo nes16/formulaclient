@@ -18,6 +18,8 @@ export class UIStateService {
     userId:number = -1;
     user:any = null;
     tabsPage:any = null;
+    category:any = null;
+    
     static event_types = {
         resource_save_complete:1,   //Successful save of an resource
         service_error_occurred:2, //Publishing errors from services

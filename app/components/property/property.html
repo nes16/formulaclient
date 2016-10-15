@@ -3,7 +3,7 @@
         <ion-item-divider *ngIf="index == 0" danger>
               Syncronize Errors
         </ion-item-divider>
-        <ion-item *ngIf="!query" (dbltap)="showChildren($event)" (click)="presentActionSheet($event)">
+        <ion-item *ngIf="!query" (dbltap)="showChildren($event)" (click)="onClick($event)">
             <fl-base [resource]="resource"></fl-base>
             {{resource.name}}
             <ion-buttons right>

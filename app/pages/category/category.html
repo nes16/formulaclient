@@ -1,7 +1,6 @@
-<ion-header>
-</ion-header>
-<ion-content>
-    <ion-list>
-	    <fl-component *ngFor="let res of resources"  [resource]="res" ></fl-component>
-	</ion-list>
-</ion-content>
+<ion-list>
+	<ion-item>
+		<ion-button (click)="clear($event)">Clear</ion-button>
+	</ion-item>
+	<fl-category *ngFor="let res of resources" [filter]="true" [resource]="res" ></fl-category>
+</ion-list>

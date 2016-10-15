@@ -6,6 +6,7 @@ import { ResourceCollection, Unit, States, Favorite, Formula } from '../types/st
 import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular';
 import { ErrorHandler } from '../types/standard';
 import { ResourceListPage } from '../pages/resource-list'
+import { Observable } from 'rxjs/Observable';
 
 export class BaseComponent {
 	submitButtonName: string;
@@ -19,10 +20,13 @@ export class BaseComponent {
 	constructor(public app: App,
 		public dataService: DataService
 		, public nav: NavController
-		, public uiStateService: UIStateService = null) {
+		, public uiStateService: UIStateService = null
+		) {
 			 this.tabsPage = uiStateService.tabsPage;
 
 	}
+
+
 
 
 
@@ -34,7 +38,8 @@ export class BaseComponent {
 	@Input() onlyProp = false;
 	@Input() index = null;
 	@Input() last = null;
-
+	@Input() filter:boolean = false;
+	
 	ngOnInit() {
 		if (this.resource)
 			this.setButtonName(this.resource);
@@ -174,7 +179,7 @@ export class BaseComponent {
 		}
 		return false;
 	}
-
+	
 	emit() {
 		var type = UIStateService.event_types.resource_save_complete;
 		this.uiStateService.or.next({ status: 'success', type: type, resource: this.resource });
@@ -201,13 +206,63 @@ export class BaseComponent {
 		this.openDetailsTab(val)
 	}
 
+	onCategory(){
+		var type = UIStateService.event_types.resource_selected;
+		var subscribtion = this.uiStateService.ole.subscribe(sel => {
+			let oles:Observable<any>[] = [];
+			if(sel.type == type)
+			{
+				if(sel.status == 'success'){
+					if(this.resource.crs)
+						oles.push(this.dataService.removeItem(this.resource.crs));
+					let cr = this.resource.setCategory(sel.resource);
+					oles.push(this.dataService.saveItemRecursive(cr))
+					Observable.from(oles).map(i => i).concatAll().subscribe(
+				res => {
+
+				}, err => {
+					ErrorHandler.handle(err, "BaseComponent::onCategory", true);
+				}, () => { })
+				}
+				subscribtion.unsubscribe();
+			}
+		}, error=>{
+			ErrorHandler.handle(error, "Basecomponent::onCategory", true);
+		}, ()=>{
+			console.log('Subscribtion completed in onCategory')
+		});
+		this.uiStateService.inSelectMode = true;
+		this.nav.push(ResourceListPage, { type:'categories'});
+	}
+
+	onRemoveCategory(){
+		if(this.resource.crs)
+			this.dataService.removeItem(this.resource.crs).subscribe(
+				res => {
+
+				}, err => {
+					ErrorHandler.handle(err, "BaseComponent::onRemoveCategory", true);
+				}, () => { })
+	}
+
 	openDetailsTab(res){
 		if(res.getTable() == 'variables')
 			this.nav.push(this.detailPage, { 'currResource': this.resource })
 		else		
 			this.tabsPage.setDetailTab(res);
 	}
-	presentActionSheet(evt) {
+
+	onClick(evt) {
+		if(this.resource.getTable() == 'variables')
+			return this.onEditCmd(evt);
+		if(this.resource.getTable() == 'categories' && this.filter == true){
+			this.dismissView().then(res => {
+				this.uiStateService.category = this.resource;
+				return;
+			})
+			return;
+		}
+	
 		if (this.onSelect(evt)) //If in select mode this will be handled by the above function
 			return;
 		var errorButton = {
@@ -249,6 +304,21 @@ export class BaseComponent {
 				this.onRun(evt);
 			}
 		}
+		
+		var catButton = {
+					text: "Set Category",
+					handler: () => {
+						this.onCategory();
+					}
+				};
+
+		var unCatButton = {
+					text: "Remove Category",
+					handler: () => {
+						this.onRemoveCategory();
+					}
+				};
+				
 
 		var actionSheetItems = {
 			title: 'Select item command',
@@ -266,6 +336,7 @@ export class BaseComponent {
 						this.onRemoveCmd(evt);
 					}
 				},
+				
 				{
 					text: 'Cancel',
 					role: 'cancel',
@@ -297,6 +368,13 @@ export class BaseComponent {
 		if (this.resource.getTable() == 'formulas'){
 			actionSheetItems.buttons.splice(0,0,runButton);
 		}
+		if(this.resource.getTable() != 'categories'){
+			actionSheetItems.buttons.splice(0,0,catButton);
+		}
+		if(this.resource.crs && this.resource.getTable() != 'categories'){
+			actionSheetItems.buttons.splice(0,1,unCatButton);
+		}
+		
 		let actionSheet = new ActionSheet(this.app, actionSheetItems);
 
 		actionSheet.present();
@@ -316,5 +394,7 @@ export class BaseComponent {
         this[field + "Changed"] = true;
     }
 
-
+	dismissView(){
+		return null;
+	}
 }

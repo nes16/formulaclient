@@ -187,6 +187,7 @@ export class BaseResource {
     deleted: string;
     oldState: any;
     favorite: Favorite = null;
+    crs: CR = null;
     constructor(state = null) {
         this.loadState(state);
     }   
@@ -241,6 +242,9 @@ export class BaseResource {
         let tn = this.getTable();
         if(tn == 'fgs' || tn == 'crs' || tn == 'favorites'){
             delete state.name;
+        }
+        if(tn == 'varvals'){
+            delete state.error_messages;
         }
         return state;
     }
@@ -307,6 +311,14 @@ export class BaseResource {
         let f = new Favorite();
         f._favoritable = this;
         return f;
+    }
+
+    setCategory(c){
+        let cr = new CR();
+        cr._resource = this;
+        cr._category = c;
+        this.crs = cr;
+        return cr;
     }
 
     get Favorite() {
@@ -870,6 +882,10 @@ export class ValueU {
     convert(unit:Measure):number{
         return this.val;
     }
+
+    asString():string{
+        return this.getValue(null).toString();
+    }
 }
 
 export class Varval extends BaseResource implements ValueProvider{
@@ -877,7 +893,7 @@ export class Varval extends BaseResource implements ValueProvider{
     /*Formula id*/
     formula_id:string;
     /*String version of variable and value */
-    /*"["var1", "var2"],["5 in","10 in"]" */
+    /*"["var1", "5 in"],["var2","10 in"]" */
     variables:string;
 
 
@@ -917,16 +933,15 @@ export class Varval extends BaseResource implements ValueProvider{
     get Formula():Formula{
         return this._formula;
     }
+
     init(formula:Formula){
         let toks_vals =  JSON.parse(this.variables);
-        let toks = toks_vals[0];
-        let vals = toks_vals[1];
         this.formula_id = formula.id;
         this._formula = formula;
         this._formula.Variables.forEach((v)=> {
-            toks.forEach((t,i)=>{
-                if(v.symbol == t){
-                    this._values[t] = new ValueU(vals[i])
+            toks_vals.forEach((t,i)=>{
+                if(v.symbol == t[0]){
+                    this._values[t[0]] = new ValueU(t[1])
                 }
             })
         })
@@ -936,7 +951,8 @@ export class Varval extends BaseResource implements ValueProvider{
         return Object.assign(
             super.getState(), {
                 formula_id: this._formula.id,
-                variables: JSON.stringify(this._formula.Variables.forEach(v => {this._values[v.symbol].input})),
+                variables: JSON.stringify(this._formula.Variables.map(v => [v.symbol, this._values[v.symbol].input])),
+                result:this._result.asString()
             });
     }
 
@@ -944,7 +960,7 @@ export class Varval extends BaseResource implements ValueProvider{
         state = state || {};
         super.loadState(state);
         this.formula_id = state.formula_id || null;
-        this.variables = state.variables || null;
+        this.variables = state.variables;
     }
 
     evaluate(){
@@ -1070,6 +1086,14 @@ export class Variable extends BaseResource {
         this.property_id = val.PropertyId;
         this.unit_id = val.UnitId;
 
+    }
+
+    isUserResource():boolean{
+        return false;
+    }
+
+    isChildResource():boolean{
+        return true;
     }
 }
 
@@ -1205,10 +1229,14 @@ export class Category extends BaseResource {
     _parent: Category;
     children: Category[];
 
-    _level:number;
+    
+    _level:number = null;
+    _code:number = null;
+    _index:number = 0;
 
     static _root:Category = Category.root();
     static table: string = "categories";
+    static initComplete:boolean = false;
 
     constructor(state: any = null) {
         super(state);
@@ -1230,15 +1258,23 @@ export class Category extends BaseResource {
     }
 
     init(info) {
-        if (info.clist) {
-            this.children = info.clist.filter(i => i.parent_id == this.id);
-            if(this.parent_id)
-                this._parent = info.clist.find(i => i.id == this.parent_id);
-            else{
-                this._parent = Category._root;
-                this._parent.children.push(this);
-            }
-        }
+        if(Category.initComplete)
+            return;
+        this.initChildren(Category._root, info.clist, 0);
+    }
+
+    initChildren(parent, clist, level){
+        parent.children = clist.filter(i => i.parent_id == parent.id);
+        parent._lastChildIndex = parent.children.length;
+        parent.children.forEach((i, k) => {
+            i._parent=parent;
+            i._code = i._parent._code | (k+1) << 8*(3-level);
+            i._level = level;
+            i._index = k;
+            this.initChildren(i, clist, level+1)
+        });
+        
+        Category.initComplete = true;
     }
 
     getTable(): string {
@@ -1272,6 +1308,14 @@ export class Category extends BaseResource {
     isUserResource(){
         return false;
     }
+
+    isSubCategory(c):boolean{
+        return ((c._code & this._code) == this._code)
+    }
+
+    getPrefix():number{
+        return this._level*25+10;
+    }
 }
 
 export class CR extends BaseResource {
@@ -1293,10 +1337,21 @@ export class CR extends BaseResource {
         this.category_id = null;
         this.categorizable_id = null;
     }
+    
     init() {
-        this._category = ResourceCollection.all[this.category_id] as Category;
+        if(this._resource)
+            return;
         this._resource = ResourceCollection.all[this.categorizable_id];
-        this.categorizable_type = this._resource.getTable();
+        if(this._resource){
+            this._category = ResourceCollection.all[this.category_id] as Category;
+            this._resource.crs = this;
+            this.categorizable_type = this._resource.getTable();
+        }
+    }
+
+    deinit(){
+        if(this._resource)
+            this._resource.crs = null;
     }
 
     getTable() {

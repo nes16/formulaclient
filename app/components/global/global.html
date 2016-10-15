@@ -3,7 +3,7 @@
         <ion-item-divider *ngIf="index == 0" danger>
               Syncronizing Errors
         </ion-item-divider>
-        <ion-item  (click)="presentActionSheet($event)">
+        <ion-item  (click)="onClick($event)">
             <div>
                 <span>{{resource.name}}</span>
                 <span>(<mathq [(ngModel)]="resource.symbol"></mathq>)</span>
@@ -17,7 +17,7 @@
         </ion-item-divider>
     </template>
     <template [ngSwitchCase]="'row'">
-        <ion-row (click)="presentActionSheet($event)">
+        <ion-row (click)="onClick($event)">
             <ion-col >
                 <span>{{resource.name}}</span>
             </ion-col>

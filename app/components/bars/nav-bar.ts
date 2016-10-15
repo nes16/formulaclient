@@ -3,6 +3,7 @@ import {IONIC_DIRECTIVES, NavController, App} from 'ionic-angular';
 import {MoreOptions} from '../../pages/more-options/more-options';
 import {UIStateService} from '../../services/ui-state-service';
 import { PopoverController, PopoverOptions } from 'ionic-angular';
+import { CategoryFilterPage } from '../../pages/category/category'
 
 @Component({
 	selector: 'fl-nav-bar',
@@ -63,5 +64,10 @@ export class FlNavBar {
 
 	sync(evt){
 		this.uiStateService.fireSync();
+	}
+
+	filter(evt){
+		let opts = this.popoverCtrl.create(CategoryFilterPage)
+	     opts.present({ev:evt});
 	}
 }

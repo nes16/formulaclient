@@ -31,9 +31,12 @@
                     <ion-label>Result</ion-label>
                     <ion-input type="text" [ngModelOptions]="{standalone: true}"  [(ngModel)]="resource._result.input"></ion-input>
                 </ion-item>
+                <ion-item-divider>
+                    Input variable(s) values
+                </ion-item-divider>
                 <template ngFor let-v [ngForOf]="resource._formula._variables" let-i="index">
                     <ion-item>
-                        <ion-label>Variable</ion-label>
+                        <ion-label>{{v.symbol}}</ion-label>
                         <ion-input type="text" [(ngModel)]="resource._values[v.symbol].input" [formControl]="form.controls['Var'+i]"></ion-input>
                     </ion-item>
                     <!--<fb-error [fcontrol]="form.controls.name"></fb-error>-->

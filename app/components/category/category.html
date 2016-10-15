@@ -1,16 +1,16 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-        <ion-item (dbltap)="showChildren($event)" (click)="presentActionSheet($event)">
+        <ion-item [ngStyle]="getStyle()" (dbltap)="showChildren($event)" (click)="onClick($event)">
             <ion-buttons right>
                 <a (click)="onExpand($event)">
                     <a (click)="onExpand($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
                 </a>
-                <a (click)="onAddCategory($event)">
+                <a *ngIf="!filter" (click)="onAddCategory($event)">
                     <ion-icon royal  name="add"></ion-icon>
                 </a>
             </ion-buttons>
             <div>
-                <h3>{{resource.name}}</h3>
+                <h3>{{getIndentedName()}}</h3>
             </div>
         </ion-item>
         <template [ngIf]="add">
@@ -27,7 +27,7 @@
         </template>
 
         <template [ngIf]="expand">
-            <fl-category *ngFor="let c of children" [resource]="c"></fl-category>
+            <fl-category *ngFor="let c of children" [filter]="filter" [mode]="mode" [resource]="c"></fl-category>
         </template>
     </template>
     <template [ngSwitchCase]="'edit'">

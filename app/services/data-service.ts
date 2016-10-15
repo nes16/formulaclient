@@ -77,10 +77,18 @@ export class DataService {
       .map((n,i)=>{
         if(i == lists.length-1){
           console.log('Info:Initializing lists...')
+          let supportLists = [this.favorites, this.crs] as Array<ResourceCollection<BaseResource>>;
           lists.forEach(li => {
+            if(supportLists.indexOf(li) == -1){
+              li.State = States.LOAD_COMPLETE;
+              this.initListItem(li)
+              console.log('Info:Initializing main list complete')
+            }
+          })
+          supportLists.forEach(li => {
             li.State = States.LOAD_COMPLETE;
             this.initListItem(li)
-            console.log('Info:Initializing list complete')
+            console.log('Info:Initializing support list complete')
           })
         }
       })
@@ -229,10 +237,7 @@ export class DataService {
       let li = this[r.getTable()] as ResourceCollection<BaseResource>;
       if(r.id == null){
         r.id = UUID.UUID();
-        if(r.getTable() == 'categories')
-          r.user_id = 1;
-        else
-          r.user_id = this.uiService.userId;
+        r.user_id = this.uiService.userId;
         li.add(r);
         return this.cache.addItem(r)
       }

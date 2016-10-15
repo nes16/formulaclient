@@ -1,5 +1,5 @@
     <template [ngIf]="mode == 'list'">
-        <ion-item (click)="presentActionSheet($event)">
+        <ion-item (click)="onClick($event)">
             <fl-base [resource]="resource"></fl-base>
             <div>
                 <span>{{resource.name}}</span><span>(
