@@ -114,6 +114,8 @@ export class DataService {
         return { plist:this.properties, ulist: this.units, vlist:this.variables, glist:this.globals, fglist:this.fgs};
         case this.categories:
         return { clist:this.categories }
+        case this.varvals:
+        return {flist:this.formulas, vlist:this.variables}
         default :
         return {};
       }

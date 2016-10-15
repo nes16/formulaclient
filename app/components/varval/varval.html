@@ -1,13 +1,13 @@
 <div [ngSwitch]="mode">
     <template [ngSwitchCase]="'list'">
-        <ion-item (click)="presentActionSheet($event)">
+        <ion-item (click)="onClick($event)">
             <div>
-                <h3>{{resource.name}}</h3>
+                <h3>Name:{{resource.name}}</h3>
                 <p>
-                <span>{{getFormatedValues()}}</span>
+                <span>Input:{{getFormatedValues()}}</span>
                 </p>
                 <p>
-                <span>{{resource._result}}</span>
+                <span>Result:{{resource._result.asString()}}</span>
                 <fl-unit-sel [(ngModel)]="resource.Measure" [mode]='list'></fl-unit-sel>
                 </p>
             </div>

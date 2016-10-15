@@ -110,6 +110,10 @@ export class BaseComponent {
 	}
 
 	showChildren(evt) {
+		if(this.resource.getTable() == 'formulas')
+			this.nav.push(ResourceListPage, { type:'varvals', formula: this.resource })
+		else if(this.resource.getTable() == 'properties')
+			this.nav.push(ResourceListPage, { type:'units', prop: this.resource })
 
 	}
 
@@ -272,8 +276,9 @@ export class BaseComponent {
 				this.onErrorCmd(evt);
 			}
 		}
+		let childTxt = this.resource.getTable() == 'properties'?'Units':'Run History';
 		var newButton = {
-			text: 'Units',
+			text: childTxt,
 			handler: () => {
 				this.showChildren(evt);
 			}
@@ -356,7 +361,7 @@ export class BaseComponent {
 		if (this.resource.hasError() == true) {
 			actionSheetItems.buttons.splice(0, 0, errorButton);
 		}
-		if (this.resource.getTable() == 'properties')
+		if (this.resource.getTable() == 'properties' || this.resource.getTable() == 'formulas')
 			actionSheetItems.buttons.splice(1, 0, newButton)
 
 		if (this.uiStateService.authenticated) {

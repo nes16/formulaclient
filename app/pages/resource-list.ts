@@ -6,6 +6,7 @@ import { PropertyComponent } from '../components/property/property';
 import { UnitComponent } from '../components/unit/unit';
 import { FormulaComponent } from '../components/formula/formula';
 import { GlobalComponent } from '../components/global/global';
+import { VarvalComponent } from '../components/varval/varval';
 import { CategoryComponent } from '../components/category/category';
 import { FlNavBar } from '../components/bars/nav-bar';
 import { Observable } from 'rxjs/Observable';
@@ -18,7 +19,7 @@ import { ErrorHandler } from '../types/standard';
 
 @Component({
     templateUrl: 'build/pages/resource-list.html',
-    directives:[FlNavBar, PropertyComponent, UnitComponent, CategoryComponent, GlobalComponent, FormulaComponent],
+    directives:[FlNavBar, PropertyComponent, UnitComponent, CategoryComponent, GlobalComponent, FormulaComponent, VarvalComponent],
     pipes:      [FavFilterPipe]
 })
 

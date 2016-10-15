@@ -909,7 +909,8 @@ export class Varval extends BaseResource implements ValueProvider{
         super(state);
         if(!state)
             this.setDefault();
-        this._result = new ValueU("");
+        if(!this._result)
+            this._result = new ValueU("");
     }
 
     setDefault(){
@@ -934,10 +935,11 @@ export class Varval extends BaseResource implements ValueProvider{
         return this._formula;
     }
 
-    init(formula:Formula){
+    init(info){
+        if(this._formula)
+            return;
         let toks_vals =  JSON.parse(this.variables);
-        this.formula_id = formula.id;
-        this._formula = formula;
+        this._formula = ResourceCollection.all[this.formula_id] as Formula;
         this._formula.Variables.forEach((v)=> {
             toks_vals.forEach((t,i)=>{
                 if(v.symbol == t[0]){
@@ -961,6 +963,7 @@ export class Varval extends BaseResource implements ValueProvider{
         super.loadState(state);
         this.formula_id = state.formula_id || null;
         this.variables = state.variables;
+        this._result = new ValueU(state.result);
     }
 
     evaluate(){

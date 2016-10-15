@@ -72,12 +72,13 @@ export class VarvalComponent extends BaseComponent {
                 this.form.addControl("Var"+i,  new FormControl(vv._values[v.symbol], [Validators.required]))
             })
 
+			this.form.valueChanges.subscribe(r => {
+				if(this.form.valid){
+					vv.evaluate();
+				}
+			})
 		}
-		this.form.valueChanges.subscribe(r => {
-			if(this.form.valid){
-				vv.evaluate();
-			}
-		})
+		
 		
 	}
 
@@ -92,6 +93,6 @@ export class VarvalComponent extends BaseComponent {
 	}
 
 	getFormatedValues(){
-		return "var1 = 5, var2 = 8"
+		return this.resource.variables;
 	}
 }
