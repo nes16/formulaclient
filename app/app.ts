@@ -18,6 +18,7 @@ import { UserPage } from './pages/user/user';
 
 import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
+import { ResponsiveState } from 'responsive-directives-angular2';
 
 interface PageObj {
   title: string;
@@ -139,6 +140,7 @@ ionicBootstrap(FormulaApp, [
   RemoteService,
   SqlService,
   SqlCacheService,
-  App
+  App,
+  ResponsiveState
  ], { });
 

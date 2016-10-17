@@ -35,5 +35,6 @@ export class TabsPage {
   setDetailTab(res:any){
     this.resource = res;
     this.tabRef.select(3);
+    this.tabRef.getSelected().root
   }
 }

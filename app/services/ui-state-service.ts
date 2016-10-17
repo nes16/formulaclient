@@ -7,6 +7,8 @@ import { ErrorHandler } from '../types/standard';
 
 import { ModalsPage } from '../pages/modals/modals';
 import { MyTokenAuth } from './token-auth/auth-service';
+import { ResponsiveState } from 'responsive-directives-angular2';
+
 
 @Injectable()
 export class UIStateService {
@@ -19,6 +21,7 @@ export class UIStateService {
     user:any = null;
     tabsPage:any = null;
     category:any = null;
+    device:string = "mobile"
     
     static event_types = {
         resource_save_complete:1,   //Successful save of an resource
@@ -26,7 +29,8 @@ export class UIStateService {
         resource_selected:3,
         network_state_change:4,
         syncronize:5,
-        auth:6
+        auth:6,
+        category:7
     }
 
     //Used for communicate async operation
@@ -35,7 +39,7 @@ export class UIStateService {
     or:Observer<any>;
 
     inSelectMode:boolean;
-    constructor(public app:App, private platform: Platform, private auth:MyTokenAuth) {
+    constructor(public app:App, private platform: Platform, private auth:MyTokenAuth, public respState:ResponsiveState) {
         this.ole = ConnectableObservable.create(or => {
             this.or = or;
         }).publish();
@@ -44,6 +48,10 @@ export class UIStateService {
         this.authenticated = auth.userIsAuthenticated();
         this.user = auth.getUser();
         this.listenToLoginEvents();
+        this.respState.deviceObserver.subscribe(res => {
+            this.device = res;
+            console.log(JSON.stringify(res));
+        })
     }
 
 
@@ -111,6 +119,11 @@ export class UIStateService {
 
     get Content(){
         return this.content;
+    }
+
+    setCategory(c){
+        this.category = c;
+        this.or.next({type:UIStateService.event_types.category, value:c})
     }
 
     listenToLoginEvents() {

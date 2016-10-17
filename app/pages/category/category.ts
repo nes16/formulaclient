@@ -75,7 +75,7 @@ export class CategoryFilterPage implements  OnInit, OnDestroy {
     }
 
     clear(evt){
-        this.uiService.category = null;
+        this.uiService.setCategory(null)
         this.viewController.dismiss();
     }
 

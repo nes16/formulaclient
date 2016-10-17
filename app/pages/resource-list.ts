@@ -74,6 +74,9 @@ export class ResourceListPage implements  OnInit, OnDestroy {
                   this.dataService[this.resourceType].or.next(this.dataService[this.resourceType].resources);
               });
             }
+            if(res.type == UIStateService.event_types.category){
+                this.selectedViewType(this.viewType);              
+            }
         }, 
         (error) => { 
             ErrorHandler.handle(error, "ResourceListPage::ngOnInit", true);
@@ -108,6 +111,9 @@ export class ResourceListPage implements  OnInit, OnDestroy {
 
     filterCategoryAndParent(res){
         let res1 = this.filterParent(res);
+        if(this.resourceType == 'categories')
+            return res1; 
+        
         if(this.uiService.category != null){
                         return res1.filter(i => {return i.crs  && this.uiService.category.isSubCategory(i.crs._category)}
             )

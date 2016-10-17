@@ -261,7 +261,7 @@ export class BaseComponent {
 			return this.onEditCmd(evt);
 		if(this.resource.getTable() == 'categories' && this.filter == true){
 			this.dismissView().then(res => {
-				this.uiStateService.category = this.resource;
+				this.uiStateService.setCategory(this.resource);
 				return;
 			})
 			return;
@@ -317,13 +317,6 @@ export class BaseComponent {
 					}
 				};
 
-		var unCatButton = {
-					text: "Remove Category",
-					handler: () => {
-						this.onRemoveCategory();
-					}
-				};
-				
 
 		var actionSheetItems = {
 			title: 'Select item command',
@@ -375,9 +368,6 @@ export class BaseComponent {
 		}
 		if(this.resource.getTable() != 'categories'){
 			actionSheetItems.buttons.splice(0,0,catButton);
-		}
-		if(this.resource.crs && this.resource.getTable() != 'categories'){
-			actionSheetItems.buttons.splice(0,1,unCatButton);
 		}
 		
 		let actionSheet = new ActionSheet(this.app, actionSheetItems);

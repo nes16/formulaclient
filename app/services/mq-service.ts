@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'jquery'
-import '../lib/mathquill-0.10.0/mathquill'
+import '../lib/mathquill-0.10.1/mathquill'
 
 declare var $: any;
 declare var MathQuill: any;

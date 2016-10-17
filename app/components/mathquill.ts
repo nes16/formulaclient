@@ -9,7 +9,9 @@ import { Unit } from '../types/standard';
 	selector: 'mathq',
 	template: `
 				<span #mq style="font-size:15pt">x\\cdot5</span>
-				`
+				
+
+					`
 				,
 	directives:[IONIC_DIRECTIVES]
 })
@@ -29,7 +31,6 @@ export class MathQ {
 	@Output('change') change = new EventEmitter();
 	@ViewChild('mq') spanElem;	
 	
-
 	ngOnInit() {
 	}
 	//updATE units set factor="\left(x+459.67\right)\cdot\frac{5}{9}" where id=489
@@ -37,24 +38,25 @@ export class MathQ {
 	ngAfterViewInit(){
 		var _self = this;
 		var MQ = this.mqService.getInterface();
-		
-		if(this.editable){
-			this.mathelem = MQ.MathField(this.spanElem.nativeElement, {
-			   spaceBehavesLikeTab: true,
-			   substituteTextarea:function() {
+		let mobileMathQFieldCreator = function() {
 			   			var elem = document.createElement('span');
 			   			elem.setAttribute("tabindex", "0");
     					return elem;
-    				},
+    				};
+		if(this.editable){
+			let options = {
+			   spaceBehavesLikeTab: true,
 			   handlers: {
 				   edit: function(mq) {
 					   if(!_self.writing)
 					   _self.change.emit(mq.latex());
 				   }
 			   }
-			 });
+			 };
+			 if(this.uiStateService.device == "mobile")
+			 	options['substituteTextarea']=mobileMathQFieldCreator;
+			this.mathelem = MQ.MathField(this.spanElem.nativeElement, options);
 		}else{
-			
 			this.mathelem = MQ.StaticMath(this.spanElem.nativeElement);
 		}
 				
