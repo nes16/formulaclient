@@ -54,7 +54,7 @@ class FormulaApp {
     { title: 'Signup', component: UserPage, icon: 'person-add', params:{option:'signup'} }
   ];
 
-  rootPage: any = TutorialPage;
+  rootPage: any = TabsPage;
 
   constructor(
     public apsignup: App,

@@ -143,10 +143,20 @@ export class SqlService {
 		if(type == 'delete'){
 			query = `DELETE FROM ${table} WHERE ${andCond} ${orCond}`;
 		}
+		//reverse "\\\\" with "\\" done by JSON.stringify. 
+		//because escaping done in JSON.stringify is NOT
+		//required. we are not parsing againg after fetch from db.
+		// query = query.replace("\\\\", "\\");
+		// while(query.indexOf("\\\\") != -1)
+		// 	query = query.replace("\\\\", "\\");
 		//replace "\"" with ""
-		query = query.replace("\\\"", "\"\"");
-		while(query.indexOf("\\\"") != -1)
-			query = query.replace("\\\"", "\"\"");
+		//because escaping done in JSON.stringify is NOT
+		//compatible with SQL statement
+		// query = query.replace("\\\"", "\"\"");
+		// while(query.indexOf("\\\"") != -1)
+		// 	query = query.replace("\\\"", "\"\"");
+
+		
 
 		return query;
 	}
@@ -169,7 +179,20 @@ export class SqlService {
 				return "1"
 			}
 			else{
-				return JSON.stringify(val);
+				let val1 = JSON.stringify(val);
+				if(typeof val == "string"){
+					let val1Old = val1;
+					let bString = false;
+					val1 = val1.replace(/\"$/g, "")
+					if(val1Old != val1)
+						bString = true;
+					val1 = val1.replace(/\\\"/g, "\"\"");
+					val1 = val1.replace(/\\\\/g, "\\");
+					if(bString)
+						val1 += "\"";		
+				}
+				return val1;
+
 			}
 		}
 	}

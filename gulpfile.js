@@ -63,7 +63,7 @@ gulp.task('build', ['clean'], function(done){
   );
 });
 gulp.task('copyfonts', function() {
-  return gulp.src('app/lib/mathquill-0.10.0/font/*.+(eot|ttf|otf|svg|woff|woff2)')
+  return gulp.src('app/lib/mathquill-0.10.1/font/*.+(eot|ttf|otf|svg|woff|woff2)')
     .pipe(gulp.dest('www/build/fonts'));
 });
 gulp.task('sass', buildSass);

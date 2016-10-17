@@ -30,11 +30,17 @@ export class TabsPage {
     this.uiStateService.tabsPage = this;
   }
 
+  ngOnInit(){
+  }
+
+  ngAfterViewInit(){
+    this.tabRef.select(this.mySelectedIndex);
+  }
+  
   @ViewChild('myTabs') tabRef: Tabs;
 
   setDetailTab(res:any){
     this.resource = res;
     this.tabRef.select(3);
-    this.tabRef.getSelected().root
   }
 }
