@@ -24,7 +24,8 @@ export class MathQ {
 				 private renderer: Renderer,
 				 private mqService:MQService,
 				 private nav: NavController,
-				 public uiStateService:UIStateService){
+				 public uiStateService:UIStateService
+				 ){
 	}
 
 	@Input() editable = false;
@@ -32,6 +33,7 @@ export class MathQ {
 	@ViewChild('mq') spanElem;	
 	
 	ngOnInit() {
+		
 	}
 	//updATE units set factor="\left(x+459.67\right)\cdot\frac{5}{9}" where id=489
 	//select factor from units where id=489
@@ -64,7 +66,7 @@ export class MathQ {
 		this.listeners.push(this.renderer.listen(this.mathelem.el(), 'focusin', (event) => {
 			if(this.editable){
 				this.mqService.curElem = this.mathelem;
-				this.mqService.showKeyboard = true;
+				this.mqService.setKeyboard(true);
 				if(this.uiStateService.content){
 					this.uiStateService.content.resize();
 					this.scrollTo();
@@ -73,10 +75,12 @@ export class MathQ {
     	}));
 
 		this.listeners.push(this.renderer.listen(this.mathelem.el(), 'focusout', (event) => {
-			this.mqService.showKeyboard = false;
+			this.mqService.setKeyboard(false);
 			if(this.uiStateService.content)
 				this.uiStateService.content.resize();
     	}));
+		if(this.editable)
+			this.init();
 	}
 
 	scrollTo() {
@@ -103,5 +107,40 @@ export class MathQ {
 		//Destroy listeners
 		this.listeners.map(l => l());
 	}
+
+	touchHandler(event)
+{
+    var touches = event.changedTouches,
+        first = touches[0],
+        type = "";
+    switch(event.type)
+    {
+        case "touchstart": type = "mousedown"; break;
+        case "touchmove":  type = "mousemove"; break;        
+        case "touchend":   type = "mouseup";   break;
+        default:           return;
+    }
+
+    // initMouseEvent(type, canBubble, cancelable, view, clickCount, 
+    //                screenX, screenY, clientX, clientY, ctrlKey, 
+    //                altKey, shiftKey, metaKey, button, relatedTarget);
+
+    var simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent(type, true, true, window, 1, 
+                                  first.screenX, first.screenY, 
+                                  first.clientX, first.clientY, false, 
+                                  false, false, false, 0/*left*/, null);
+
+    first.target.dispatchEvent(simulatedEvent);
+    event.preventDefault();
+}
+
+  init() 
+  {
+      this.listeners.push(this.renderer.listen(this.mathelem.el(), "touchstart", this.touchHandler));
+      this.listeners.push(this.renderer.listen(this.mathelem.el(), "touchmove", this.touchHandler));
+      this.listeners.push(this.renderer.listen(this.mathelem.el(), "touchend", this.touchHandler));
+      this.listeners.push(this.renderer.listen(this.mathelem.el(), "touchcancel", this.touchHandler));    
+  }
 }
 

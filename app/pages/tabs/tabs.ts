@@ -36,11 +36,23 @@ export class TabsPage {
   ngAfterViewInit(){
     this.tabRef.select(this.mySelectedIndex);
   }
-  
+
   @ViewChild('myTabs') tabRef: Tabs;
 
   setDetailTab(res:any){
     this.resource = res;
     this.tabRef.select(3);
+  }
+
+  setResourcePage(table){
+    if(table == "properties" || table == "units"){
+      return this.tabRef.select(0)
+    }
+    if(table == "globals"){
+      return this.tabRef.select(1)
+    }
+    if(table == "formulas"){
+      return this.tabRef.select(2)
+    }
   }
 }

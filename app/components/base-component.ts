@@ -195,7 +195,7 @@ export class BaseComponent {
 			.saveItemRecursive(this.resource)
 			.subscribe(
 				res => {
-
+					this.uiStateService.tabsPage.setResourcePage(this.resource.getTable())
 				}, err => {
 					ErrorHandler.handle(err, "BaseComponent::edit", true);
 				}, () => { })
