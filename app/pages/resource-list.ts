@@ -35,6 +35,7 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     resources:Array<BaseResource> = new Array<BaseResource>();
     tabsPage;any;
     viewType:string = 'All'
+    detailPage:any = DetailPage;
     constructor(public navParams: NavParams
               , public dataService:DataService
               , public uiService:UIStateService
@@ -147,7 +148,7 @@ export class ResourceListPage implements  OnInit, OnDestroy {
     get Title(){
     	switch(this.resourceType){
             case "properties":
-                return "Properties";
+                return "Units";
             case "globals":
                 return "Globals";
             case "formulas":
@@ -155,7 +156,7 @@ export class ResourceListPage implements  OnInit, OnDestroy {
             case "varvals":
                 return "Run Formula " + this.formula.name;
             case "units":
-                return "Units for " + this.prop.name;
+                return "Units " + this.prop.name;
             case "categories":
                 return "Categories";
             default:

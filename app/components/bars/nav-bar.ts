@@ -29,6 +29,7 @@ export class FlNavBar {
 	@Input() addButton;
 	@Input() searchButton;
 	@Input() moreButton;
+	@Input() filterButton;
 	@Input() title;
 	@Output('onFilterChange') onFilterChange = new EventEmitter();
 	@Output('onFilterCancel') onFilterCancel = new EventEmitter();

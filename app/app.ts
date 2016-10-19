@@ -40,7 +40,7 @@ class FormulaApp {
   // the left menu only works after login
   // the login page disables the left menu
   appPages: PageObj[] = [
-    { title: 'Properties & Units', component: TabsPage, icon: 'calendar' },
+    { title: 'Units', component: TabsPage, icon: 'calendar' },
     { title: 'Globals', component: TabsPage, index: 1, icon: 'contacts' },
     { title: 'Formulas', component: TabsPage, index: 2, icon: 'map' },
     { title: 'Categories', component: TabsPage, index: 4, icon: 'map' },
@@ -130,6 +130,7 @@ ionicBootstrap(FormulaApp, [
         useValue: [REACTIVE_FORM_DIRECTIVES],
         multi: true
   } ,
+
   provide('ApiEndpoint', {useValue: 'http://formulalab.net/api/v1'}),
   BaseService,
   MyTokenAuth,
@@ -142,5 +143,5 @@ ionicBootstrap(FormulaApp, [
   SqlCacheService,
   App,
   ResponsiveState
- ], { });
+ ], {tabsHideOnSubPages:"true"});
 

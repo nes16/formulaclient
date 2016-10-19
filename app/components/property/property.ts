@@ -59,10 +59,7 @@ export class PropertyComponent extends BaseComponent{
 	//	var a = this.unitForm 
 	}
 		
-	onNewCmd(evt, resource) {
-		var unit = this.resource.newUnit();
-		super.onNewCmd(evt, unit);
-	}
+	
 
 	onEditCmd(evt) {
 		super.onEditCmd(evt);

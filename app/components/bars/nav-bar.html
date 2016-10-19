@@ -1,18 +1,16 @@
     <ion-navbar no-border-bottom>
-        <ion-buttons start>
+        <ion-buttons left>
             <button *ngIf="menuButton" menuToggle>
                 <ion-icon name="menu"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-buttons left>
+        <ion-title small>{{title}}</ion-title>
+        <ion-buttons right>
             <button royal [class.fl-hidden]="!switchButton" [disabled]="!Online" (click)="sync($event)">
                 <ion-icon name="sync" ></ion-icon>
             </button>
-        </ion-buttons>
-        <ion-title>{{title}}</ion-title>
-        <ion-buttons right>
-            <button royal  (click)="filter($event)">
-                <ion-icon name="briefcase"></ion-icon>
+            <button royal  [class.fl-hidden]="!filterButton" (click)="filter($event)">
+                <ion-icon ios="ios-options-outline" md="md-options"></ion-icon>
             </button>
             <button royal [class.fl-hidden]="!addButton" (click)="add($event)">
                 <ion-icon name="add"></ion-icon>

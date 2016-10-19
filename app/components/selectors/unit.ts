@@ -95,7 +95,7 @@ export class UnitSelector {
 			console.log('Subscribtion completed in select')
 		});
 		this.uiStateService.inSelectMode = true;
-		this.nav.push(ResourceListPage, { type:"properties" });
+		this.uiStateService.tabsPage.setResourcePage("properties");
 	}
 }
 

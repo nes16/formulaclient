@@ -85,15 +85,6 @@ export class BaseComponent {
 				}, () => { })
 	}
 
-	onNewCmd(evt, resource) {
-		if (this.dataService.checkOnlineAndErrors(this.resource)) {
-			this.nav.push(this.detailPage, { 'currResource': resource })
-			if (evt) {
-				evt.stopPropagation();
-				evt.preventDefault();
-			}
-		}
-	}
 
 	get Resource() {
 		return this.resource;
@@ -177,17 +168,11 @@ export class BaseComponent {
 		if (this.uiStateService.inSelectMode) {
 			var type = UIStateService.event_types.resource_selected;
 			this.uiStateService.or.next({ status: 'success', type: type, resource: this.resource })
-			this.nav.pop();
+			this.uiStateService.tabsPage.setDetailTab();
 			this.uiStateService.inSelectMode = false;
 			return true;
 		}
 		return false;
-	}
-	
-	emit() {
-		var type = UIStateService.event_types.resource_save_complete;
-		this.uiStateService.or.next({ status: 'success', type: type, resource: this.resource });
-		this.nav.pop();
 	}
 
 	edit(evt) {
@@ -195,10 +180,11 @@ export class BaseComponent {
 			.saveItemRecursive(this.resource)
 			.subscribe(
 				res => {
-					this.uiStateService.tabsPage.setResourcePage(this.resource.getTable())
 				}, err => {
 					ErrorHandler.handle(err, "BaseComponent::edit", true);
-				}, () => { })
+				}, () => { 
+					this.uiStateService.tabsPage.clearDetailTab();
+				})
 	}
 
 	onHistory(evt){
@@ -250,10 +236,7 @@ export class BaseComponent {
 	}
 
 	openDetailsTab(res){
-		if(res.getTable() == 'variables')
-			this.nav.push(this.detailPage, { 'currResource': this.resource })
-		else		
-			this.tabsPage.setDetailTab(res);
+		this.tabsPage.setDetailTab(res);
 	}
 
 	onClick(evt) {

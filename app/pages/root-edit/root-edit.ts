@@ -32,13 +32,11 @@ export class DetailPage {
     master: any;
     tabsPage:any;
     navMode:boolean = false;
-    static root:DetailPage = null;
     constructor(public app:App, public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService, public mq:MQService) {
         this.tabsPage = uiStateService.tabsPage;
         this.currResource = navParams.get('currResource');
-        if(this.currResource){
-            this.setTitle();
-        }
+        if(this.currResource)
+            this.navMode =true;
     }
 
     @ViewChild(Content) content: Content;
@@ -49,16 +47,21 @@ export class DetailPage {
     }
 
     ngOnInit() {
+        if(this.currResource)
+            this.setDetail(true);
+    }
+
+    ngAfterViewInit(){
+        if(!this.currResource)
+            this.setDetail()
+    }
+
+    setDetail(init:boolean = false){
         this.uiStateService.Content = this.content;
-    }
-
-    setDetail(){
-        DetailPage.root = this; 
-        this.currResource = this.tabsPage.resources[0];
-        this.setTitle();
-    }
-
-    setTitle(){
+        if(!this.tabsPage.resource)
+            return;
+        if(!this.navMode)
+            this.currResource = this.tabsPage.resource;
         this.type = this.currResource.getTable();
         if(this.type == 'properties')
             this.title = 'Property - ' + this.currResource.name;
@@ -70,7 +73,7 @@ export class DetailPage {
             this.title = 'Variable - ' + this.currResource.name;
         else if (this.type == 'formulas')
             this.title = 'Formula - ' + this.currResource.name;
-        else if (this.type == 'varvals')
+         else if (this.type == 'varvals')
             this.title = 'Run Formula - ' + this.currResource.name;
         else if (this.type == 'varvals')
             this.title = 'Run Formula - ' + this.currResource.name;
@@ -81,7 +84,7 @@ export class DetailPage {
     }
    
     ionViewDidEnter() {
-        if(!DetailPage.root)
-            this.setDetail();
+        this.app.setTitle('Edit');
+        this.setDetail();
     }
 }

@@ -1,5 +1,5 @@
 <ion-header>
-<fl-nav-bar [title]="Title" [switchButton]="true" [addButton]="true" [menuButton]="true" [searchButton]="true" [moreButton]="true" (onCancel)="onFilterCancel($event)" (onAdd)="onNewCmd($event)" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
+<fl-nav-bar [title]="Title" [switchButton]="true" [addButton]="true" [filterButton]="true" [menuButton]="true" [searchButton]="false" [moreButton]="true" (onCancel)="onFilterCancel($event)" (onAdd)="onNewCmd($event)" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
 </ion-header>
 <ion-content>
 	<ion-segment [(ngModel)]="viewType" [attr.light]="isAndroid ? '' : null">

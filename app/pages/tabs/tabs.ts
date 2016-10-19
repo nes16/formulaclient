@@ -23,7 +23,8 @@ export class TabsPage {
   param4:any = {tabs:this};
   param5:any = {type:"categories"};
   mySelectedIndex: number;
-  resource:any;
+  resources = [];
+  oldResource:any;
 
   constructor(navParams: NavParams, public uiStateService:UIStateService) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
@@ -40,19 +41,41 @@ export class TabsPage {
   @ViewChild('myTabs') tabRef: Tabs;
 
   setDetailTab(res:any){
-    this.resource = res;
+    if(res){
+      this.resources.push(res);
+      if(DetailPage.root)
+        DetailPage.root.nav.push(DetailPage, {currResource:res})
+    }
     this.tabRef.select(3);
   }
 
+
+  clearDetailTab(){
+    let resource = this.resources.pop();
+    this.setResourcePage(resource.getTable());
+    if(DetailPage.root){
+      if(this.resources.length)
+    	  DetailPage.root.nav.pop();
+      else
+        DetailPage.root = null;
+    }
+  }
+	
+  emit(resource) {
+		var type = UIStateService.event_types.resource_save_complete;
+		this.uiStateService.or.next({ status: 'success', type: type, resource: resource });
+		this.uiStateService.inSelectMode = false;
+	}
+
   setResourcePage(table){
-    if(table == "properties" || table == "units"){
-      return this.tabRef.select(0)
-    }
-    if(table == "globals"){
-      return this.tabRef.select(1)
-    }
-    if(table == "formulas"){
-      return this.tabRef.select(2)
-    }
+      if(table == "properties" || table == "units"){
+        return this.tabRef.select(0)
+      }
+      if(table == "globals"){
+        return this.tabRef.select(1)
+      }
+      if(table == "formulas"){
+        return this.tabRef.select(2)
+      }
   }
 }
