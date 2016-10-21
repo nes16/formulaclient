@@ -21,6 +21,56 @@ export class MathNode {
         }
     }
 
+    static ops = {
+        sin: Math.sin,
+        cos: Math.cos,
+        tan: Math.tan,
+        arctan: Math.atan,
+        arccos: Math.acos,
+        arcsin: Math.asin,
+        sinh: Math.sinh,
+        cosh: Math.cosh,
+        tanh: Math.tanh,
+        cot: MathNode.cot,
+        sec: MathNode.sec,
+        css: MathNode.csc,
+        arccot: MathNode.arccot,
+        arcsec: MathNode.arcsec,
+        arccsc: MathNode.arccsc,
+        coth: MathNode.coth,
+        sech: MathNode.sech,
+        csch: MathNode.csch,
+    }
+
+    static csc = function (val) {
+        return 1 / Math.sin(val);
+    };
+    static sec = function (val) {
+        return 1 / Math.cos(val);
+    };
+    static cot = function (val) {
+        return  1 / Math.tan(val);
+    };
+    
+    static arccsc = function (val) {
+        return  Math.asin(1 / val);
+    };
+    static arcsec = function (val) {
+        return  Math.acos(1 / val);
+    };
+    static arccot = function (val) {
+        return  Math.atan(1 / val);
+    };
+    
+    static csch = function (val) {
+        return  1 / Math.sinh(val);
+    };
+    static sech = function (val) {
+        return  1 / Math.cosh(val);
+    };
+    static coth = function (val) {
+        return  1 / Math.tanh(val);
+    };
 
 
     prepare2Arg() {
@@ -28,9 +78,24 @@ export class MathNode {
         this.args[1].type.call(this.args[1]);
     };
 
+    prepare3Arg() {
+        this.args[0].type.call(this.args[0]);
+        this.args[1].type.call(this.args[1]);
+        this.args[2].type.call(this.args[2]);
+    };
+    
     prepare1Arg() {
         this.args[0].type.call(this.args[0]);
     };
+
+    prepareOpArg(){
+        this.args[1].type.call(this.args[1]);
+    };
+
+    preparePowOpArg(){
+        this.args[1].type.call(this.args[1]);
+        this.args[2].type.call(this.args[2]);
+    }
 
     method(p1) {
         console.log('Using object var - ' + this.args);
@@ -85,19 +150,19 @@ export class MathNode {
     doLn() {
         this.prepare1Arg();
         console.log("Ln - " + this.args[0].val);
-        this.val = Math.log(this.args[0]);
+        this.val = Math.log(this.args[0].val);
     };
 
     doLog10() {
         this.prepare1Arg();
         console.log("Log10 - " + this.args[0].val);
-        this.val = Math.log10(this.args[0]);
+        this.val = Math.log10(this.args[0].val);
     };
 
     doLogBase() {
         this.prepare2Arg();
         console.log("Logbase - " + this.args[0].val + ',' + this.args[1].val);
-        this.val = Math.log(this.args[1])/(Math as any).ln(this.args[0]);
+        this.val = Math.log(this.args[1].val)/(Math as any).ln(this.args[0].val);
     };
 
     doParen() {
@@ -106,112 +171,38 @@ export class MathNode {
         this.val = this.args[0].val;
     };
 
-    
-    
-    doSin() {
-        this.prepare1Arg();
-        console.log("Sin - " + this.args[0].val);
-        this.val = Math.sin(this.args[0]);       
-    };
-
-    doCos() {
-        this.prepare1Arg();
-        console.log("Cos - " + this.args[0].val);
-        this.val = Math.cos(this.args[0]);
-    };
-
-    doTan() {
-        this.prepare1Arg();
-        console.log("Tan - " + this.args[0].val);
-        this.val = Math.tan(this.args[0]);
-    };
-
-    doCsc() {
-        this.prepare1Arg();
-        console.log("Csc - " + this.args[0].val);
-        this.val = 1/Math.sin(this.args[0]);
-    };
-
-    doSec() {
-        this.prepare1Arg();
-        console.log("Sec - " + this.args[0].val);
-        this.val = 1/Math.cos(this.args[0]);
-    };
-
-    doCot() {
-        this.prepare1Arg();
-        console.log("Cot - " + this.args[0].val);
-        this.val = 1/Math.tan(this.args[0]);
-    };
-
-    doArcSin(){
-        this.prepare1Arg();
-        console.log("ArcSin - " + this.args[0].val);
-        this.val = Math.asin(this.args[0]);
-    }
-    doArcCos(){
-        this.prepare1Arg();
-        console.log("ArcCos - " + this.args[0].val);
-        this.val = Math.acos(this.args[0]);
-    }
-    doArcTan(){
-        this.prepare1Arg();
-        console.log("ArcTan - " + this.args[0].val);
-        this.val = Math.atan(this.args[0]);
-    }
-    doArcCsc(){
-        this.prepare1Arg();
-        console.log("ArcCsc - " + this.args[0].val);
-        this.val = Math.asin(1/this.args[0]);
-    }
-    doArcSec(){
-        this.prepare1Arg();
-        console.log("ArcSec - " + this.args[0].val);
-        this.val = Math.acos(1/this.args[0]);
-    }
-    doArcCot(){
-        this.prepare1Arg();
-        console.log("ArcCot - " + this.args[0].val);
-        this.val = Math.atan(1/this.args[0]);
-    }
-
-    doSinh(){
-        this.prepare1Arg();
-        console.log("Sinh - " + this.args[0].val);
-        this.val = Math.sinh(this.args[0]);
-    }
-    doCosh(){
-        this.prepare1Arg();
-        console.log("Cosh - " + this.args[0].val);
-        this.val = Math.cosh(this.args[0]);
-    }
-    doTanh(){
-        this.prepare1Arg();
-        console.log("Tanh - " + this.args[0].val);
-        this.val = Math.tanh(this.args[0]);
-    }
-    doCsch(){
-        this.prepare1Arg();
-        console.log("Csch - " + this.args[0].val);
-        this.val = 1/Math.sinh(this.args[0]);
-    }
-    doSech(){
-        this.prepare1Arg();
-        console.log("Sech - " + this.args[0].val);
-        this.val = 1/Math.cosh(this.args[0]);
-    }
-    doCoth(){
-        this.prepare1Arg();
-        console.log("Coth - " + this.args[0].val);
-        this.val = 1/Math.tanh(this.args[0]);
+    doPowOp(){
+        this.preparePowOpArg();
+        console.log("Op - " + this.args[0] +", power - " + this.args[1].val + ", param - " + this.args[2].val);
+        this.val = Math.pow(MathNode.ops[this.args[0].slice(1)](this.args[2].val), this.args[1].val);
     }
     
+    doOp(){
+        this.prepareOpArg();
+        console.log("Op - " + this.args[0] +", param - " + this.args[1].val);
+        this.val = MathNode.ops[this.args[0].slice(1)](this.args[1].val);
+    }
 
+    doPowLn(){
+        this.prepare2Arg();
+        console.log("Ln - power - " + this.args[0].val+", param - " + this.args[1].val);
+        this.val = Math.pow(Math.log(this.args[1].val), this.args[0].val);
+    }
+    doPowLog10(){
+        this.prepare2Arg();
+        console.log("Log10 - power - " + this.args[0].val+", param - " + this.args[1].val);
+        this.val = Math.pow(Math.log10(this.args[1].val), this.args[0].val);
+    }
+    doPowLogBase(){
+        this.prepare3Arg();
+        console.log("Logbase - base - " + this.args[0].val+ ",power - " + this.args[1].val+", param - " + this.args[2].val);
+        this.val = Math.pow(Math.log(this.args[2].val) / Math.log(this.args[0].val), this.args[1].val);
+    }
 
     doAssign() {
         this.prepare2Arg();
         console.log("Assign - " + this.args[0].val + ',' + this.args[1].val);
-        this.val = this.args[0] = this.args[1];
+        this.val = this.args[0].val = this.args[1].val;
     }
 
     doNumber() {

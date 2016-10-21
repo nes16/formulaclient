@@ -6,13 +6,100 @@
 
 // Some code that does stuff
 %{
+  if(!yy.MathNode){
+    yy.MathNode = (function () {
+        function MathNode(type, arg) {
+            console.log("Object created")
+            this.type = type;
+            for(i=0;i<arg.length;i++)
+                if(arg[i].type)
+                    arg[i].type();
+        }
+        MathNode.prototype.doAdd = function(){
+            console.log("doAdd");
+        }
+        MathNode.prototype.doSub = function(){
+            console.log("doSub");
+        }
+        MathNode.prototype.toString = function(){
+            this.type();
+        }
+        MathNode.prototype.isSimulator = function(){
+            return true;
+        }
+        MathNode.prototype.doMul = function(){
+            console.log("doMul");
+        }
+        MathNode.prototype.doDiv = function(){
+            console.log("doDiv");
+        }
+        MathNode.prototype.doSqrt = function(){
+            console.log("doSqrt");
+        }
+        MathNode.prototype.doNthRoot = function(){
+            console.log("doNthRoot");
+        }
+        MathNode.prototype.doPow = function(){
+            console.log("doPow");
+        }
+        MathNode.prototype.doLn = function(){
+            console.log("doLn");
+        }
+        MathNode.prototype.doLog10 = function(){
+            console.log("doLog10");
+        }
+        MathNode.prototype.doLogBase = function(){
+            console.log("doLogBase");
+        }
+        MathNode.prototype.doLogBase = function(){
+            console.log("doLogBase");
+        }
+        MathNode.prototype.doParen = function(){
+            console.log("doParen");
+        }
+       
+        
+        MathNode.prototype.doAssign = function(){
+            console.log("doAssign");
+        }
+        MathNode.prototype.doNumber = function(){
+            console.log("doNumber");
+        }
+        MathNode.prototype.doVar = function(){
+            console.log("doVar");
+        }
+
+        MathNode.prototype.doPowOp = function(){
+            console.log("doPowOp");
+        }
+        
+        MathNode.prototype.doOp = function(){
+            console.log("doOp");
+        }
+
+        MathNode.prototype.doPowLn = function(){
+            console.log("doPowLn");
+        }
+        MathNode.prototype.doPowLog10 = function(){
+            console.log("doPowLog10");
+        }
+        MathNode.prototype.doPowLogBase = function(){
+            console.log("doPowLogBase");
+        }
+        return MathNode;
+    }());
+  }
   addNode = function(type, arg) { 
   args = [];
   for(i=1;i<arguments.length;i++)
         args.push(arguments[i]);
   
-  return new yy.MathNode(type, args);
+        var n = new yy.MathNode(type, args);
+        if(n.isSimulator)
+            type();
+        return n;
   }; 
+
 %}
 
 %%
@@ -27,29 +114,8 @@
 <INITIAL,ARRAY>("\\sqrt")              { return 'SQRT'; }
 <INITIAL,ARRAY>("^")                   { return 'POW'; }
 <INITIAL,ARRAY>("\\ln")                { return 'LN'; }
-<INITIAL,ARRAY>((\\log)(\space|\:|\ )*_([0-9]))  { yytext = this.matches[4]; return 'LOGBASE1'; }
 <INITIAL,ARRAY>("\\log_")              {  return 'LOGBASE'; }
 <INITIAL,ARRAY>("\\log")               { return 'LOG10'; }
-
-// Trig functions 
-<INITIAL,ARRAY>("\\sinh")               { return 'SINH'; }
-<INITIAL,ARRAY>("\\cosh")               { return 'COSH'; }
-<INITIAL,ARRAY>("\\tanh")               { return 'TANH'; }
-<INITIAL,ARRAY>("\\csch")               { return 'CSCH'; }
-<INITIAL,ARRAY>("\\sech")               { return 'SECH'; }
-<INITIAL,ARRAY>("\\coth")               { return 'COTH'; }
-<INITIAL,ARRAY>("\\sin")               { return 'SIN'; }
-<INITIAL,ARRAY>("\\cos")               { return 'COS'; }
-<INITIAL,ARRAY>("\\tan")               { return 'TAN'; }
-<INITIAL,ARRAY>("\\csc")               { return 'CSC'; }
-<INITIAL,ARRAY>("\\sec")               { return 'SEC'; }
-<INITIAL,ARRAY>("\\cot")               { return 'COT'; }
-<INITIAL,ARRAY>("\\arcsin")            { return 'ARCSIN'; }
-<INITIAL,ARRAY>("\\arccos")               { return 'ARCCOS'; }
-<INITIAL,ARRAY>("\\arctan")               { return 'ARCTAN'; }
-<INITIAL,ARRAY>("\\arccsc")               { return 'ARCCSC'; }
-<INITIAL,ARRAY>("\\arcsec")               { return 'ARCSEC'; }
-<INITIAL,ARRAY>("\\arccot")               { return 'ARCCOT'; }
 
 // Brackets 
 <INITIAL,ARRAY>("\\left(")             { return 'LPAREN'; }
@@ -64,43 +130,10 @@
 
 // Varibles numbers and constants
 <INITIAL,ARRAY>([0-9]+(\.[0-9]+)?\b)   { return 'NUMBER'; }
+<INITIAL,ARRAY>(\\(arc)?(sin|cos|tan|cot|sec|csc)h?)                            {return 'OPERATOR';}
+<INITIAL,ARRAY>("\\pi")                      {return 'VAR'; }
 <INITIAL,ARRAY>(([a-zA-Z][a-zA-Z0-9]*)(_[a-zA-Z0-9]|_\{[a-zA-Z0-9]{2,}\})?)       { return 'VAR'; }
-<INITIAL,ARRAY>("\\alpha")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\beta")           {return 'VAR'; }
-<INITIAL,ARRAY>("\\delta")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\epsilon")        {return 'VAR'; }
-<INITIAL,ARRAY>("\\varepsilon")     {return 'VAR'; }
-<INITIAL,ARRAY>("\\eta")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\gamma")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\iota")           {return 'VAR'; }
-<INITIAL,ARRAY>("\\kappa")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\lambda")         {return 'VAR'; }
-<INITIAL,ARRAY>("\\mu")             {return 'VAR'; }
-<INITIAL,ARRAY>("\\nu")             {return 'VAR'; }
-<INITIAL,ARRAY>("\\omega")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\phi")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\varphi")         {return 'VAR'; }
-<INITIAL,ARRAY>("\\pi")             {return 'VAR'; }
-<INITIAL,ARRAY>("\\psi")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\rho")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\sigma")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\tau")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\theta")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\upsilon")        {return 'VAR'; }
-<INITIAL,ARRAY>("\\xi")             {return 'VAR'; }
-<INITIAL,ARRAY>("\\zeta")           {return 'VAR'; }
-<INITIAL,ARRAY>("\\Delta")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\Gamma")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\Lambda")         {return 'VAR'; }
-<INITIAL,ARRAY>("\\Omega")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\Phi")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\Pi")             {return 'VAR'; }
-<INITIAL,ARRAY>("\\Psi")            {return 'VAR'; }
-<INITIAL,ARRAY>("\\Sigma")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\Theta")          {return 'VAR'; }
-<INITIAL,ARRAY>("\\Upsilon")        {return 'VAR'; }
-<INITIAL,ARRAY>("\\Xi")             {return 'VAR'; }
-<INITIAL,ARRAY>("\\aleph")          {return 'VAR'; }
+<INITIAL,ARRAY>(\\theta(_[a-zA-Z0-9]|_\{[a-zA-Z0-9]{2,}\})?)          {return 'VAR'; }
 
 // Other stuff to ignore 
 <INITIAL,ARRAY>("$")                   {  }
@@ -117,7 +150,7 @@
 %left MUL FRAC
 %right POW SQRT SQRTBASE 
 %left UMINUS
-%right SIN COS TAN CSC SEC COT ARCSIN ARCCOS ARCTAN ARCCSC ARCSEC ARCCOT SINH COSH TANH CSCH SECH COTH LN LOG10 LOGBASE1 LOGBASE
+%right OPERATOR LN LOG10 LOGBASE
 
 %left EQUALTO
 %left IGNORE NUMBER
@@ -140,11 +173,15 @@ e
 
     | SQRT e            {$$ = addNode(yy.MathNode.prototype.doSqrt,$2);}
     | SQRT e e          {$$ = addNode(yy.MathNode.prototype.doNthRoot,$2, $3);}
+    | OPERATOR POW e e  {$$ = addNode(yy.MathNode.prototype.doPowOp,  $1, $3, $4);}
+    | LN POW e e              {$$ = addNode(yy.MathNode.prototype.doPowLn,$3, $4);}
+    | LOG10 POW e e           {$$ = addNode(yy.MathNode.prototype.doPowLog10,$3, $4);}
+    | LOGBASE e POW  e e      {$$ = addNode(yy.MathNode.prototype.doPowLogBase,$2,$4, $5);}
+    
     | e POW e           {$$ = addNode(yy.MathNode.prototype.doPow,$1,$3);}
     | SUB e %prec UMINUS  {$$ = -$2;}
     | LN e              {$$ = addNode(yy.MathNode.prototype.doLn,$2);}
     | LOG10 e           {$$ = addNode(yy.MathNode.prototype.doLog10,$2);}
-    | LOGBASE1 e       {$$ = addNode(yy.MathNode.prototype.doLogBase,$1,$2);}
     | LOGBASE e e       {$$ = addNode(yy.MathNode.prototype.doLogBase,$2,$3);}
 
     // Brackets
@@ -153,25 +190,8 @@ e
     | LSQ  e RSQ          {$$ = addNode(yy.MathNode.prototype.doParen,$2);}
 
     // Trig
-    | SIN e              {$$ = addNode(yy.MathNode.prototype.doSin,$2);}
-    | COS e              {$$ = addNode(yy.MathNode.prototype.doCos,$2);}
-    | TAN e              {$$ = addNode(yy.MathNode.prototype.doTan,$2);}
-    | CSC e              {$$ = addNode(yy.MathNode.prototype.doCsc,$2);}
-    | SEC e              {$$ = addNode(yy.MathNode.prototype.doSec,$2);}
-    | COT e              {$$ = addNode(yy.MathNode.prototype.doCot,$2);}
-    | ARCSIN e              {$$ = addNode(yy.MathNode.prototype.doArcSin,$2);}
-    | ARCCOS e              {$$ = addNode(yy.MathNode.prototype.doArcCos,$2);}
-    | ARCTAN e              {$$ = addNode(yy.MathNode.prototype.doArcTan,$2);}
-    | ARCCSC e              {$$ = addNode(yy.MathNode.prototype.doArcCsc,$2);}
-    | ARCSEC e              {$$ = addNode(yy.MathNode.prototype.doArcSec,$2);}
-    | ARCCOT e              {$$ = addNode(yy.MathNode.prototype.doArcCot,$2);}
-    | SINH e              {$$ = addNode(yy.MathNode.prototype.doSinh,$2);}
-    | COSH e              {$$ = addNode(yy.MathNode.prototype.doCosh,$2);}
-    | TANH e              {$$ = addNode(yy.MathNode.prototype.doTanh,$2);}
-    | CSCH e              {$$ = addNode(yy.MathNode.prototype.doCsch,$2);}
-    | SECH e              {$$ = addNode(yy.MathNode.prototype.doSech,$2);}
-    | COTH e              {$$ = addNode(yy.MathNode.prototype.doCoth,$2);}
-
+    | OPERATOR e              {$$ = addNode(yy.MathNode.prototype.doOp, $1, $2);}
+   
     // Logic
     | e EQUAL e          {$$ = addNode(yy.MathNode.prototype.doAssign,$1,$3);}
     
