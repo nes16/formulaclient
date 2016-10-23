@@ -30,10 +30,12 @@ export class FlNavBar {
 	@Input() searchButton;
 	@Input() moreButton;
 	@Input() filterButton;
+	@Input() closeButton = false;
 	@Input() title;
 	@Output('onFilterChange') onFilterChange = new EventEmitter();
 	@Output('onFilterCancel') onFilterCancel = new EventEmitter();
 	@Output('onAdd') onAdd = new EventEmitter();  
+	@Output('onClose') onClose = new EventEmitter();  
 
 	search(){
 		if (this.searchBar)
@@ -57,6 +59,10 @@ export class FlNavBar {
 
 	add(evt){
 		this.onAdd.emit(evt)
+	}
+
+	close(evt){
+		this.onClose.emit(evt);
 	}
 
 	get Online(){

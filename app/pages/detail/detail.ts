@@ -79,6 +79,10 @@ export class DetailPage {
         else
             throw("Invalid type detail page");
     }
+
+    onClose(){
+        this.tabsPage.clearDetailTab();
+    }
    
     ionViewDidEnter() {
         if(!DetailPage.root)

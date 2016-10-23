@@ -143,5 +143,5 @@ ionicBootstrap(FormulaApp, [
   SqlCacheService,
   App,
   ResponsiveState
- ], {tabsHideOnSubPages:"true"});
+ ]);
 

@@ -155,7 +155,8 @@ export class SqlService {
 		// query = query.replace("\\\"", "\"\"");
 		// while(query.indexOf("\\\"") != -1)
 		// 	query = query.replace("\\\"", "\"\"");
-
+		query = query.replace(/\\\\/g, "\\");
+		query = query.replace(/\\\"/g, "\"\"");
 		
 
 		return query;
@@ -207,7 +208,6 @@ export class SqlService {
 			this.storage.query(stmt).then((res) => {
 				if(or){
 					//Send the statement string with result
-					console.log(stmt);
 					res.res.length = 0;
 					if(res.res)
 						res.res.stmt = stmt;
@@ -216,6 +216,7 @@ export class SqlService {
 				}
 			},(err) => {
 				//Send the stmt string with error
+				console.log(stmt);			
 				console.log(JSON.stringify(err));
 				ErrorHandler.handle(err, "SqlService::query " + stmt, false);
 				if(err.err)

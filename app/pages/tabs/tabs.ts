@@ -49,7 +49,6 @@ export class TabsPage {
     this.tabRef.select(3);
   }
 
-
   clearDetailTab(){
     let resource = this.resources.pop();
     this.setResourcePage(resource.getTable());
@@ -60,6 +59,7 @@ export class TabsPage {
         DetailPage.root = null;
     }
   }
+
 	
   emit(resource) {
 		var type = UIStateService.event_types.resource_save_complete;

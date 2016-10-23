@@ -69,7 +69,7 @@ export class MathQ {
 				this.mqService.setKeyboard(true);
 				if(this.uiStateService.content){
 					this.uiStateService.content.resize();
-					this.scrollTo();
+					//this.scrollTo();
 				}
 			}
     	}));

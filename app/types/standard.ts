@@ -941,12 +941,8 @@ export class Varval extends BaseResource implements ValueProvider{
         let toks_vals =  JSON.parse(this.variables);
         this._formula = ResourceCollection.all[this.formula_id] as Formula;
         if(this._formula){
-            this._formula.Variables.forEach((v)=> {
-                toks_vals.forEach((t,i)=>{
-                    if(v.symbol == t[0]){
-                        this._values[t[0]] = new ValueU(t[1])
-                    }
-                })
+            this._formula.Variables.forEach((v, i)=> {
+                this._values[v.symbol] = new ValueU(toks_vals[i])
             })
         }
     }
@@ -955,7 +951,7 @@ export class Varval extends BaseResource implements ValueProvider{
         return Object.assign(
             super.getState(), {
                 formula_id: this._formula.id,
-                variables: JSON.stringify(this._formula.Variables.map(v => [v.symbol, this._values[v.symbol].input])),
+                variables: JSON.stringify(this._formula.Variables.map(v => this._values[v.symbol].input)),
                 result:this._result.asString()
             });
     }
