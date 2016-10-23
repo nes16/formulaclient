@@ -37,7 +37,7 @@
                 <template ngFor let-v [ngForOf]="resource._formula._variables" let-i="index">
                     <ion-item>
                         <ion-label><mathq   [ngModelOptions]="{standalone: true}" [ngModel]="v.symbol"></mathq></ion-label>
-                        <ion-input type="text" [(ngModel)]="resource._values[v.symbol].input" [formControl]="form.controls['Var'+i]"></ion-input>
+                        <ion-input (input)="evaluate($event)" type="text" [(ngModel)]="resource._values[v.symbol].input" [formControl]="form.controls['Var'+i]"></ion-input>
                     </ion-item>
                     <!--<fb-error [fcontrol]="form.controls.name"></fb-error>-->
                 </template>

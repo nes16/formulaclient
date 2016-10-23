@@ -904,7 +904,8 @@ export class Varval extends BaseResource implements ValueProvider{
     _result:ValueU;
     _rootNode:MathNode = null;
     static ps:LatexParserService = new LatexParserService();
-
+    static magicStingDB = [[/\\/g, "@G#"], [/\"/g, "#G@"]];
+    static magicStingMEM = [[/@G#/g, "\\"], [/#G@/g, "\""]];
     constructor(state:any = null){
         super(state);
         if(!state)
@@ -951,7 +952,7 @@ export class Varval extends BaseResource implements ValueProvider{
         return Object.assign(
             super.getState(), {
                 formula_id: this._formula.id,
-                variables: JSON.stringify(this._formula.Variables.map(v => this._values[v.symbol].input)),
+                variables: this.replaceSpecialChar('DB',JSON.stringify(this._formula.Variables.map(v => this._values[v.symbol].input))),
                 result:this._result.asString()
             });
     }
@@ -960,7 +961,7 @@ export class Varval extends BaseResource implements ValueProvider{
         state = state || {};
         super.loadState(state);
         this.formula_id = state.formula_id || null;
-        this.variables = state.variables;
+        this.variables = this.replaceSpecialChar('MEM', state.variables);
         this._result = new ValueU(state.result);
     }
 
@@ -1015,6 +1016,14 @@ export class Varval extends BaseResource implements ValueProvider{
         return false;
     }
 
+    replaceSpecialChar(to:string, val:string):string{
+        let items = (to == 'DB')?Varval.magicStingDB:Varval.magicStingMEM;
+        items.forEach(i => {
+            if(val && val.length > 0)
+                val = val.replace(i[0] as RegExp,i[1] as string);    
+        })
+        return val;
+    }
 }
 
 export class Variable extends BaseResource {

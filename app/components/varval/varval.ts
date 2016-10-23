@@ -69,22 +69,32 @@ export class VarvalComponent extends BaseComponent {
                 value: new FormControl(vv._result)
             })
             vv._formula.Variables.forEach((v,i) => {
-                this.form.addControl("Var"+i,  new FormControl(vv._values[v.symbol], [Validators.required]))
+				let fc = new FormControl(vv._values[v.symbol], [Validators.required]) as FormControl;
+				this.form.addControl("Var"+i, fc );
+				//fc.registerOnChange(this.evaluate);
+				// fc.registerOnChange(val => {
+				// 	if(this.form.valid)
+				// 		vv.evaluate();
+				// })
             })
 
-			this.form.valueChanges.subscribe(r => {
-				if(this.form.valid){
-					vv.evaluate();
-				}
-			})
+			// this.form.valueChanges.subscribe(r => {
+			// 	if(this.form.valid){
+			// 		vv.evaluate();
+			// 	}
+			// })
 		}
 		
 		
 	}
 
 	
-	evaluate(){
-
+	evaluate(evt){
+		if(evt.srcElement.changeTimeout)
+       	 	clearTimeout(evt.srcElement.changeTimeout);
+		evt.srcElement.changeTimeout = setTimeout(() => {
+			this.resource.evaluate();
+        }, 600);
 	}
 
 	getVariables(){

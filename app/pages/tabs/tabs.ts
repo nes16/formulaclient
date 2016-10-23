@@ -74,7 +74,7 @@ export class TabsPage {
       if(table == "globals"){
         return this.tabRef.select(1)
       }
-      if(table == "formulas"){
+      if(table == "formulas" || table == "varvals" || table == "variables"){
         return this.tabRef.select(2)
       }
   }

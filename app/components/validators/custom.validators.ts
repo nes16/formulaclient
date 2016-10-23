@@ -70,7 +70,7 @@ export function createUniqueNameValidator(service:DataService, resourceType:stri
     if(resource.nameTimeout)
       clearTimeout(resource.nameTimeout);
     return new Promise((resolve, reject) => {
-                resource.nameTimeout = setTimeout(() => {
+                resource.nameTimeout = (() => {
                     service.isUnique(resourceType, "name", control.value as string, resource.id, (res, i)=> control.value == res.name)
                           .subscribe(res => {
                             if(res.unique){
