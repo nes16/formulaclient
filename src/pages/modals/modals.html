@@ -1,0 +1,44 @@
+<ion-content>
+    <ion-toolbar>
+        <ion-title>{{title}}</ion-title>
+        <ion-buttons right>
+            <button royal (click)="dismiss($event)">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+    <div [ngSwitch]="option">
+        <template [ngSwitchCase]="'about'">
+            <ion-card>
+                <p>
+                    TestLab is an application for create, edit, browse standard and custom formulas with units. The formulas can be input with values to find the result.
+                </p>
+            </ion-card>
+        </template>
+        <template [ngSwitchCase]="'error'">
+            <ion-list>
+                <ion-item>
+                    <ion-label stacked>{{errorInfo.common_message}}</ion-label>
+                </ion-item>
+                <template [ngIf]="hasFieldErrors()">
+                    <ion-item *ngFor="let f of getErrorFields()">
+                        <h1>{{f}}</h1>
+                        <p *ngFor="let e of getMessagesForField(f)">
+                            {{e}}
+                        </p>
+                    </ion-item>
+                </template>
+                <ion-item>
+                    <button ion-button class="button button-block button-positive" (click)="dismiss($event)">Ok</button>
+                </ion-item>
+            </ion-list>
+        </template>
+        <template [ngSwitchCase]="'progress'">
+            <ion-list>
+                <ion-item>
+                    <ion-label stacked>{{message}}</ion-label>
+                </ion-item>
+            </ion-list>
+        </template>
+    </div>
+</ion-content>

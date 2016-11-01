@@ -1,0 +1,29 @@
+<ion-header>
+<fl-nav-bar [title]="'Detail -' + currResource?.name"  (onClose)="onClose($event)" [closeButton]="true"  [searchButton]="false" [moreButton]="false"></fl-nav-bar>
+</ion-header>l
+<ion-content id="detail-page">
+    <ion-list *ngIf="type == 'properties'">
+        <fl-property [mode]="'edit'" [resource]="currResource"></fl-property>
+    </ion-list>
+    <ion-list *ngIf="type == 'units'">
+        <fl-unit  [mode]="'edit'" [resource]="currResource"></fl-unit>
+    </ion-list>
+    <ion-list *ngIf="type == 'globals'">
+        <fl-global  [mode]="'edit'" [resource]="currResource"></fl-global>
+    </ion-list>
+    <ion-list *ngIf="type == 'formulas'">
+        <fl-formula  [mode]="'edit'" [resource]="currResource"></fl-formula>
+    </ion-list>
+    <ion-list *ngIf="type == 'variables'">
+        <fl-var  [mode]="'edit'" [resource]="currResource"></fl-var>
+    </ion-list>
+    <ion-list *ngIf="type == 'varvals'">
+        <fl-varval  [mode]="'edit'" [resource]="currResource"></fl-varval>
+    </ion-list>
+    <ion-list *ngIf="type == 'categories'">
+        <fl-category  [mode]="'edit'" [resource]="currResource"></fl-category>
+    </ion-list>
+</ion-content>
+<ion-footer [class.fl-hidden]="!mq.showKeyboard">
+<keypad></keypad>
+</ion-footer>

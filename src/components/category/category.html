@@ -1,0 +1,49 @@
+<div [ngSwitch]="mode">
+    <template [ngSwitchCase]="'list'">
+        <ion-item [ngStyle]="getStyle()" (dbltap)="showChildren($event)" (click)="onClick($event)">
+            <ion-buttons right>
+                <a (click)="onExpand($event)">
+                    <a (click)="onExpand($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
+                </a>
+                <a *ngIf="!filter" (click)="onAddCategory($event)">
+                    <ion-icon royal  name="add"></ion-icon>
+                </a>
+            </ion-buttons>
+            <div>
+                <h3>{{getIndentedName()}}</h3>
+            </div>
+        </ion-item>
+        <template [ngIf]="add">
+            <form [formGroup]="childForm" (submit)="onAddSubmit($event)">
+            
+            <ion-item>
+
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="childResource.name"></ion-input>
+                <fb-error [fcontrol]="childForm.controls.name"></fb-error>
+            </ion-item>
+            </form>
+
+        </template>
+
+        <template [ngIf]="expand">
+            <fl-category *ngFor="let c of children" [filter]="filter" [mode]="mode" [resource]="c"></fl-category>
+        </template>
+    </template>
+    <template [ngSwitchCase]="'edit'">
+        <form [formGroup]="form" (submit)="edit($event)">
+            <ion-list>
+                <ion-list-header>
+                    Subcategory of {{resource._parent.name}}
+                </ion-list-header>
+                <ion-item>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                </ion-item>
+                <fb-error [fcontrol]="form.controls.name"></fb-error>
+                <ion-item>
+                    <button ion-button type="button" name="submit" (click)="edit($event)" [disabled]="!form.valid">{{submitButtonName}}</button>
+                </ion-item>
+            </ion-list>
+        </form>
+    </template>

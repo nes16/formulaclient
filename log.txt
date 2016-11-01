@@ -1,0 +1,2323 @@
+
+Running 'serve:before' npm script before serve
+
+> ionic-app-base@ watch /projects
+> ionic-app-scripts watch
+
+[2m[15:31:12][22m  [36mionic-app-scripts 0.0.36[39m 
+[2m[15:31:12][22m  watch started [2m...[22m 
+[2m[15:31:12][22m  build dev started [2m...[22m 
+[2m[15:31:12][22m  clean started [2m...[22m 
+[2m[15:31:12][22m  clean finished [2min 7 ms[22m 
+[2m[15:31:12][22m  copy started [2m...[22m 
+[2m[15:31:12][22m  transpile started [2m...[22m 
+[15:31:13]  lint started ... 
+            Unused import: 'provide' 
+
+       L1:  //https://github.com/ronzeidman/ng2-ui-auth/blob/master/src/jwtHttp.ts
+       L2:  import { Injectable, provide, Provider } from '@angular/core';
+       L3:  import {
+
+            Unused import: 'Provider' 
+
+       L1:  //https://github.com/ronzeidman/ng2-ui-auth/blob/master/src/jwtHttp.ts
+       L2:  import { Injectable, provide, Provider } from '@angular/core';
+       L3:  import {
+
+            Unused import: 'Observable' 
+
+       L8:  } from '@angular/http';
+       L9:  import { Observable } from 'rxjs/Observable';
+      L10:  import 'rxjs/add/operator/map';
+
+            Unused variable: '_ref' 
+
+      L33:  url.headers.set('Content-Type', 'application/json');
+      L34:  var _ref = this._auth.config.tokenFormat;
+      L35:  options = {};
+
+            Unused variable: 'val' 
+
+     L106:  updateHeadersFromResponse(resp) {
+     L107:    var key, newHeaders, val;
+     L108:    newHeaders = {};
+
+            Duplicate variable: 's2' 
+
+     L434:  var p2 = /([A-Za-z /]+)/
+     L435:  var s2 = ''
+     L436:  var part1 = '';
+
+            Unused import: 'UIStateService' 
+
+       L3:  import { DataService } from '../services/data-service';
+       L4:  import { UIStateService } from '../services/ui-state-service';
+       L5:  import { ValueProvider } from '../lib/math-node/value'
+
+            Unused variable: 'O' 
+
+     L255:      return true;
+     L256:  var curState = this.getState(), O
+     L257:  var keys = Object.keys(curState);
+
+            Unused variable: 'index' 
+
+    L1545:  ResourceCollection.all[lr.id] = lr;
+    L1546:  let index = li.offlineData.remove(j);
+
+            Unused import: 'Http' 
+
+       L4:  import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, Req
+
+            Unused import: 'HTTP_PROVIDERS' 
+
+       L4:  import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, Req
+
+            Unused import: 'BaseRequestOptions' 
+
+       L4:  import { Http, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, Req
+
+            Unused import: 'Request' 
+
+       L4:  p, HTTP_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, RequestOptionsA
+
+            Unused import: 'RequestOptions' 
+
+       L4:  P_PROVIDERS, Headers, BaseRequestOptions, Request, RequestOptions, RequestOptionsArgs, R
+
+            Unused import: 'RequestOptionsArgs' 
+
+       L4:  eaders, BaseRequestOptions, Request, RequestOptions, RequestOptionsArgs, RequestMethod, 
+
+            Unused import: 'RequestMethod' 
+
+       L4:  ions, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response } from '@angu
+
+            Unused import: 'Response' 
+
+       L4:  est, RequestOptions, RequestOptionsArgs, RequestMethod, Response } from '@angular/http';
+
+            Unused import: 'LocalStorage' 
+
+      L10:  import 'rxjs/add/operator/catch';
+      L11:  import { Events, LocalStorage, Storage } from 'ionic-angular';
+
+            Unused import: 'Storage' 
+
+      L10:  import 'rxjs/add/operator/catch';
+      L11:  import { Events, LocalStorage, Storage } from 'ionic-angular';
+
+            Unused import: 'Util' 
+
+      L13:  import { JwtHttp } from "./jwtHttp";
+      L14:  import { Util } from '../../lib/util';
+      L15:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused import: 'ErrorHandler' 
+
+      L14:  import { Util } from '../../lib/util';
+      L15:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused variable: 'location_parse' 
+
+     L422:  validateUser() {
+     L423:    var clientId, expiry, location_parse, params, search, token, uid, url, token_type;
+
+            Unused variable: 'search' 
+
+     L422:  validateUser() {
+     L423:    var clientId, expiry, location_parse, params, search, token, uid, url, token_type;
+
+            Unused variable: 'result' 
+
+     L623:  let newUser = Object.assign(this.retrieveData('auth_user') || {}, u);
+     L624:  let result = this.persistData('auth_user', newUser, null);
+
+            Unused import: 'Modal' 
+
+       L1:  import { Modal, NavController, NavParams, ViewController } from 'ionic-angular';
+       L2:  import { Component } from '@angular/core'
+
+            Unused import: 'ErrorHandler' 
+
+       L5:  import { Modal } from 'ionic-angular';
+       L6:  import { ErrorHandler } from '../types/standard';
+
+            Unused variable: 'networkState' 
+
+      L59:  this.platform.ready().then(() => {
+      L60:      var networkState = navigator.connection.type;
+      L61:      document.addEventListener("online", this.onOnline.bind(this), false);
+
+            Unused import: 'Http' 
+
+       L1:  import { Injectable, Inject } from '@angular/core';
+       L2:  import { Http } from '@angular/http';
+       L3:  import { Observable } from 'rxjs/Observable';
+
+            Unused import: 'Util' 
+
+       L7:  import 'rxjs/add/operator/catch';
+       L8:  import { Util } from '../lib/util'
+
+            Unused import: 'Http' 
+
+       L1:  import { Injectable } from '@angular/core';
+       L2:  import { Http } from '@angular/http';
+       L3:  import { BaseService } from './base-service';
+
+            Unused import: 'Observable' 
+
+       L3:  import { BaseService } from './base-service';
+       L4:  import { Observable } from 'rxjs/Observable';
+       L5:  import { Observer } from 'rxjs/Observer';
+
+            Unused import: 'Observer' 
+
+       L4:  import { Observable } from 'rxjs/Observable';
+       L5:  import { Observer } from 'rxjs/Observer';
+       L6:  import { Unit, Property } from '../types/standard'
+
+            Unused import: 'Unit' 
+
+       L5:  import { Observer } from 'rxjs/Observer';
+       L6:  import { Unit, Property } from '../types/standard'
+
+            Unused import: 'Property' 
+
+       L5:  import { Observer } from 'rxjs/Observer';
+       L6:  import { Unit, Property } from '../types/standard'
+
+            Unused import: 'forwardRef' 
+
+       L1:  import { Injectable,forwardRef } from '@angular/core';
+       L2:  import { Http } from '@angular/http';
+
+            Unused import: 'Http' 
+
+       L1:  import { Injectable,forwardRef } from '@angular/core';
+       L2:  import { Http } from '@angular/http';
+       L3:  import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../type
+
+            Unused import: 'TableOfflineData' 
+
+       L2:  import { Http } from '@angular/http';
+       L3:  import { FG, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types
+       L4:  import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, V
+
+            Unused import: 'pass' 
+
+       L2:  import { Http } from '@angular/http';
+       L3:  G, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
+       L4:  import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, V
+
+            Unused import: 'AsyncSync' 
+
+       L2:  import { Http } from '@angular/http';
+       L3:  G, OfflineData, TableOfflineData, LogHandler, pass, AsyncSync } from '../types/standard'
+       L4:  import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, V
+
+            Unused import: 'OpCodes' 
+
+       L4:  import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, V
+       L5:  t { SyncResponseHandler, Category, CR,  States, OpCodes, ItemSyncState } from '../types/
+       L6:  import { ErrorHandler } from '../types/standard';
+
+            Unused import: 'ItemSyncState' 
+
+       L4:  import { ResourceCollection, BaseResource, Unit, Property, Global, Formula, Variable, V
+       L5:  ncResponseHandler, Category, CR,  States, OpCodes, ItemSyncState } from '../types/standa
+       L6:  import { ErrorHandler } from '../types/standard';
+
+            Unused import: 'Observer' 
+
+      L11:  import { Observable } from 'rxjs/Observable';
+      L12:  import { Observer } from 'rxjs/Observer';
+
+            Unused variable: 'li' 
+
+     L124:  isUnique(table:string, field:string, value:string, id:string, predicate: (value: Ba
+     L125:    let li = this[table] as ResourceCollection<BaseResource>;
+     L126:    let oles = new Array<Observable<any>>();
+
+            Unused variable: 'syncResponse' 
+
+     L166:  //Handle response for sync opertaion
+     L167:  var syncResponse = null;
+     L168:  this.remoteService
+
+            Unused import: 'Output' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+
+            Unused import: 'QueryList' 
+
+       L1:  Ref, Renderer, Input, Output, EventEmitter, ViewChild, QueryList } from '@angular/core';
+       L2:  import { Keys } from './keys';
+
+            Unused import: 'Keys' 
+
+       L1:  import { Component, ElementRef, Renderer, Input, Output, EventEmitter, ViewChild, Query
+       L2:  import { Keys } from './keys';
+       L3:  import { Modal, NavController } from 'ionic-angular';
+
+            Unused import: 'Modal' 
+
+       L2:  import { Keys } from './keys';
+       L3:  import { Modal, NavController } from 'ionic-angular';
+       L4:  import { MQService } from '../providers/mq-service';
+
+            Unused import: 'Unit' 
+
+       L5:  import { UIStateService } from '../providers/ui-state-service';
+       L6:  import { Unit } from '../lib/types/standard';
+
+            Unused import: 'Output' 
+
+       L1:  import { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from '@angul
+       L2:  import { MathQ } from './mathquill';
+
+            Unused import: 'ViewChildren' 
+
+       L1:  import { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from '@angul
+       L2:  import { MathQ } from './mathquill';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from '@angul
+       L2:  import { MathQ } from './mathquill';
+
+            Unused import: 'QueryList' 
+
+       L1:  ort { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from '@angular/
+       L2:  import { MathQ } from './mathquill';
+
+            Unused import: 'forwardRef' 
+
+       L1:  Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from '@angular/core';
+       L2:  import { MathQ } from './mathquill';
+
+            Unused import: 'MathQ' 
+
+       L1:  import { Input, Output, ViewChildren, EventEmitter, QueryList, forwardRef } from '@angu
+       L2:  import { MathQ } from './mathquill';
+       L3:  import { DataService } from '../providers/data-service'
+
+            Unused import: 'ResourceCollection' 
+
+       L4:  import { UIStateService } from '../providers/ui-state-service'
+       L5:  import { ResourceCollection, Unit, States, Favorite, Formula } from '../lib/types/standa
+       L6:  import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular
+
+            Unused import: 'Unit' 
+
+       L4:  import { UIStateService } from '../providers/ui-state-service'
+       L5:  import { ResourceCollection, Unit, States, Favorite, Formula } from '../lib/types/standa
+       L6:  import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular
+
+            Unused import: 'Favorite' 
+
+       L4:  import { UIStateService } from '../providers/ui-state-service'
+       L5:  import { ResourceCollection, Unit, States, Favorite, Formula } from '../lib/types/standa
+       L6:  import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L5:  import { ResourceCollection, Unit, States, Favorite, Formula } from '../lib/types/stand
+       L6:  import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular'
+       L7:  import { ErrorHandler } from '../lib/types/standard';
+
+            Unused import: 'Modal' 
+
+       L5:  import { ResourceCollection, Unit, States, Favorite, Formula } from '../lib/types/stand
+       L6:  import { IONIC_DIRECTIVES, Modal, NavController, ActionSheet, App } from 'ionic-angular'
+       L7:  import { ErrorHandler } from '../lib/types/standard';
+
+            Unused import: 'Host' 
+
+       L1:  import { Host, Directive, forwardRef, Provider } from '@angular/core';
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused variable: 'CUSTOM_VALUE_ACCESSOR' 
+
+       L5:  const CUSTOM_VALUE_ACCESSOR = new Provider(
+       L6:      NG_VALUE_ACCESSOR, {useExisting: forwardRef(() => MathQValueAccessor), multi: true}
+
+            Unused import: 'ElementRef' 
+
+       L1:  import { mathkeys } from './keypad_keys';
+       L2:  import { Component,  ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L3:  import { Modal, ViewController } from 'ionic-angular';
+
+            Unused import: 'Input' 
+
+       L1:  import { mathkeys } from './keypad_keys';
+       L2:  import { Component,  ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L3:  import { Modal, ViewController } from 'ionic-angular';
+
+            Unused import: 'Output' 
+
+       L1:  import { mathkeys } from './keypad_keys';
+       L2:  import { Component,  ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L3:  import { Modal, ViewController } from 'ionic-angular';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { mathkeys } from './keypad_keys';
+       L2:  import { Component,  ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L3:  import { Modal, ViewController } from 'ionic-angular';
+
+            Unused import: 'Modal' 
+
+       L2:  import { Component,  ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L3:  import { Modal, ViewController } from 'ionic-angular';
+       L4:  import { MQService } from '../../providers/mq-service'
+
+            Unused import: 'Renderer' 
+
+       L1:  import { Component, ElementRef, Renderer, Input, Output, EventEmitter } from '@angular/c
+       L2:  import { Modal, ViewController, NavController } from 'ionic-angular';
+
+            Unused import: 'Modal' 
+
+       L1:  import { Component, ElementRef, Renderer, Input, Output, EventEmitter } from '@angular/
+       L2:  import { Modal, ViewController, NavController } from 'ionic-angular';
+
+            Unused import: 'MathKeypad' 
+
+       L4:  import { MathKeypad } from '../keys/keypad'
+       L5:  import { MQService } from '../../providers/mq-service'
+
+            Unused import: 'MQService' 
+
+       L4:  import { MathKeypad } from '../keys/keypad'
+       L5:  import { MQService } from '../../providers/mq-service'
+       L6:  import { DataService } from '../../providers/data-service'
+
+            Unused import: 'MathQ' 
+
+       L7:  import { UIStateService } from '../../providers/ui-state-service'
+       L8:  import { MathQ } from '../mathquill';
+       L9:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+       L8:  import { MathQ } from '../mathquill';
+       L9:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L10:  import { Unit, Measure } from '../../lib/types/standard';
+
+            Unused import: 'Unit' 
+
+       L9:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L10:  import { Unit, Measure } from '../../lib/types/standard';
+      L11:  import { Observable } from 'rxjs/Observable';
+
+            Unused import: 'Observable' 
+
+      L10:  import { Unit, Measure } from '../../lib/types/standard';
+      L11:  import { Observable } from 'rxjs/Observable';
+      L12:  import { Observer } from 'rxjs/Observer';
+
+            Unused import: 'Observer' 
+
+      L11:  import { Observable } from 'rxjs/Observable';
+      L12:  import { Observer } from 'rxjs/Observer';
+      L13:  import 'rxjs/add/operator/map';
+
+            Unused import: 'ResourceListPage' 
+
+      L14:  import 'rxjs/add/operator/catch';
+      L15:  import { ResourceListPage } from '../../pages/resource-list'
+      L16:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused import: 'Host' 
+
+       L1:  import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/cor
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'Component' 
+
+       L1:  import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/cor
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'Input' 
+
+       L1:  import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/cor
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'Output' 
+
+       L1:  import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/cor
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'OnInit' 
+
+       L1:  import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/cor
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/cor
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'ElementRef' 
+
+       L1:  ort { Host,Component,Input,Output,OnInit,EventEmitter,ElementRef } from '@angular/core';
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+
+            Unused import: 'NgClass' 
+
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+       L3:  import { NgClass,Control } from '@angular/common';
+       L4:  import { Directive,  Renderer, Self, forwardRef, Provider } from '@angular/core';
+
+            Unused import: 'Control' 
+
+       L2:  import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+       L3:  import { NgClass,Control } from '@angular/common';
+       L4:  import { Directive,  Renderer, Self, forwardRef, Provider } from '@angular/core';
+
+            Unused import: 'Renderer' 
+
+       L3:  import { NgClass,Control } from '@angular/common';
+       L4:  import { Directive,  Renderer, Self, forwardRef, Provider } from '@angular/core';
+       L5:  import { UnitSelector } from './unit';
+
+            Unused import: 'Self' 
+
+       L3:  import { NgClass,Control } from '@angular/common';
+       L4:  import { Directive,  Renderer, Self, forwardRef, Provider } from '@angular/core';
+       L5:  import { UnitSelector } from './unit';
+
+            Unused import: 'Observable' 
+
+       L1:  import { Observable } from 'rxjs/Rx';
+       L2:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'Global' 
+
+       L2:  import { DataService } from '../../providers/data-service';
+       L3:  import { Measure, Formula, Unit, Global, BaseResource } from '../../lib/types/standard';
+       L4:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused import: 'OnChanges' 
+
+       L1:  import { Component, Input, OnChanges } from "@angular/core";
+       L2:  import { IONIC_DIRECTIVES } from "ionic-angular";
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L1:  import { Component, Input, OnChanges } from "@angular/core";
+       L2:  import { IONIC_DIRECTIVES } from "ionic-angular";
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+       L3:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+       L4:  import { Property, Unit } from '../../lib/types/standard';
+
+            Unused import: 'Property' 
+
+       L3:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+       L4:  import { Property, Unit } from '../../lib/types/standard';
+       L5:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'Unit' 
+
+       L3:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+       L4:  import { Property, Unit } from '../../lib/types/standard';
+       L5:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'BaseResource' 
+
+       L7:  import { BaseComponent } from '../base-component'
+       L8:  import { BaseResource } from '../base-resource'
+       L9:  import { MathQ } from '../mathquill';
+
+            Unused import: 'MathQ' 
+
+       L8:  import { BaseResource } from '../base-resource'
+       L9:  import { MathQ } from '../mathquill';
+      L10:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+       L9:  import { MathQ } from '../mathquill';
+      L10:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L11:  import { UnitSelector } from '../selectors/unit';
+
+            Unused import: 'UnitSelector' 
+
+      L10:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L11:  import { UnitSelector } from '../selectors/unit';
+      L12:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+
+            Unused import: 'UnitValueAccessor' 
+
+      L11:  import { UnitSelector } from '../selectors/unit';
+      L12:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+      L13:  import { DetailPage } from '../../pages/detail/detail';
+
+            Unused import: 'FBError' 
+
+      L14:  import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameVali
+      L15:  import { FBError } from '../fb-error';
+
+            Unused import: 'Variable' 
+
+       L4:  import { ValueProvider } from '../lib/math-node/value'
+       L5:  import { Variable, Global, FG } from '../types/standard'
+
+            Unused import: 'Global' 
+
+       L4:  import { ValueProvider } from '../lib/math-node/value'
+       L5:  import { Variable, Global, FG } from '../types/standard'
+
+            Unused import: 'FG' 
+
+       L4:  import { ValueProvider } from '../lib/math-node/value'
+       L5:  import { Variable, Global, FG } from '../types/standard'
+
+            Unused import: 'ElementRef' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter, Query, ViewChildren, QueryL
+       L2:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+
+            Unused import: 'Query' 
+
+       L1:  nent, ElementRef, Input, Output, EventEmitter, Query, ViewChildren, QueryList } from '@a
+       L2:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+
+            Unused import: 'ViewChildren' 
+
+       L1:  , ElementRef, Input, Output, EventEmitter, Query, ViewChildren, QueryList } from '@angul
+       L2:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+
+            Unused import: 'QueryList' 
+
+       L1:  Ref, Input, Output, EventEmitter, Query, ViewChildren, QueryList } from '@angular/core';
+       L2:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter, Query, ViewChildren, Query
+       L2:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+       L3:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'BaseResource' 
+
+       L6:  import { UIStateService } from '../../providers/ui-state-service'
+       L7:  import { BaseResource } from '../base-resource'
+       L8:  import { BaseComponent } from '../base-component'
+
+            Unused import: 'MathQ' 
+
+       L8:  import { BaseComponent } from '../base-component'
+       L9:  import { MathQ } from '../mathquill';
+      L10:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+       L9:  import { MathQ } from '../mathquill';
+      L10:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L11:  import { UnitSelector } from '../selectors/unit';
+
+            Unused import: 'UnitSelector' 
+
+      L10:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L11:  import { UnitSelector } from '../selectors/unit';
+      L12:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+
+            Unused import: 'UnitValueAccessor' 
+
+      L11:  import { UnitSelector } from '../selectors/unit';
+      L12:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+      L13:  import { DetailPage } from '../../pages/detail/detail';
+
+            Unused import: 'Input' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'Output' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+       L3:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+
+            Unused import: 'Formula' 
+
+       L5:  import { Formula, Property, Unit, Variable, Global, Measure , FG } from '../../lib/types
+       L6:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'Property' 
+
+       L5:  import { Formula, Property, Unit, Variable, Global, Measure , FG } from '../../lib/types
+       L6:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'Unit' 
+
+       L5:  import { Formula, Property, Unit, Variable, Global, Measure , FG } from '../../lib/types
+       L6:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'Measure' 
+
+       L5:  rt { Formula, Property, Unit, Variable, Global, Measure , FG } from '../../lib/types/sta
+       L6:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'BaseResource' 
+
+       L8:  import { LatexParserService } from '../../providers/latex-parser-service';
+       L9:  import { BaseResource } from '../base-resource'
+      L10:  import { BaseComponent } from '../base-component'
+
+            Unused import: 'MathQ' 
+
+      L10:  import { BaseComponent } from '../base-component'
+      L11:  import { MathQ } from '../mathquill';
+      L12:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+      L11:  import { MathQ } from '../mathquill';
+      L12:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L13:  import { VarComponent } from '../variable/variable';
+
+            Unused import: 'VarComponent' 
+
+      L12:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L13:  import { VarComponent } from '../variable/variable';
+      L14:  import { GlobalComponent } from '../global/global';
+
+            Unused import: 'GlobalComponent' 
+
+      L13:  import { VarComponent } from '../variable/variable';
+      L14:  import { GlobalComponent } from '../global/global';
+      L15:  import { UnitSelector } from '../selectors/unit';
+
+            Unused import: 'UnitSelector' 
+
+      L14:  import { GlobalComponent } from '../global/global';
+      L15:  import { UnitSelector } from '../selectors/unit';
+      L16:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+
+            Unused import: 'UnitValueAccessor' 
+
+      L15:  import { UnitSelector } from '../selectors/unit';
+      L16:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+      L17:  import { DetailPage } from '../../pages/detail/detail';
+
+            Unused import: 'Observable' 
+
+      L17:  import { DetailPage } from '../../pages/detail/detail';
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUnique
+
+            Unused import: 'FBError' 
+
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUnique
+      L20:  import { FBError } from '../fb-error';
+      L21:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused import: 'Input' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'Output' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+       L3:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+
+            Unused import: 'ValueU' 
+
+       L5:  import { Varval, ValueU } from '../../lib/types/standard';
+       L6:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'BaseResource' 
+
+       L8:  import { LatexParserService } from '../../providers/latex-parser-service';
+       L9:  import { BaseResource } from '../base-resource'
+      L10:  import { BaseComponent } from '../base-component'
+
+            Unused import: 'MathQ' 
+
+      L10:  import { BaseComponent } from '../base-component'
+      L11:  import { MathQ } from '../mathquill';
+      L12:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+      L11:  import { MathQ } from '../mathquill';
+      L12:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L13:  import { VarComponent } from '../variable/variable';
+
+            Unused import: 'VarComponent' 
+
+      L12:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L13:  import { VarComponent } from '../variable/variable';
+      L14:  import { GlobalComponent } from '../global/global';
+
+            Unused import: 'GlobalComponent' 
+
+      L13:  import { VarComponent } from '../variable/variable';
+      L14:  import { GlobalComponent } from '../global/global';
+      L15:  import { UnitSelector } from '../selectors/unit';
+
+            Unused import: 'UnitSelector' 
+
+      L14:  import { GlobalComponent } from '../global/global';
+      L15:  import { UnitSelector } from '../selectors/unit';
+      L16:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+
+            Unused import: 'UnitValueAccessor' 
+
+      L15:  import { UnitSelector } from '../selectors/unit';
+      L16:  import { UnitValueAccessor } from '../selectors/unit-accessor';
+      L17:  import { DetailPage } from '../../pages/detail/detail';
+
+            Unused import: 'Observable' 
+
+      L17:  import { DetailPage } from '../../pages/detail/detail';
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUnique
+
+            Unused import: 'symbolValidator' 
+
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueN
+      L20:  import { FBError } from '../fb-error';
+
+            Unused import: 'createMeasureValidator' 
+
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueN
+      L20:  import { FBError } from '../fb-error';
+
+            Unused import: 'createFormulaValidator' 
+
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueN
+      L20:  import { FBError } from '../fb-error';
+
+            Unused import: 'createUniqueNameValidator' 
+
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  idator, createMeasureValidator, createFormulaValidator,  createUniqueNameValidator, crea
+      L20:  import { FBError } from '../fb-error';
+
+            Unused import: 'createUniqueSymbolValidator' 
+
+      L18:  import { Observable } from 'rxjs/Observable';
+      L19:  ator, createFormulaValidator,  createUniqueNameValidator, createUniqueSymbolValidator  }
+      L20:  import { FBError } from '../fb-error';
+
+            Unused import: 'FBError' 
+
+      L19:  import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUnique
+      L20:  import { FBError } from '../fb-error';
+      L21:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused import: 'ErrorHandler' 
+
+      L20:  import { FBError } from '../fb-error';
+      L21:  import { ErrorHandler } from '../../lib/types/standard';
+
+            Unused import: 'Input' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'Output' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L4:  import { UIStateService } from '../../providers/ui-state-service';
+       L5:  import { App, IONIC_DIRECTIVES, NavController, ViewController } from 'ionic-angular';
+       L6:  import { BaseResource } from '../base-resource';
+
+            Unused import: 'BaseResource' 
+
+       L5:  import { App, IONIC_DIRECTIVES, NavController, ViewController } from 'ionic-angular';
+       L6:  import { BaseResource } from '../base-resource';
+       L7:  import { BaseComponent } from '../base-component'
+
+            Unused import: 'FormulaComponent' 
+
+       L7:  import { BaseComponent } from '../base-component'
+       L8:  import { FormulaComponent } from '../formula/formula';
+       L9:  import { Category } from '../../lib/types/standard'
+
+            Unused import: 'NavController' 
+
+       L1:  import { Component } from '@angular/core';
+       L2:  import { App, Modal, NavController, NavParams, ViewController } from 'ionic-angular'
+       L3:  import { ModalsPage } from '../modals/modals';
+
+            Unused import: 'CategoryComponent' 
+
+       L4:  import { UIStateService } from '../../providers/ui-state-service';
+       L5:  import { CategoryComponent } from '../../components/category/category';
+       L6:  import { Observable } from 'rxjs/Observable';
+
+            Unused import: 'Observable' 
+
+       L5:  import { CategoryComponent } from '../../components/category/category';
+       L6:  import { Observable } from 'rxjs/Observable';
+       L7:  import { Observer } from 'rxjs/Observer';
+
+            Unused import: 'Observer' 
+
+       L6:  import { Observable } from 'rxjs/Observable';
+       L7:  import { Observer } from 'rxjs/Observer';
+       L8:  import { BaseResource, Category } from '../../lib/types/standard'
+
+            Unused import: 'PopoverOptions' 
+
+       L4:  import { UIStateService } from '../../providers/ui-state-service';
+       L5:  import { PopoverController, PopoverOptions } from 'ionic-angular';
+       L6:  import { CategoryPage } from '../../pages/category/category'
+
+            Unused import: 'Alert' 
+
+       L1:  import { Component } from '@angular/core';
+       L2:  import { App, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angula
+       L3:  import { Property, Unit, Formula } from '../../lib/types/standard';
+
+            Unused import: 'ActionSheet' 
+
+       L1:  import { Component } from '@angular/core';
+       L2:  import { App, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angula
+       L3:  import { Property, Unit, Formula } from '../../lib/types/standard';
+
+            Unused import: 'Property' 
+
+       L2:  import { App, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angul
+       L3:  import { Property, Unit, Formula } from '../../lib/types/standard';
+       L4:  import { forwardRef, ViewChild } from '@angular/core';
+
+            Unused import: 'Unit' 
+
+       L2:  import { App, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angul
+       L3:  import { Property, Unit, Formula } from '../../lib/types/standard';
+       L4:  import { forwardRef, ViewChild } from '@angular/core';
+
+            Unused import: 'Formula' 
+
+       L2:  import { App, NavController, NavParams, Alert, ActionSheet, Content } from 'ionic-angul
+       L3:  import { Property, Unit, Formula } from '../../lib/types/standard';
+       L4:  import { forwardRef, ViewChild } from '@angular/core';
+
+            Unused import: 'forwardRef' 
+
+       L3:  import { Property, Unit, Formula } from '../../lib/types/standard';
+       L4:  import { forwardRef, ViewChild } from '@angular/core';
+       L5:  import { DataService } from '../../providers/data-service';
+
+            Unused import: 'PropertyComponent' 
+
+       L6:  import { UIStateService } from '../../providers/ui-state-service';
+       L7:  import { PropertyComponent } from '../../components/property/property';
+       L8:  import { UnitComponent } from '../../components/unit/unit';
+
+            Unused import: 'UnitComponent' 
+
+       L7:  import { PropertyComponent } from '../../components/property/property';
+       L8:  import { UnitComponent } from '../../components/unit/unit';
+       L9:  import { GlobalComponent } from '../../components/global/global';
+
+            Unused import: 'GlobalComponent' 
+
+       L8:  import { UnitComponent } from '../../components/unit/unit';
+       L9:  import { GlobalComponent } from '../../components/global/global';
+      L10:  import { FormulaComponent } from '../../components/formula/formula';
+
+            Unused import: 'FormulaComponent' 
+
+       L9:  import { GlobalComponent } from '../../components/global/global';
+      L10:  import { FormulaComponent } from '../../components/formula/formula';
+      L11:  import { VarvalComponent } from '../../components/varval/varval';
+
+            Unused import: 'VarvalComponent' 
+
+      L10:  import { FormulaComponent } from '../../components/formula/formula';
+      L11:  import { VarvalComponent } from '../../components/varval/varval';
+      L12:  import { CategoryComponent } from '../../components/category/category';
+
+            Unused import: 'CategoryComponent' 
+
+      L11:  import { VarvalComponent } from '../../components/varval/varval';
+      L12:  import { CategoryComponent } from '../../components/category/category';
+      L13:  import { VarComponent } from '../../components/variable/variable';
+
+            Unused import: 'VarComponent' 
+
+      L12:  import { CategoryComponent } from '../../components/category/category';
+      L13:  import { VarComponent } from '../../components/variable/variable';
+      L14:  import { MathKeypad } from '../../components/keys/keypad';
+
+            Unused import: 'MathKeypad' 
+
+      L13:  import { VarComponent } from '../../components/variable/variable';
+      L14:  import { MathKeypad } from '../../components/keys/keypad';
+      L15:  import { FlNavBar } from '../../components/fl-nav-bar/fl-nav-bar';
+
+            Unused import: 'FlNavBar' 
+
+      L14:  import { MathKeypad } from '../../components/keys/keypad';
+      L15:  import { FlNavBar } from '../../components/fl-nav-bar/fl-nav-bar';
+      L16:  import { Observer } from 'rxjs/Observer';
+
+            Unused import: 'Observer' 
+
+      L15:  import { FlNavBar } from '../../components/fl-nav-bar/fl-nav-bar';
+      L16:  import { Observer } from 'rxjs/Observer';
+      L17:  import { MQService } from '../../providers/mq-service'
+
+            Unused import: 'Output' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter, ViewChildren, QueryList } f
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  import { Component, ElementRef, Input, Output, EventEmitter, ViewChildren, QueryList } f
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'ViewChildren' 
+
+       L1:  mponent, ElementRef, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angul
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'QueryList' 
+
+       L1:  ElementRef, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L4:  import { UIStateService } from '../../providers/ui-state-service'
+       L5:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+       L6:  import { BaseResource } from '../base-resource'
+
+            Unused import: 'BaseResource' 
+
+       L5:  import { IONIC_DIRECTIVES, NavController, App } from 'ionic-angular';
+       L6:  import { BaseResource } from '../base-resource'
+       L7:  import { BaseComponent } from '../base-component'
+
+            Unused import: 'MathQ' 
+
+       L7:  import { BaseComponent } from '../base-component'
+       L8:  import { MathQ } from '../mathquill';
+       L9:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+       L8:  import { MathQ } from '../mathquill';
+       L9:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L10:  import { Unit } from '../../lib/types/standard';
+
+            Unused import: 'FBError' 
+
+      L12:  import { symbolValidator, factorValidator, createUniqueNameValidator, createUniqueSymbo
+      L13:  import { FBError } from '../fb-error';
+
+            Unused import: 'Output' 
+
+       L1:  import { Component, ElementRef, Input, Output,  ViewChildren, EventEmitter, QueryList } 
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'EventEmitter' 
+
+       L1:  ponent, ElementRef, Input, Output,  ViewChildren, EventEmitter, QueryList } from '@angul
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+            Unused import: 'IONIC_DIRECTIVES' 
+
+       L2:  import { FormControl, FormGroup, Validators } from '@angular/forms';
+       L3:  import { App, IONIC_DIRECTIVES,  NavController } from 'ionic-angular';
+
+            Unused import: 'Property' 
+
+       L5:  import { Property, Unit } from '../../lib/types/standard';
+       L6:  import { DataService } from '../../providers/data-service'
+
+            Unused import: 'Unit' 
+
+       L5:  import { Property, Unit } from '../../lib/types/standard';
+       L6:  import { DataService } from '../../providers/data-service'
+
+            Unused import: 'BaseResource' 
+
+       L7:  import { UIStateService } from '../../providers/ui-state-service'
+       L8:  import { BaseResource } from '../base-resource';
+       L9:  import { ResourceListPage } from '../../pages/resource-list'
+
+            Unused import: 'MathQ' 
+
+      L11:  import { UnitComponent } from '../unit/unit'
+      L12:  import { MathQ } from '../mathquill'
+      L13:  import { MathQValueAccessor } from '../mathquill-accessor';
+
+            Unused import: 'MathQValueAccessor' 
+
+      L12:  import { MathQ } from '../mathquill'
+      L13:  import { MathQValueAccessor } from '../mathquill-accessor';
+      L14:  import { DetailPage } from '../../pages/detail/detail';
+
+            Unused import: 'FBError' 
+
+      L14:  import { DetailPage } from '../../pages/detail/detail';
+      L15:  import { FBError } from '../fb-error';
+      L16:  import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameVali
+
+            Unused import: 'symbolValidator' 
+
+      L15:  import { FBError } from '../fb-error';
+      L16:  import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValid
+
+            Unused import: 'numberValidator' 
+
+      L15:  import { FBError } from '../fb-error';
+      L16:  import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValid
+
+            Unused import: 'createMeasureValidator' 
+
+      L15:  import { FBError } from '../fb-error';
+      L16:  import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValid
+
+            Unused import: 'Injectable' 
+
+       L1:  import { Injectable, Pipe, PipeTransform } from '@angular/core';
+
+            Unused import: 'PropertyComponent' 
+
+       L4:  import { UIStateService } from '../providers/ui-state-service';
+       L5:  import { PropertyComponent } from '../components/property/property';
+       L6:  import { UnitComponent } from '../components/unit/unit';
+
+            Unused import: 'UnitComponent' 
+
+       L5:  import { PropertyComponent } from '../components/property/property';
+       L6:  import { UnitComponent } from '../components/unit/unit';
+       L7:  import { FormulaComponent } from '../components/formula/formula';
+
+            Unused import: 'FormulaComponent' 
+
+       L6:  import { UnitComponent } from '../components/unit/unit';
+       L7:  import { FormulaComponent } from '../components/formula/formula';
+       L8:  import { GlobalComponent } from '../components/global/global';
+
+            Unused import: 'GlobalComponent' 
+
+       L7:  import { FormulaComponent } from '../components/formula/formula';
+       L8:  import { GlobalComponent } from '../components/global/global';
+       L9:  import { VarvalComponent } from '../components/varval/varval';
+
+            Unused import: 'VarvalComponent' 
+
+       L8:  import { GlobalComponent } from '../components/global/global';
+       L9:  import { VarvalComponent } from '../components/varval/varval';
+      L10:  import { CategoryComponent } from '../components/category/category';
+
+            Unused import: 'CategoryComponent' 
+
+       L9:  import { VarvalComponent } from '../components/varval/varval';
+      L10:  import { CategoryComponent } from '../components/category/category';
+      L11:  import { FlNavBar } from '../components/fl-nav-bar/fl-nav-bar';
+
+            Unused import: 'FlNavBar' 
+
+      L10:  import { CategoryComponent } from '../components/category/category';
+      L11:  import { FlNavBar } from '../components/fl-nav-bar/fl-nav-bar';
+      L12:  import { Observable } from 'rxjs/Observable';
+
+            Unused import: 'Observable' 
+
+      L11:  import { FlNavBar } from '../components/fl-nav-bar/fl-nav-bar';
+      L12:  import { Observable } from 'rxjs/Observable';
+      L13:  import { Observer } from 'rxjs/Observer';
+
+            Unused import: 'Observer' 
+
+      L12:  import { Observable } from 'rxjs/Observable';
+      L13:  import { Observer } from 'rxjs/Observer';
+      L14:  import { DetailPage } from '../pages/detail/detail';
+
+            Unused import: 'FavFilterPipe' 
+
+      L15:  import { BaseResource, Property, Formula, Global, Category } from '../lib/types/standar
+      L16:  import { FavFilterPipe } from '../components/fav-filter'
+      L17:  import { ErrorHandler } from '../lib/types/standard';
+
+            Unused variable: 'u' 
+
+     L171:  resource = new Property();
+     L172:  var u = resource.newUnit(true);
+     L173:  break;
+
+            Unused import: 'Modal' 
+
+       L1:  import { Component, ViewChild } from '@angular/core';
+       L2:  import { App, Events, MenuController, Nav, Platform, Modal } from 'ionic-angular';
+       L3:  import { Splashscreen, StatusBar } from 'ionic-native';
+
+            Unused import: 'TutorialPage' 
+
+       L6:  import { TabsPage } from '../pages/tabs/tabs';
+       L7:  import { TutorialPage } from '../pages/tutorial/tutorial';
+       L8:  import { ResponsiveState } from 'responsive-directives-angular2';
+
+            Unused import: 'ResponsiveState' 
+
+       L7:  import { TutorialPage } from '../pages/tutorial/tutorial';
+       L8:  import { ResponsiveState } from 'responsive-directives-angular2';
+       L9:  import { MyTokenAuth } from '../providers/token-auth/auth-service'
+
+            Unused import: 'App' 
+
+       L1:  import { App, Platform, Storage, SqlStorage } from 'ionic-angular';
+       L2:  import { Injectable } from '@angular/core';
+
+            Unused import: 'Http' 
+
+       L2:  import { Injectable } from '@angular/core';
+       L3:  import { Http } from '@angular/http';
+       L4:  import { RemoteService } from './remote-service';
+
+            Unused import: 'RemoteService' 
+
+       L3:  import { Http } from '@angular/http';
+       L4:  import { RemoteService } from './remote-service';
+       L5:  import { Observable } from 'rxjs/Observable';
+
+            Unused import: 'Observer' 
+
+       L5:  import { Observable } from 'rxjs/Observable';
+       L6:  import { Observer } from 'rxjs/Observer';
+       L7:  import { ErrorHandler } from '../types/standard';
+
+            Unused import: 'ResourceCollection' 
+
+       L9:  import { ResourceCollection, Unit, Property/*, Category, Formula*/} from '../types/stand
+
+            Unused import: 'Unit' 
+
+       L9:  import { ResourceCollection, Unit, Property/*, Category, Formula*/} from '../types/stand
+
+            Unused import: 'Property' 
+
+       L9:  import { ResourceCollection, Unit, Property/*, Category, Formula*/} from '../types/stand
+
+            Unused import: 'FormsModule' 
+
+       L2:  import { IonicApp, IonicModule } from 'ionic-angular';
+       L3:  import { FormsModule }   from '@angular/forms';
+       L4:  import { HttpModule }    from '@angular/http';
+
+            Unused import: 'HttpModule' 
+
+       L3:  import { FormsModule }   from '@angular/forms';
+       L4:  import { HttpModule }    from '@angular/http';
+       L5:  import { FormulaApp } from './app.component';
+
+            Unused import: 'provide' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+
+            Unused import: 'inject' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+       L3:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'addProviders' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+       L3:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'providers' 
+
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+       L3:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'ElementFinder' 
+
+       L1:  import { ElementFinder } from 'protractor';
+       L2:  import { ResourceListPO } from './pageObjects/resource-list.pgo'
+
+            Unused import: 'App' 
+
+       L2:  import { SqlCacheService } from './sqlcache-service'
+       L3:  import { Content, App, Platform } from 'ionic-angular';
+       L4:  import { RemoteService } from './remote-service'
+
+            Unused import: 'Platform' 
+
+       L2:  import { SqlCacheService } from './sqlcache-service'
+       L3:  import { Content, App, Platform } from 'ionic-angular';
+       L4:  import { RemoteService } from './remote-service'
+
+            Unused import: 'Http' 
+
+      L10:  import { provide } from '@angular/core'
+      L11:  import { Http,  HTTP_PROVIDERS } from '@angular/http';
+      L12:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'Unit' 
+
+      L14:  import { Observable } from 'rxjs/Observable';
+      L15:  import { Property, Unit, BaseResource } from '../types/standard'
+      L16:  import {
+
+            Unused import: 'BaseResource' 
+
+      L14:  import { Observable } from 'rxjs/Observable';
+      L15:  import { Property, Unit, BaseResource } from '../types/standard'
+      L16:  import {
+
+            Unused import: 'provide' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+
+            Unused import: 'inject' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+       L3:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'addProviders' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+       L3:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'providers' 
+
+       L2:  import { inject, addProviders  } from '@angular/core/testing';
+       L3:  import { providers }  from '../../test/diExports';
+
+            Unused import: 'Http' 
+
+       L1:  import { provide } from '@angular/core'
+       L2:  import { Http, HTTP_PROVIDERS } from '@angular/http';
+       L3:  import { providers }  from '../../../test/diExports';
+
+            Unused import: 'async' 
+
+       L3:  import { providers }  from '../../../test/diExports';
+       L4:  import { inject, async  } from '@angular/core/testing';
+       L5:  import { MyTokenAuth } from './auth-service'
+
+[15:31:22]  lint finished in 9.12 s 
+            Cannot find name 'ValueProvider'. 
+
+[2m      L93:  [22m  UIStateService,
+[2m      L94:  [22m  [41mV[49m[41ma[49m[41ml[49m[41mu[49m[41me[49m[41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m('ApiEndpoint', {useValue: 'http://formulalab.net/api/v1'}),
+[2m      L95:  [22m]
+
+            Cannot find name 'Provider'. 
+
+[2m       L5:  [22m[36mconst[39m CUSTOM_VALUE_ACCESSOR = [36mnew[39m [41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m(
+[2m       L6:  [22m    NG_VALUE_ACCESSOR, {useExisting: forwardRef(() => MathQValueAccessor), multi: true}
+
+            Module '"/projects/node_modules/@angular/common/index"' has no exported member 'Control'. 
+
+[2m       L2:  [22m[36mimport[39m { NG_VALUE_ACCESSOR, ControlValueAccessor } [36mfrom[39m '@angular/forms';
+[2m       L3:  [22m[36mimport[39m { NgClass,[41mC[49m[41mo[49m[41mn[49m[41mt[49m[41mr[49m[41mo[49m[41ml[49m } [36mfrom[39m '@angular/common';
+[2m       L4:  [22m[36mimport[39m { Directive,  Renderer, Self, forwardRef, Provider } [36mfrom[39m '@angular/core';
+
+            Cannot find name 'Provider'. 
+
+[2m       L7:  [22m[36mconst[39m UNIT_VALUE_ACCESSOR = [36mnew[39m [41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m(
+[2m       L8:  [22m    NG_VALUE_ACCESSOR, {useExisting: forwardRef(() => UnitValueAccessor), multi: true});
+
+            Module '"/projects/node_modules/@angular/core/index"' has no exported member 'provide'. 
+
+[2m       L1:  [22m[36mimport[39m { [41mp[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m } [36mfrom[39m '@angular/core'
+[2m       L2:  [22m[36mimport[39m { inject, addProviders  } [36mfrom[39m '@angular/core/testing';
+
+            Module '"/projects/node_modules/@angular/core/testing/index"' has no exported member 'addProviders'. 
+
+[2m       L1:  [22m[36mimport[39m { provide } [36mfrom[39m '@angular/core'
+[2m       L2:  [22m[36mimport[39m { inject, [41ma[49m[41md[49m[41md[49m[41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m[41ms[49m  } [36mfrom[39m '@angular/core/testing';
+[2m       L3:  [22m[36mimport[39m { providers }  [36mfrom[39m '../../test/diExports';
+
+            Cannot find name 'describe'. 
+
+[2m       L5:  [22m[41md[49m[41me[49m[41ms[49m[41mc[49m[41mr[49m[41mi[49m[41mb[49m[41me[49m('Lib: Standard', () => {
+
+            Cannot find name 'DataService'. 
+
+[2m      L48:  [22mstatic all: { [id: string]: BaseResource; } = {};
+[2m      L49:  [22mconstructor(public ds: [41mD[49m[41ma[49m[41mt[49m[41ma[49m[41mS[49m[41me[49m[41mr[49m[41mv[49m[41mi[49m[41mc[49m[41me[49m
+[2m      L50:  [22m    , public type: any) {
+
+            Cannot find name 'MathNode'. 
+
+[2m     L708:  [22mparsed:boolean = false;
+[2m     L709:  [22mrootNode:[41mM[49m[41ma[49m[41mt[49m[41mh[49m[41mN[49m[41mo[49m[41md[49m[41me[49m = null;
+
+            Cannot find name 'ValueProvider'. 
+
+[2m     L891:  [22m[36mexport[39m [36mclass[39m Varval [36mextends[39m BaseResource implements [41mV[49m[41ma[49m[41ml[49m[41mu[49m[41me[49m[41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m{
+[2m     L892:  [22m    static table: string = "varvals";
+
+            Cannot find name 'MathNode'. 
+
+[2m     L901:  [22m_values: {[key:string]: ValueU} = {};
+[2m     L902:  [22m_nodes: {[key:string] : [41mM[49m[41ma[49m[41mt[49m[41mh[49m[41mN[49m[41mo[49m[41md[49m[41me[49m} = {};
+
+            Cannot find name 'MathNode'. 
+
+[2m     L904:  [22m_result:ValueU;
+[2m     L905:  [22m_rootNode:[41mM[49m[41ma[49m[41mt[49m[41mh[49m[41mN[49m[41mo[49m[41md[49m[41me[49m = null;
+[2m     L906:  [22mstatic ps:LatexParserService = [36mnew[39m LatexParserService();
+
+            Cannot find name 'LatexParserService'. 
+
+[2m     L905:  [22m_rootNode:MathNode = null;
+[2m     L906:  [22mstatic ps:[41mL[49m[41ma[49m[41mt[49m[41me[49m[41mx[49m[41mP[49m[41ma[49m[41mr[49m[41ms[49m[41me[49m[41mr[49m[41mS[49m[41me[49m[41mr[49m[41mv[49m[41mi[49m[41mc[49m[41me[49m = [36mnew[39m LatexParserService();
+[2m     L907:  [22mstatic magicStingDB = [[/\\/g, "@G#"], [/\"/g, "#G@"]];
+
+            Cannot find name 'DataService'. 
+
+[2m    L1499:  [22m[36mexport[39m [36mclass[39m SyncResponseHandler {
+[2m    L1500:  [22muctor(public offlineData: OfflineData, public ds: [41mD[49m[41ma[49m[41mt[49m[41ma[49m[41mS[49m[41me[49m[41mr[49m[41mv[49m[41mi[49m[41mc[49m[41me[49m, public cs: CacheService) 
+
+            Cannot find name 'ElementFinder'. 
+
+[2m       L5:  [22m[36mexport[39m [36mclass[39m  ResourceListPO{
+[2m       L6:  [22m  addButton:[41mE[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m[41mF[49m[41mi[49m[41mn[49m[41md[49m[41me[49m[41mr[49m;
+[2m       L7:  [22m  list:any;
+
+            Cannot find name 'element'. 
+
+[2m      L13:  [22mconstructor(){
+[2m      L14:  [22m  this.addButton = [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.css('button ion-icon[name="add"]')).element(by.xpath('an
+[2m      L15:  [22m  this.menu = element(by.className("bar-button-menutoggle"));
+
+            Cannot find name 'by'. 
+
+[2m      L13:  [22mconstructor(){
+[2m      L14:  [22m  this.addButton = element([41mb[49m[41my[49m.css('button ion-icon[name="add"]')).element(by.xpath('an
+[2m      L15:  [22m  this.menu = element(by.className("bar-button-menutoggle"));
+
+            Cannot find name 'by'. 
+
+[2m      L13:  [22m constructor(){
+[2m      L14:  [22m= element(by.css('button ion-icon[name="add"]')).element([41mb[49m[41my[49m.xpath('ancestor::button'));
+[2m      L15:  [22m   this.menu = element(by.className("bar-button-menutoggle"));
+
+            Cannot find name 'element'. 
+
+[2m      L14:  [22mthis.addButton = element(by.css('button ion-icon[name="add"]')).element(by.xpath('a
+[2m      L15:  [22mthis.menu = [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.className("bar-button-menutoggle"));
+
+            Cannot find name 'by'. 
+
+[2m      L14:  [22mthis.addButton = element(by.css('button ion-icon[name="add"]')).element(by.xpath('a
+[2m      L15:  [22mthis.menu = element([41mb[49m[41my[49m.className("bar-button-menutoggle"));
+
+            Cannot find name 'element'. 
+
+[2m      L18:  [22msegment(name){
+[2m      L19:  [22m  [36mreturn[39m [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.css(`ion-segment-button[value="${name}"]`))
+
+            Cannot find name 'by'. 
+
+[2m      L18:  [22msegment(name){
+[2m      L19:  [22m  [36mreturn[39m element([41mb[49m[41my[49m.css(`ion-segment-button[value="${name}"]`))
+
+            Cannot find name 'element'. 
+
+[2m      L24:  [22m[2m//browser.driver.sleep(3000);[22m
+[2m      L25:  [22m[41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.css(`ion-menu ion-list button.item:nth-child(${num})`)).click();
+
+            Cannot find name 'by'. 
+
+[2m      L24:  [22m[2m//browser.driver.sleep(3000);[22m
+[2m      L25:  [22melement([41mb[49m[41my[49m.css(`ion-menu ion-list button.item:nth-child(${num})`)).click();
+
+            Cannot find name 'browser'. 
+
+[2m      L34:  [22mlet but = this.getSubmitButton();
+[2m      L35:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.wait(ExpectedConditions.elementToBeClickable(but), 5000);
+[2m      L36:  [22mbut.click();
+
+            Cannot find name 'element'. 
+
+[2m      L40:  [22mgetListCount(type){
+[2m      L41:  [22m  [36mvar[39m list = [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m.all(by.css(`ion-list fl-${type}`));
+[2m      L42:  [22m  [36mreturn[39m list.count();
+
+            Cannot find name 'by'. 
+
+[2m      L40:  [22mgetListCount(type){
+[2m      L41:  [22m  [36mvar[39m list = element.all([41mb[49m[41my[49m.css(`ion-list fl-${type}`));
+[2m      L42:  [22m  [36mreturn[39m list.count();
+
+            Cannot find name 'element'. 
+
+[2m      L58:  [22m[36mif[39m (index) 
+[2m      L59:  [22m  [36mreturn[39m [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m.all(by.css(`input[formcontrolname="${name}"]`)).get(index);
+[2m      L60:  [22m[36melse[39m
+
+            Cannot find name 'by'. 
+
+[2m      L58:  [22m[36mif[39m (index) 
+[2m      L59:  [22m  [36mreturn[39m element.all([41mb[49m[41my[49m.css(`input[formcontrolname="${name}"]`)).get(index);
+[2m      L60:  [22m[36melse[39m
+
+            Cannot find name 'element'. 
+
+[2m      L60:  [22m[36melse[39m
+[2m      L61:  [22m  [36mreturn[39m [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.css(`input[formcontrolname="${name}"]`));
+
+            Cannot find name 'by'. 
+
+[2m      L60:  [22m[36melse[39m
+[2m      L61:  [22m  [36mreturn[39m element([41mb[49m[41my[49m.css(`input[formcontrolname="${name}"]`));
+
+            Cannot find name 'element'. 
+
+[2m      L64:  [22mgetSubmitButton(){
+[2m      L65:  [22m  [36mreturn[39m [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.css('button[name="submit"]'))
+
+            Cannot find name 'by'. 
+
+[2m      L64:  [22mgetSubmitButton(){
+[2m      L65:  [22m  [36mreturn[39m element([41mb[49m[41my[49m.css('button[name="submit"]'))
+
+            Cannot find name 'element'. 
+
+[2m      L68:  [22mgetTitle():any{
+[2m      L69:  [22m  [36mreturn[39m [41me[49m[41ml[49m[41me[49m[41mm[49m[41me[49m[41mn[49m[41mt[49m(by.css("ion-page.resource-list-page ion-title div.toolbar-title"))
+
+            Cannot find name 'by'. 
+
+[2m      L68:  [22mgetTitle():any{
+[2m      L69:  [22m  [36mreturn[39m element([41mb[49m[41my[49m.css("ion-page.resource-list-page ion-title div.toolbar-title"))
+
+            Cannot find name 'describe'. 
+
+[2m       L4:  [22m[41md[49m[41me[49m[41ms[49m[41mc[49m[41mr[49m[41mi[49m[41mb[49m[41me[49m('List - basic functions'+browser.params.user.login, function() {
+
+            Cannot find name 'browser'. 
+
+[2m       L4:  [22mdescribe('List - basic functions'+[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.params.user.login, function() {
+
+            Cannot find name 'beforeAll'. 
+
+[2m       L8:  [22m[41mb[49m[41me[49m[41mf[49m[41mo[49m[41mr[49m[41me[49m[41mA[49m[41ml[49m[41ml[49m(function() {
+[2m       L9:  [22m    browser.get('');
+
+            Cannot find name 'browser'. 
+
+[2m       L8:  [22mbeforeAll(function() {
+[2m       L9:  [22m    [41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.get('');
+[2m      L10:  [22m});
+
+            Cannot find name 'beforeEach'. 
+
+[2m      L12:  [22m[41mb[49m[41me[49m[41mf[49m[41mo[49m[41mr[49m[41me[49m[41mE[49m[41ma[49m[41mc[49m[41mh[49m(function() {
+[2m      L13:  [22m    browser.driver.sleep(10);
+
+            Cannot find name 'browser'. 
+
+[2m      L12:  [22mbeforeEach(function() {
+[2m      L13:  [22m    [41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.driver.sleep(10);
+[2m      L14:  [22m});
+
+            Cannot find name 'it'. 
+
+[2m      L16:  [22m[41mi[49m[41mt[49m('should have proper title'+browser.params.user.login, function() {
+[2m      L17:  [22m  page.setList(1);
+
+            Cannot find name 'browser'. 
+
+[2m      L16:  [22mit('should have proper title'+[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.params.user.login, function() {
+[2m      L17:  [22m  page.setList(1);
+
+            Cannot find name 'expect'. 
+
+[2m      L17:  [22m  page.setList(1);
+[2m      L18:  [22m  [41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(page.getTitle().getText()).toEqual('Properties');
+[2m      L19:  [22m});
+
+            Cannot find name 'it'. 
+
+[2m      L21:  [22m[41mi[49m[41mt[49m('should have one item after adding a property and also after refres'+ browser.param
+[2m      L22:  [22m  if(browser.params.user.login == 'user2'){
+
+            Cannot find name 'browser'. 
+
+[2m      L21:  [22mm after adding a property and also after refres'+ [41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.params.user.login, function(){
+[2m      L22:  [22m    if(browser.params.user.login == 'user2'){
+
+            Cannot find name 'browser'. 
+
+[2m      L21:  [22mit('should have one item after adding a property and also after refres'+ browser.para
+[2m      L22:  [22m  if([41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.params.user.login == 'user2'){
+[2m      L23:  [22m    console.log('User 2 sleeping [36mfor[39m 20 second')
+
+            Cannot find name 'browser'. 
+
+[2m      L23:  [22mconsole.log('User 2 sleeping [36mfor[39m 20 second')
+[2m      L24:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.driver.sleep(20000);  
+
+            Cannot find name 'browser'. 
+
+[2m      L26:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.driver.sleep(2000);  
+[2m      L27:  [22mpage.addButton.click();
+
+            Cannot find name 'browser'. 
+
+[2m      L27:  [22mpage.addButton.click();
+[2m      L28:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.driver.sleep(2000);  
+[2m      L29:  [22mpage.addResource('properties', {p:{name:"property1"}, u:{name:"unit1", description:
+
+            Cannot find name 'browser'. 
+
+[2m      L29:  [22mpage.addResource('properties', {p:{name:"property1"}, u:{name:"unit1", description:
+[2m      L30:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.sleep(3000);
+[2m      L31:  [22mpage.segment('All').click();
+
+            Cannot find name 'browser'. 
+
+[2m      L31:  [22mpage.segment('All').click();
+[2m      L32:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.sleep(1000);
+[2m      L33:  [22mexpect(page.getListCount('property')).toBe(1);
+
+            Cannot find name 'expect'. 
+
+[2m      L32:  [22mbrowser.sleep(1000);
+[2m      L33:  [22m[41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(page.getListCount('property')).toBe(1);
+[2m      L34:  [22mbrowser.refresh();
+
+            Cannot find name 'browser'. 
+
+[2m      L33:  [22mexpect(page.getListCount('property')).toBe(1);
+[2m      L34:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.refresh();
+[2m      L35:  [22mbrowser.driver.sleep(4000)
+
+            Cannot find name 'browser'. 
+
+[2m      L34:  [22mbrowser.refresh();
+[2m      L35:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.driver.sleep(4000)
+[2m      L36:  [22mpage.segment('All').click();
+
+            Cannot find name 'browser'. 
+
+[2m      L36:  [22mpage.segment('All').click();
+[2m      L37:  [22m[41mb[49m[41mr[49m[41mo[49m[41mw[49m[41ms[49m[41me[49m[41mr[49m.sleep(1000);
+[2m      L38:  [22mexpect(page.getListCount('property')).toBe(1);
+
+            Cannot find name 'expect'. 
+
+[2m      L37:  [22m  browser.sleep(1000);
+[2m      L38:  [22m  [41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(page.getListCount('property')).toBe(1);
+[2m      L39:  [22m});
+
+            Module '"/projects/node_modules/@angular/core/index"' has no exported member 'provide'. 
+
+[2m       L9:  [22m[36mimport[39m { JwtHttp } [36mfrom[39m './token-auth/jwtHttp'
+[2m      L10:  [22m[36mimport[39m { [41mp[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m } [36mfrom[39m '@angular/core'
+[2m      L11:  [22m[36mimport[39m { Http,  HTTP_PROVIDERS } [36mfrom[39m '@angular/http';
+
+            Module '"/projects/node_modules/@angular/http/index"' has no exported member 'HTTP_PROVIDERS'. 
+
+[2m      L10:  [22m[36mimport[39m { provide } [36mfrom[39m '@angular/core'
+[2m      L11:  [22m[36mimport[39m { Http,  [41mH[49m[41mT[49m[41mT[49m[41mP[49m[41m_[49m[41mP[49m[41mR[49m[41mO[49m[41mV[49m[41mI[49m[41mD[49m[41mE[49m[41mR[49m[41mS[49m } [36mfrom[39m '@angular/http';
+[2m      L12:  [22m[36mimport[39m { providers }  [36mfrom[39m '../../test/diExports';
+
+            Module '"/projects/node_modules/@angular/core/testing/index"' has no exported member 'addProviders'. 
+
+[2m      L16:  [22m[36mimport[39m {
+[2m      L17:  [22m  [41ma[49m[41md[49m[41md[49m[41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m[41ms[49m
+[2m      L18:  [22m} [36mfrom[39m '@angular/core/testing';
+
+            Cannot find name 'describe'. 
+
+[2m      L21:  [22m[41md[49m[41me[49m[41ms[49m[41mc[49m[41mr[49m[41mi[49m[41mb[49m[41me[49m('Service: data-service', () => {
+[2m      L22:  [22m[2m  //setup[22m
+
+            Cannot find name 'beforeEach'. 
+
+[2m      L42:  [22m[41mb[49m[41me[49m[41mf[49m[41mo[49m[41mr[49m[41me[49m[41mE[49m[41ma[49m[41mc[49m[41mh[49m(() => {
+[2m      L43:  [22m  addProviders(myproviders.concat(providers))
+
+            Cannot find name 'jasmine'. 
+
+[2m      L43:  [22maddProviders(myproviders.concat(providers))
+[2m      L44:  [22moriginalTimeout = [41mj[49m[41ma[49m[41ms[49m[41mm[49m[41mi[49m[41mn[49m[41me[49m.DEFAULT_TIMEOUT_INTERVAL;
+[2m      L45:  [22m  jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
+            Cannot find name 'jasmine'. 
+
+[2m      L44:  [22m  originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+[2m      L45:  [22m    [41mj[49m[41ma[49m[41ms[49m[41mm[49m[41mi[49m[41mn[49m[41me[49m.DEFAULT_TIMEOUT_INTERVAL = 10000;
+[2m      L46:  [22m});
+
+            Cannot find name 'afterEach'. 
+
+[2m      L48:  [22m[41ma[49m[41mf[49m[41mt[49m[41me[49m[41mr[49m[41mE[49m[41ma[49m[41mc[49m[41mh[49m(function() {
+[2m      L49:  [22m  jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+
+            Cannot find name 'jasmine'. 
+
+[2m      L48:  [22mafterEach(function() {
+[2m      L49:  [22m  [41mj[49m[41ma[49m[41ms[49m[41mm[49m[41mi[49m[41mn[49m[41me[49m.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+[2m      L50:  [22m});
+
+            Cannot find name 'it'. 
+
+[2m      L52:  [22m[41mi[49m[41mt[49m('set the provider',   inject([DataService, SqlCacheService], (s:DataService, s1:Sql
+[2m      L53:  [22m  service = s;
+
+            Cannot find name 'expect'. 
+
+[2m      L54:  [22m  cs = s1;
+[2m      L55:  [22m  [41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(true).toBe(true);
+[2m      L56:  [22m}));
+
+            Cannot find name 'it'. 
+
+[2m      L59:  [22m[2m//specs[22m
+[2m      L60:  [22m[41mi[49m[41mt[49m('should initialize cache service', (done) => {
+[2m      L61:  [22m   service.init().catch(err=>{console.log('Inside catch');return Observable.empty()})
+
+            Cannot find name 'expect'. 
+
+[2m      L65:  [22mconsole.log("inside selectAll" + JSON.stringify(res))
+[2m      L66:  [22m[41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(res.length).toBe(0)
+
+            Cannot find name 'it'. 
+
+[2m      L73:  [22m[41mi[49m[41mt[49m('should save [36mnew[39m item', (done) => {
+[2m      L74:  [22m   let p = [36mnew[39m Property({name:'Property1'})
+
+            Cannot find name 'expect'. 
+
+[2m      L81:  [22mconsole.log('inside save');
+[2m      L82:  [22m[41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(res.rows.length).toBe(1);
+[2m      L83:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L88:  [22m  [41mi[49m[41mt[49m('should publish failure message when save failed', (done)=>{
+[2m      L89:  [22mdone()
+
+            Cannot find name 'it'. 
+
+[2m      L92:  [22m  [41mi[49m[41mt[49m('should sync offLine data', (done)=>{
+[2m      L93:  [22mdone()
+
+            Cannot find name 'it'. 
+
+[2m      L96:  [22m  [41mi[49m[41mt[49m('should publish sync operation start and end', (done)=>{
+[2m      L97:  [22mdone()
+
+            Cannot find name 'it'. 
+
+[2m     L100:  [22m  [41mi[49m[41mt[49m('should have propert count of items with error', (done)=>{
+[2m     L101:  [22mdone()
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L21:  [22m[2m// categories: ResourceCollection;[22m
+[2m      L22:  [22mproperties: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Property> = [36mnew[39m ResourceCollection<Property>(this, Pr
+[2m      L23:  [22mglobals: ResourceCollection<Global> = [36mnew[39m ResourceCollection<Global>(this, Global);
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L21:  [22m[2m// categories: ResourceCollection;[22m
+[2m      L22:  [22mproperties: ResourceCollection<Property> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mP[49m[41mr[49m[41mo[49m[41mp[49m[41me[49m[41mr[49m[41mt[49m[41my[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mP[49m[41mr[49m
+[2m      L23:  [22mglobals: ResourceCollection<Global> = [36mnew[39m ResourceCollection<Global>(this, Global);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L22:  [22mproperties: ResourceCollection<Property> = [36mnew[39m ResourceCollection<Property>(this, P
+[2m      L23:  [22mglobals: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Global> = [36mnew[39m ResourceCollection<Global>(this, Global);
+[2m      L24:  [22munits: ResourceCollection<Unit> = [36mnew[39m ResourceCollection<Unit>(this, Unit);
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L22:  [22mproperties: ResourceCollection<Property> = [36mnew[39m ResourceCollection<Property>(this, P
+[2m      L23:  [22mglobals: ResourceCollection<Global> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mG[49m[41ml[49m[41mo[49m[41mb[49m[41ma[49m[41ml[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mG[49m[41ml[49m[41mo[49m[41mb[49m[41ma[49m[41ml[49m[41m)[49m;
+[2m      L24:  [22munits: ResourceCollection<Unit> = [36mnew[39m ResourceCollection<Unit>(this, Unit);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L23:  [22mglobals: ResourceCollection<Global> = [36mnew[39m ResourceCollection<Global>(this, Global);
+[2m      L24:  [22munits: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Unit> = [36mnew[39m ResourceCollection<Unit>(this, Unit);
+[2m      L25:  [22mformulas: ResourceCollection<Formula> = [36mnew[39m ResourceCollection<Formula>(this, Formu
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L23:  [22mglobals: ResourceCollection<Global> = [36mnew[39m ResourceCollection<Global>(this, Global);
+[2m      L24:  [22munits: ResourceCollection<Unit> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mU[49m[41mn[49m[41mi[49m[41mt[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mU[49m[41mn[49m[41mi[49m[41mt[49m[41m)[49m;
+[2m      L25:  [22mformulas: ResourceCollection<Formula> = [36mnew[39m ResourceCollection<Formula>(this, Formu
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L24:  [22munits: ResourceCollection<Unit> = [36mnew[39m ResourceCollection<Unit>(this, Unit);
+[2m      L25:  [22mformulas: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Formula> = [36mnew[39m ResourceCollection<Formula>(this, Formul
+[2m      L26:  [22mvariables: ResourceCollection<Variable> = [36mnew[39m ResourceCollection<Variable>(this, Va
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L24:  [22munits: ResourceCollection<Unit> = [36mnew[39m ResourceCollection<Unit>(this, Unit);
+[2m      L25:  [22mformulas: ResourceCollection<Formula> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mF[49m[41mo[49m[41mr[49m[41mm[49m[41mu[49m[41ml[49m[41ma[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mF[49m[41mo[49m[41mr[49m[41mm[49m[41mu[49m[41ml[49m
+[2m      L26:  [22mvariables: ResourceCollection<Variable> = [36mnew[39m ResourceCollection<Variable>(this, Va
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L25:  [22mformulas: ResourceCollection<Formula> = [36mnew[39m ResourceCollection<Formula>(this, Formu
+[2m      L26:  [22mvariables: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Variable> = [36mnew[39m ResourceCollection<Variable>(this, Var
+[2m      L27:  [22mfgs: ResourceCollection<FG> = [36mnew[39m ResourceCollection<FG>(this, FG);
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L25:  [22mformulas: ResourceCollection<Formula> = [36mnew[39m ResourceCollection<Formula>(this, Formu
+[2m      L26:  [22mvariables: ResourceCollection<Variable> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mV[49m[41ma[49m[41mr[49m[41mi[49m[41ma[49m[41mb[49m[41ml[49m[41me[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mV[49m[41ma[49m[41mr[49m
+[2m      L27:  [22mfgs: ResourceCollection<FG> = [36mnew[39m ResourceCollection<FG>(this, FG);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L26:  [22mvariables: ResourceCollection<Variable> = [36mnew[39m ResourceCollection<Variable>(this, Va
+[2m      L27:  [22mfgs: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<FG> = [36mnew[39m ResourceCollection<FG>(this, FG);
+[2m      L28:  [22mfavorites: ResourceCollection<Favorite> = [36mnew[39m ResourceCollection<Favorite>(this, Fa
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L26:  [22mvariables: ResourceCollection<Variable> = [36mnew[39m ResourceCollection<Variable>(this, Va
+[2m      L27:  [22mfgs: ResourceCollection<FG> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mF[49m[41mG[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mF[49m[41mG[49m[41m)[49m;
+[2m      L28:  [22mfavorites: ResourceCollection<Favorite> = [36mnew[39m ResourceCollection<Favorite>(this, Fa
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L27:  [22mfgs: ResourceCollection<FG> = [36mnew[39m ResourceCollection<FG>(this, FG);
+[2m      L28:  [22mfavorites: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Favorite> = [36mnew[39m ResourceCollection<Favorite>(this, Fav
+[2m      L29:  [22mcategories: ResourceCollection<Category> = [36mnew[39m ResourceCollection<Category>(this, C
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L27:  [22mfgs: ResourceCollection<FG> = [36mnew[39m ResourceCollection<FG>(this, FG);
+[2m      L28:  [22mfavorites: ResourceCollection<Favorite> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mF[49m[41ma[49m[41mv[49m[41mo[49m[41mr[49m[41mi[49m[41mt[49m[41me[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mF[49m[41ma[49m[41mv[49m
+[2m      L29:  [22mcategories: ResourceCollection<Category> = [36mnew[39m ResourceCollection<Category>(this, C
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L28:  [22mfavorites: ResourceCollection<Favorite> = [36mnew[39m ResourceCollection<Favorite>(this, Fa
+[2m      L29:  [22mcategories: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Category> = [36mnew[39m ResourceCollection<Category>(this, Ca
+[2m      L30:  [22mcrs: ResourceCollection<CR> = [36mnew[39m ResourceCollection<CR>(this, CR);
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L28:  [22mfavorites: ResourceCollection<Favorite> = [36mnew[39m ResourceCollection<Favorite>(this, Fa
+[2m      L29:  [22mcategories: ResourceCollection<Category> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mC[49m[41ma[49m[41mt[49m[41me[49m[41mg[49m[41mo[49m[41mr[49m[41my[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mC[49m[41ma[49m
+[2m      L30:  [22mcrs: ResourceCollection<CR> = [36mnew[39m ResourceCollection<CR>(this, CR);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L29:  [22mcategories: ResourceCollection<Category> = [36mnew[39m ResourceCollection<Category>(this, C
+[2m      L30:  [22mcrs: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<CR> = [36mnew[39m ResourceCollection<CR>(this, CR);
+[2m      L31:  [22mvarvals: ResourceCollection<Varval> = [36mnew[39m ResourceCollection<Varval>(this, Varval);
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L29:  [22mcategories: ResourceCollection<Category> = [36mnew[39m ResourceCollection<Category>(this, C
+[2m      L30:  [22mcrs: ResourceCollection<CR> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mC[49m[41mR[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mC[49m[41mR[49m[41m)[49m;
+[2m      L31:  [22mvarvals: ResourceCollection<Varval> = [36mnew[39m ResourceCollection<Varval>(this, Varval);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L30:  [22mcrs: ResourceCollection<CR> = [36mnew[39m ResourceCollection<CR>(this, CR);
+[2m      L31:  [22mvarvals: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<Varval> = [36mnew[39m ResourceCollection<Varval>(this, Varval);
+[2m      L32:  [22mlogHandler:LogHandler;
+
+            Untyped function calls may not accept type arguments. 
+
+[2m      L30:  [22mcrs: ResourceCollection<CR> = [36mnew[39m ResourceCollection<CR>(this, CR);
+[2m      L31:  [22mvarvals: ResourceCollection<Varval> = [41mn[49m[41me[49m[41mw[49m[41m [49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m[41m<[49m[41mV[49m[41ma[49m[41mr[49m[41mv[49m[41ma[49m[41ml[49m[41m>[49m[41m([49m[41mt[49m[41mh[49m[41mi[49m[41ms[49m[41m,[49m[41m [49m[41mV[49m[41ma[49m[41mr[49m[41mv[49m[41ma[49m[41ml[49m[41m)[49m;
+[2m      L32:  [22mlogHandler:LogHandler;
+
+            Cannot find name 'LogHandler'. 
+
+[2m      L31:  [22mvarvals: ResourceCollection<Varval> = [36mnew[39m ResourceCollection<Varval>(this, Varval);
+[2m      L32:  [22mlogHandler:[41mL[49m[41mo[49m[41mg[49m[41mH[49m[41ma[49m[41mn[49m[41md[49m[41ml[49m[41me[49m[41mr[49m;
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L63:  [22mloadListAndDepenent(list:[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>):Observable<any>{
+[2m      L64:  [22m  let lists = this.getDepentent(list).filter(li => li.State == States.CREATED);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L79:  [22m          console.log('Info:Initializing lists...')
+[2m      L80:  [22met supportLists = [this.favorites, this.crs] [36mas[39m Array<[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>>;
+[2m      L81:  [22m          lists.forEach(li => {
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m      L98:  [22msaveOfflineData(li:[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>):Observable<any>{
+[2m      L99:  [22m    let table = this.getTable(li);
+
+            Cannot find name 'BaseResource'. 
+
+[2m     L124:  [22mring, value:string, id:string, predicate: (value: [41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m, index: number) => boolea
+[2m     L125:  [22m      let li = this[table] [36mas[39m ResourceCollection<BaseResource>;
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L124:  [22misUnique(table:string, field:string, value:string, id:string, predicate: (value: Ba
+[2m     L125:  [22m  let li = this[table] [36mas[39m [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>;
+[2m     L126:  [22m  let oles = [36mnew[39m Array<Observable<any>>();
+
+            Cannot find name 'BaseResource'. 
+
+[2m     L199:  [22mcheckOnlineAndErrors(r:[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m){
+[2m     L200:  [22m  if(this.uiService.IsOnline && this.resourceTables.some(i => this[i].hasErrorInfo(
+
+            Cannot find name 'OfflineData'. 
+
+[2m     L210:  [22mhandleSyncResponse(offlineData:[41mO[49m[41mf[49m[41mf[49m[41ml[49m[41mi[49m[41mn[49m[41me[49m[41mD[49m[41ma[49m[41mt[49m[41ma[49m): Observable<any>{
+[2m     L211:  [22m[2m  //Update in memory objects in[22m
+
+            Cannot find name 'BaseResource'. 
+
+[2m     L218:  [22mremoveItem(r:[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m):Observable<any>{
+[2m     L219:  [22m  let items = [r];
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L220:  [22mlet oles = [] [36mas[39m Observable<any>[];
+[2m     L221:  [22mlet li = this[r.getTable()] [36mas[39m [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>;
+[2m     L222:  [22mif(r.getTable() == 'properties'){
+
+            Cannot find name 'Property'. 
+
+[2m     L222:  [22mif(r.getTable() == 'properties'){
+[2m     L223:  [22m  let prop = r [36mas[39m [41mP[49m[41mr[49m[41mo[49m[41mp[49m[41me[49m[41mr[49m[41mt[49m[41my[49m;
+[2m     L224:  [22m  items = items.concat(prop.getChildItems());
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L226:  [22mitems.forEach(i => {
+[2m     L227:  [22m  let li = this[i.getTable()] [36mas[39m [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>;
+[2m     L228:  [22m  li.remove(i);
+
+            Cannot find name 'BaseResource'. 
+
+[2m     L238:  [22m_saveItem(r:[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m):Observable<any>{
+[2m     L239:  [22m  let li = this[r.getTable()] [36mas[39m ResourceCollection<BaseResource>;
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L238:  [22m_saveItem(r:BaseResource):Observable<any>{
+[2m     L239:  [22m  let li = this[r.getTable()] [36mas[39m [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>;
+[2m     L240:  [22m  if(r.id == null){
+
+            Cannot find name 'BaseResource'. 
+
+[2m     L259:  [22msaveItemRecursive(r:[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m):Observable<any>{
+[2m     L260:  [22m  let cacheOles = [36mnew[39m Array<Observable<any>>();
+
+            Cannot find name 'BaseResource'. 
+
+[2m     L260:  [22mlet cacheOles = [36mnew[39m Array<Observable<any>>();
+[2m     L261:  [22mlet items = [r] [36mas[39m Array<[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m>;
+[2m     L262:  [22mif(r.getTable() == 'properties'){
+
+            Cannot find name 'Property'. 
+
+[2m     L262:  [22mif(r.getTable() == 'properties'){
+[2m     L263:  [22m  let prop = r [36mas[39m [41mP[49m[41mr[49m[41mo[49m[41mp[49m[41me[49m[41mr[49m[41mt[49m[41my[49m;
+[2m     L264:  [22m  items = items.concat(prop.DefaultUnit);
+
+            Cannot find name 'Formula'. 
+
+[2m     L266:  [22m[36melse[39m if(r.getTable() == 'formulas'){
+[2m     L267:  [22m  let r1 = r [36mas[39m [41mF[49m[41mo[49m[41mr[49m[41mm[49m[41mu[49m[41ml[49m[41ma[49m;
+[2m     L268:  [22m  items = items.concat(r1.Globals);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L290:  [22mgetTable(list: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>): string {
+[2m     L291:  [22m  [36mreturn[39m list.type.table;
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L294:  [22misDepententInSync(list: [41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>){
+[2m     L295:  [22m  [36mvar[39m deps = this.getDepentent(list);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L309:  [22mgetDepentent(list):[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>[]{
+[2m     L310:  [22m  let list1 = this.getDepententCore(list);
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L316:  [22mgetDepententCore(list):[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>[]{
+[2m     L317:  [22m  [36mswitch[39m (list) {
+
+            Cannot find name 'ResourceCollection'. 
+
+[2m     L334:  [22mgetReferingList(list):[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m[41mC[49m[41mo[49m[41ml[49m[41ml[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m<BaseResource>[]{
+[2m     L335:  [22m  [36mswitch[39m (list) {
+
+            Module '"/projects/node_modules/@angular/core/index"' has no exported member 'provide'. 
+
+[2m       L1:  [22m[36mimport[39m { [41mp[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m } [36mfrom[39m '@angular/core'
+[2m       L2:  [22m[36mimport[39m { inject, addProviders  } [36mfrom[39m '@angular/core/testing';
+
+            Module '"/projects/node_modules/@angular/core/testing/index"' has no exported member 'addProviders'. 
+
+[2m       L1:  [22m[36mimport[39m { provide } [36mfrom[39m '@angular/core'
+[2m       L2:  [22m[36mimport[39m { inject, [41ma[49m[41md[49m[41md[49m[41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m[41ms[49m  } [36mfrom[39m '@angular/core/testing';
+[2m       L3:  [22m[36mimport[39m { providers }  [36mfrom[39m '../../test/diExports';
+
+            Cannot find name 'describe'. 
+
+[2m       L6:  [22m[41md[49m[41me[49m[41ms[49m[41mc[49m[41mr[49m[41mi[49m[41mb[49m[41me[49m('Service: SqlService', () => {
+
+            Cannot find name 'it'. 
+
+[2m       L8:  [22m[41mi[49m[41mt[49m('should init', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L12:  [22m[41mi[49m[41mt[49m('should publish Storage support not available', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L16:  [22m[41mi[49m[41mt[49m('should prebare statement of simple select', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L21:  [22m[41mi[49m[41mt[49m('should behave...', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L26:  [22m[41mi[49m[41mt[49m('should prepare statement of delete', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L31:  [22m[41mi[49m[41mt[49m('should prepare statement of update', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L36:  [22m[41mi[49m[41mt[49m('should prepare statement of update with single value condition', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L41:  [22m[41mi[49m[41mt[49m('should prepare statement of update with IN condition', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L45:  [22m[41mi[49m[41mt[49m('should prepare statement of [36mdelete[39m with single value condition', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L51:  [22m[41mi[49m[41mt[49m('should prepare statement of update with IN condition', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L56:  [22m[41mi[49m[41mt[49m('should store KV', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L60:  [22m[41mi[49m[41mt[49m('should retrive KV', () => {
+
+            Cannot find name 'it'. 
+
+[2m      L64:  [22m[41mi[49m[41mt[49m('should [36mdelete[39m KV', () => {
+
+            Module '"/projects/node_modules/ionic-angular/index"' has no exported member 'Storage'. 
+
+[2m       L1:  [22m[36mimport[39m { App, Platform, [41mS[49m[41mt[49m[41mo[49m[41mr[49m[41ma[49m[41mg[49m[41me[49m, SqlStorage } [36mfrom[39m 'ionic-angular';
+[2m       L2:  [22m[36mimport[39m { Injectable } [36mfrom[39m '@angular/core';
+
+            Module '"/projects/node_modules/ionic-angular/index"' has no exported member 'SqlStorage'. 
+
+[2m       L1:  [22m[36mimport[39m { App, Platform, Storage, [41mS[49m[41mq[49m[41ml[49m[41mS[49m[41mt[49m[41mo[49m[41mr[49m[41ma[49m[41mg[49m[41me[49m } [36mfrom[39m 'ionic-angular';
+[2m       L2:  [22m[36mimport[39m { Injectable } [36mfrom[39m '@angular/core';
+
+            Cannot find name 'CacheService'. 
+
+[2m       L6:  [22m@Injectable()
+[2m       L7:  [22m[36mexport[39m [36mclass[39m SqlCacheService implements [41mC[49m[41ma[49m[41mc[49m[41mh[49m[41me[49m[41mS[49m[41me[49m[41mr[49m[41mv[49m[41mi[49m[41mc[49m[41me[49m{
+
+            Cannot find name 'SqlService'. 
+
+[2m       L9:  [22mconstructor(public sqlService:[41mS[49m[41mq[49m[41ml[49m[41mS[49m[41me[49m[41mr[49m[41mv[49m[41mi[49m[41mc[49m[41me[49m){
+
+            Cannot find name 'BaseResource'. 
+
+[2m      L27:  [22maddItem(item:[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m):Observable<any>{
+[2m      L28:  [22m    [36mreturn[39m this.sqlService.query({type:"insertorupdate", table:item.getTable(), obj
+
+            Cannot find name 'BaseResource'. 
+
+[2m      L31:  [22mupdateItem(item:[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m):Observable<any>{
+[2m      L32:  [22m	let cond = { and: { id: { cond: '=', value: item.id } } };
+
+            Cannot find name 'BaseResource'. 
+
+[2m      L39:  [22mupdateMany(items:Array<[41mB[49m[41ma[49m[41ms[49m[41me[49m[41mR[49m[41me[49m[41ms[49m[41mo[49m[41mu[49m[41mr[49m[41mc[49m[41me[49m>, field:string, val:any):Observable<any>{
+[2m      L40:  [22m	if(items.length == 0)
+
+            Module '"/projects/node_modules/@angular/core/index"' has no exported member 'provide'. 
+
+[2m       L1:  [22m[36mimport[39m { [41mp[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m } [36mfrom[39m '@angular/core'
+[2m       L2:  [22m[36mimport[39m { Http, HTTP_PROVIDERS } [36mfrom[39m '@angular/http';
+
+            Module '"/projects/node_modules/@angular/http/index"' has no exported member 'HTTP_PROVIDERS'. 
+
+[2m       L1:  [22m[36mimport[39m { provide } [36mfrom[39m '@angular/core'
+[2m       L2:  [22m[36mimport[39m { Http, [41mH[49m[41mT[49m[41mT[49m[41mP[49m[41m_[49m[41mP[49m[41mR[49m[41mO[49m[41mV[49m[41mI[49m[41mD[49m[41mE[49m[41mR[49m[41mS[49m } [36mfrom[39m '@angular/http';
+[2m       L3:  [22m[36mimport[39m { providers }  [36mfrom[39m '../../../test/diExports';
+
+            Module '"/projects/node_modules/@angular/core/testing/index"' has no exported member 'addProviders'. 
+
+[2m       L7:  [22m[36mimport[39m {
+[2m       L8:  [22m  [41ma[49m[41md[49m[41md[49m[41mP[49m[41mr[49m[41mo[49m[41mv[49m[41mi[49m[41md[49m[41me[49m[41mr[49m[41ms[49m
+[2m       L9:  [22m} [36mfrom[39m '@angular/core/testing';
+
+            Cannot find name 'describe'. 
+
+[2m      L11:  [22m[41md[49m[41me[49m[41ms[49m[41mc[49m[41mr[49m[41mi[49m[41mb[49m[41me[49m('Service: auth-service', () => {
+
+            Cannot find name 'beforeEach'. 
+
+[2m      L25:  [22m[41mb[49m[41me[49m[41mf[49m[41mo[49m[41mr[49m[41me[49m[41mE[49m[41ma[49m[41mc[49m[41mh[49m(() => {
+[2m      L26:  [22m  addProviders(myproviders.concat(providers))
+
+            Cannot find name 'jasmine'. 
+
+[2m      L26:  [22maddProviders(myproviders.concat(providers))
+[2m      L27:  [22moriginalTimeout = [41mj[49m[41ma[49m[41ms[49m[41mm[49m[41mi[49m[41mn[49m[41me[49m.DEFAULT_TIMEOUT_INTERVAL;
+[2m      L28:  [22m  jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
+            Cannot find name 'jasmine'. 
+
+[2m      L27:  [22m  originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+[2m      L28:  [22m    [41mj[49m[41ma[49m[41ms[49m[41mm[49m[41mi[49m[41mn[49m[41me[49m.DEFAULT_TIMEOUT_INTERVAL = 10000;
+[2m      L29:  [22m});
+
+            Cannot find name 'afterEach'. 
+
+[2m      L31:  [22m[41ma[49m[41mf[49m[41mt[49m[41me[49m[41mr[49m[41mE[49m[41ma[49m[41mc[49m[41mh[49m(function() {
+[2m      L32:  [22m  jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+
+            Cannot find name 'jasmine'. 
+
+[2m      L31:  [22mafterEach(function() {
+[2m      L32:  [22m  [41mj[49m[41ma[49m[41ms[49m[41mm[49m[41mi[49m[41mn[49m[41me[49m.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+[2m      L33:  [22m});
+
+            Cannot find name 'it'. 
+
+[2m      L35:  [22m[41mi[49m[41mt[49m('set the provider',   inject([MyTokenAuth], (s:MyTokenAuth) => {
+[2m      L36:  [22m  service = s;
+
+            Cannot find name 'expect'. 
+
+[2m      L36:  [22m  service = s;
+[2m      L37:  [22m  [41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(true).toBe(true);
+[2m      L38:  [22m}));
+
+            Cannot find name 'it'. 
+
+[2m      L40:  [22m[2m//specs[22m
+[2m      L41:  [22m[41mi[49m[41mt[49m('should not be authenticated', () => {
+[2m      L42:  [22m   let k = service.userIsAuthenticated() 
+
+            Cannot find name 'expect'. 
+
+[2m      L42:  [22m   let k = service.userIsAuthenticated() 
+[2m      L43:  [22m   [41me[49m[41mx[49m[41mp[49m[41me[49m[41mc[49m[41mt[49m(k).toBe(false)
+[2m      L44:  [22m});
+
+            Cannot find name 'it'. 
+
+[2m      L46:  [22m[41mi[49m[41mt[49m('should have proper api endpoint',()=>{
+
+            Cannot find name 'it'. 
+
+[2m      L50:  [22m[41mi[49m[41mt[49m('should publish invalid login attempt', (done)=>{
+[2m      L51:  [22m  done();
+
+            Cannot find name 'it'. 
+
+[2m      L54:  [22m [41mi[49m[41mt[49m('should able to log [36min[39m with email', (done)=>{
+[2m      L55:  [22mdone();   
+
+            Cannot find name 'it'. 
+
+[2m      L58:  [22m  [41mi[49m[41mt[49m('should be authenticated',(done)=>{
+[2m      L59:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L62:  [22m  [41mi[49m[41mt[49m('should store user information', (done)=>{
+[2m      L63:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L66:  [22m  [41mi[49m[41mt[49m('should clean token, and user info when logout', (done)=>{
+[2m      L67:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L70:  [22m  [41mi[49m[41mt[49m('should be deauthenticated',(done)=>{
+[2m      L71:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L74:  [22m  [41mi[49m[41mt[49m('should able to register a user', (done)=>{
+[2m      L75:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L78:  [22m  [41mi[49m[41mt[49m('should able to [36mdelete[39m account', (done)=>{
+[2m      L79:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L82:  [22m  [41mi[49m[41mt[49m('should get confirmation mail', (done)=>{
+[2m      L83:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L86:  [22m  [41mi[49m[41mt[49m('should able to see the profile information', (done)=>{
+[2m      L87:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L90:  [22m  [41mi[49m[41mt[49m('should able to reset password', (done)=>{
+[2m      L91:  [22mdone();
+
+            Cannot find name 'it'. 
+
+[2m      L94:  [22m  [41mi[49m[41mt[49m('password reset should invalidate existing token',(done)=>{
+[2m      L95:  [22mdone();
+
+            Module '"/projects/node_modules/@angular/http/index"' has no exported member 'HTTP_PROVIDERS'. 
+
+            Module '"/projects/node_modules/ionic-angular/index"' has no exported member 'LocalStorage'. 
+
+            Module '"/projects/node_modules/ionic-angular/index"' has no exported member 'Storage'. 
+
+            Left-hand side of assignment expression cannot be a constant or a read-only property. 
+
+[2m     L450:  [22m  window.location = url;
+[2m     L451:  [22m}
+
+            Module '"/projects/node_modules/@angular/core/index"' has no exported member 'provide'. 
+
+[2m       L1:  [22m[36mimport[39m { Injectable, provide, Provider } [36mfrom[39m '@angular/core';
+[2m       L2:  [22m[36mimport[39m {
+[2m       L3:  [22m    Http,
+
+            Property 'connection' does not exist on type 'Navigator'. 
+
+[2m      L59:  [22mthis.platform.ready().then(() => {
+[2m      L60:  [22m    [36mvar[39m networkState = navigator.[41mc[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.type;
+[2m      L61:  [22m    document.addEventListener("online", this.onOnline.bind(this), false);
+
+            Cannot find name 'Connection'. 
+
+[2m      L64:  [22m[36mvar[39m states = {};
+[2m      L65:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.UNKNOWN]  = 'Unknown connection';
+[2m      L66:  [22mstates[Connection.ETHERNET] = 'Ethernet connection';
+
+            Cannot find name 'Connection'. 
+
+[2m      L65:  [22mstates[Connection.UNKNOWN]  = 'Unknown connection';
+[2m      L66:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.ETHERNET] = 'Ethernet connection';
+[2m      L67:  [22mstates[Connection.WIFI]     = 'WiFi connection';
+
+            Cannot find name 'Connection'. 
+
+[2m      L66:  [22mstates[Connection.ETHERNET] = 'Ethernet connection';
+[2m      L67:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.WIFI]     = 'WiFi connection';
+[2m      L68:  [22mstates[Connection.CELL_2G]  = 'Cell 2G connection';
+
+            Cannot find name 'Connection'. 
+
+[2m      L67:  [22mstates[Connection.WIFI]     = 'WiFi connection';
+[2m      L68:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.CELL_2G]  = 'Cell 2G connection';
+[2m      L69:  [22mstates[Connection.CELL_3G]  = 'Cell 3G connection';
+
+            Cannot find name 'Connection'. 
+
+[2m      L68:  [22mstates[Connection.CELL_2G]  = 'Cell 2G connection';
+[2m      L69:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.CELL_3G]  = 'Cell 3G connection';
+[2m      L70:  [22mstates[Connection.CELL_4G]  = 'Cell 4G connection';
+
+            Cannot find name 'Connection'. 
+
+[2m      L69:  [22mstates[Connection.CELL_3G]  = 'Cell 3G connection';
+[2m      L70:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.CELL_4G]  = 'Cell 4G connection';
+[2m      L71:  [22mstates[Connection.NONE]     = 'No network connection';
+
+            Cannot find name 'Connection'. 
+
+[2m      L70:  [22mstates[Connection.CELL_4G]  = 'Cell 4G connection';
+[2m      L71:  [22mstates[[41mC[49m[41mo[49m[41mn[49m[41mn[49m[41me[49m[41mc[49m[41mt[49m[41mi[49m[41mo[49m[41mn[49m.NONE]     = 'No network connection';
+[2m      L72:  [22mthis.online = navigator.onLine; 
+
+            Module '"/projects/node_modules/@angular/common/index"' has no exported member 'AbstractControl'. 
+
+[2m       L3:  [22m[36mimport[39m { [41mA[49m[41mb[49m[41ms[49m[41mt[49m[41mr[49m[41ma[49m[41mc[49m[41mt[49m[41mC[49m[41mo[49m[41mn[49m[41mt[49m[41mr[49m[41mo[49m[41ml[49m } [36mfrom[39m '@angular/common';
+
+[2m[15:31:23][22m  copy finished [2min 10.67 s[22m 
+[2m[15:31:23][22m  [32mwatch ready[39m [2min 10.83 s[22m 
+Running live reload server: [36mhttp://172.17.0.2:35729[39m
+Watching: [36mwww/**/*, !www/lib/**/*, !www/**/*.map[39m
+√ Running dev server:  [36mhttp://172.17.0.2:8100[39m
+Ionic server commands, enter:
+[36m  restart[39m or [36mr[39m to restart the client app from the root
+[36m  goto[39m or [36mg[39m and a url to have the app navigate to the given url
+[36m  consolelogs[39m or [36mc[39m to enable/disable console log output
+[36m  serverlogs[39m or [36ms[39m to enable/disable server log output
+[36m  quit[39m or [36mq[39m to shutdown the server and exit
+
+ionic $ 

@@ -1,0 +1,50 @@
+<div [ngSwitch]="mode">
+    <template [ngSwitchCase]="'list'">
+        <ion-item (click)="onClick($event)">
+            <div>
+                <h3>Name:{{resource.name}}</h3>
+                <p>
+                <span>Input:{{getFormatedValues()}}</span>
+                </p>
+                <p>
+                <span>Result:{{resource._result.asString()}}</span>
+                <fl-unit-sel [(ngModel)]="resource.Measure" [mode]='list'></fl-unit-sel>
+                </p>
+            </div>
+        </ion-item>
+    </template>
+    <template [ngSwitchCase]="'edit'">
+        <!--{{error('measure')}}-->
+        <form [formGroup]="form" (submit)="edit($event, form.value)">
+            <ion-list>
+                <ion-item>
+                    <ion-label>Formula</ion-label>
+                        <span item-right><mathq  [ngModelOptions]="{standalone: true}" [(ngModel)]="resource._formula.symbol"></mathq> = <mathq  [(ngModel)]="resource._formula.latex" [ngModelOptions]="{standalone: true}"></mathq></span>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                </ion-item>
+                <fb-error [fcontrol]="form.controls.name"></fb-error>
+                <ion-item>
+                    <ion-label>Result</ion-label>
+                    <ion-input type="text" [ngModelOptions]="{standalone: true}"  [(ngModel)]="resource._result.input"></ion-input>
+                </ion-item>
+                <ion-item-divider>
+                    Input variable(s) values
+                </ion-item-divider>
+                <template ngFor let-v [ngForOf]="resource._formula._variables" let-i="index">
+                    <ion-item>
+                        <ion-label><mathq   [ngModelOptions]="{standalone: true}" [ngModel]="v.symbol"></mathq></ion-label>
+                        <ion-input (input)="evaluate($event)" type="text" [(ngModel)]="resource._values[v.symbol].input" [formControl]="form.controls['Var'+i]"></ion-input>
+                    </ion-item>
+                    <!--<fb-error [fcontrol]="form.controls.name"></fb-error>-->
+                </template>
+                <ion-item>
+                    <button ion-button name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid">{{submitButtonName}}</button>
+                </ion-item>
+            </ion-list>
+        </form>
+    </template>
+</div>

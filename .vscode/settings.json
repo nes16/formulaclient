@@ -1,14 +1,13 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "search.exclude": {
-        "**/.git": true,
-        "**/www": true
-    },
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "**/node_modules": true,
+        "**/.tmp/**/*":true,
+        "**/node_modules/**/*":true,
+        "**/www/**/*":true,
+        "**/plugins/**/*":,
     }
 }

@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "app_id": "558b4c5d",
-  "v2": true,
-  "typescript": true
+  "name": "ionic2-app-base",
+  "app_id": "",
+  "typescript": true,
+  "v2": true
 }

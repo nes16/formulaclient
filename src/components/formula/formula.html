@@ -1,0 +1,82 @@
+<div [ngSwitch]="mode">
+    <template [ngSwitchCase]="'list'">
+        <ion-item-divider *ngIf="index == 0" danger>
+              Syncronizing Errors
+        </ion-item-divider>
+        <ion-item  (click)="onClick($event)">
+            <div>
+                <h3>{{resource.name}}</h3>
+                <p>
+                <span><mathq [(ngModel)]="resource.symbol"></mathq> = <mathq [(ngModel)]="resource.latex"></mathq></span>
+                </p>
+                <p>
+                <fl-unit-sel [(ngModel)]="resource.Measure" [mode]='list'></fl-unit-sel>
+                </p>
+            </div>
+        </ion-item>
+        <ion-item-divider *ngIf="last" danger>
+          <button item-right outline light>Hide</button>
+        </ion-item-divider>
+    </template>
+    <template [ngSwitchCase]="'edit'">
+        <form [formGroup]="form" (submit)="edit($event)">
+            <ion-list>
+                <ion-item>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                </ion-item>
+                <fb-error [fcontrol]="form.controls.name"></fb-error>
+
+                <ion-item>
+                    <ion-label>Formula</ion-label>
+                        <span item-right><mathq [editable]="true" formControlName="symbol" [(ngModel)]="resource.symbol"></mathq> = <mathq [editable]="true" formControlName="latex" (change)="updateVariables($event)" [(ngModel)]="resource.latex"></mathq></span>
+                </ion-item>
+                <fb-error [fcontrol]="form.controls.symbol"></fb-error>
+
+                <ion-item>
+                    <ion-label>Measure</ion-label>
+                        <fl-unit-sel item-right formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
+                </ion-item>
+                <fb-error [fcontrol]="form.controls.measure"></fb-error>
+
+                <ion-item-divider light>Variables</ion-item-divider>
+                <div>
+                    <ion-row>
+                        <ion-col>
+                            <span>Name</span>
+                        </ion-col>
+                        <ion-col>
+                            <span>Symbol</span>
+                        </ion-col>
+                        <ion-col>
+                            <span>Property/Unit</span>
+                        </ion-col>
+                        
+                    </ion-row>
+                    <fl-var *ngFor="let v of undeleted(resource.Variables)" [resource]="v" [mode]="'list'" (moveToGlobal)="moveToGlobal($event)"></fl-var>
+                </div>
+                <ion-item-divider light>Global Variable</ion-item-divider>
+                <div>
+                    <ion-row>
+                        <ion-col>
+                            <span>Name</span>
+                        </ion-col>
+                        <ion-col>
+                            <span>Symbol</span>
+                        </ion-col>
+                        <ion-col>
+                            <span>Value</span>
+                        </ion-col>
+                        <ion-col>
+                            <span>Unit</span>
+                        </ion-col>
+                    </ion-row>
+                    <fl-global *ngFor="let g of undeleted(resource.Globals)" [resource]="g.Global" [mode]="'row'" (editcmd)="enterEdit($event)" (moveToVar)="moveToVariable($event)"></fl-global>
+                </div>
+                <ion-item>
+                    <button ion-button type="button" name="submit" (click)="edit($event,form.value)" [disabled]="!form.valid">{{submitButtonName}}</button>
+                </ion-item>
+            </ion-list>
+        </form>
+    </template>
+</div>

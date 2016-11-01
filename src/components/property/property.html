@@ -1,0 +1,46 @@
+<div [ngSwitch]="mode">
+    <template [ngSwitchCase]="'list'">
+        <ion-item-divider *ngIf="index == 0" danger>
+              Syncronize Errors
+        </ion-item-divider>
+        <ion-item *ngIf="!query" (dbltap)="showChildren($event)" (click)="onClick($event)">
+            <fl-base [resource]="resource"></fl-base>
+            {{resource.name}}
+            <ion-buttons right>
+                <a (click)="onExpandCmd($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
+            </ion-buttons>
+            <p>
+                <span>{{resource.DefaultUnit?.name}}</span> <mathq  [(ngModel)]="resource.DefaultUnit.Latex"></mathq>
+            </p>
+        </ion-item>
+        <template [ngIf]="expand">
+            <template [ngIf]="index == null">
+                <fl-unit  *ngFor="let u of resource.Units"  [resource]="u"></fl-unit> 
+            </template>
+            <template [ngIf]="index != null">
+                <fl-unit  *ngFor="let u of resource.getChildWithErrors(resource.Units)"  [resource]="u"></fl-unit> 
+            </template>
+        </template>
+        <ion-item-divider *ngIf="last" danger>
+          <button item-right outline light>Hide</button>
+        </ion-item-divider>
+    </template>
+    <template [ngSwitchCase]="'edit'">
+            <form [formGroup]="form" (submit)="edit($event)">
+	            <ion-list>
+                    <ion-item>
+                    <ion-label>Name</ion-label> 
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input >
+                    </ion-item>
+                    <fb-error [fcontrol]="form.controls.name"></fb-error>
+                    <ion-item divider>Default Unit</ion-item>
+                    <ion-item>
+                        <fl-unit  [mode]="'edit'" [updateButton]="false" [resource]="resource.DefaultUnit"></fl-unit>
+                    </ion-item>
+	                <ion-item>
+	                    <button ion-button type="button" name="submit" (click)="edit($event)" [disabled]="!form.valid || !unitForm || !unitForm.first.form.valid">{{submitButtonName}}</button>
+	                </ion-item>
+	            </ion-list>
+	        </form>
+    </template>
+</div>

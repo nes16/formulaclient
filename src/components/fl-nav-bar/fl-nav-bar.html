@@ -1,0 +1,31 @@
+    <ion-navbar no-border-bottom>
+        <ion-buttons left>
+            <button ion-button icon-only  *ngIf="menuButton" menuToggle>
+                <ion-icon name="menu"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title small>{{title}}</ion-title>
+        <ion-buttons right>
+            <button royal ion-button icon-only  [class.fl-hidden]="!switchButton" [disabled]="!Online" (click)="sync($event)">
+                <ion-icon name="sync" ></ion-icon>
+            </button>
+            <button royal ion-button icon-only   [class.fl-hidden]="!filterButton" (click)="filter($event)">
+                <ion-icon ios="ios-options-outline" md="md-options"></ion-icon>
+            </button>
+            <button royal ion-button icon-only  [class.fl-hidden]="!addButton" (click)="add($event)">
+                <ion-icon name="add"></ion-icon>
+            </button>
+            <button royal ion-button icon-only  [class.fl-hidden]="!searchButton" (click)="search($event)">
+                <ion-icon name="search"></ion-icon>
+            </button>
+            <button royal ion-button icon-only  [class.fl-hidden]="!moreButton" (click)="more($event)">
+                <ion-icon name="more"></ion-icon>
+            </button>
+            <button royal ion-button icon-only  [class.fl-hidden]="!closeButton" (click)="close($event)">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar *ngIf="searchBar" (input)="onInput($event)" (onCancel)="onCancel()" [(ngModel)]="searchQuery" [debounce]="searchDelay" >
+    </ion-searchbar>
+    

@@ -1,0 +1,38 @@
+<ion-header>
+<fl-nav-bar [title]="Title" [switchButton]="true" [addButton]="true" [filterButton]="true" [menuButton]="true" [searchButton]="false" [moreButton]="true" (onCancel)="onFilterCancel($event)" (onAdd)="onNewCmd($event)" (onFilterChange)="onFilterChange($event)"></fl-nav-bar>
+</ion-header>
+<ion-content>
+	<ion-segment [(ngModel)]="viewType">
+	    <ion-segment-button value="All" (ionSelect)="selectedViewType('All')" >
+	        All
+	    </ion-segment-button>
+	    <ion-segment-button value="Favourites" (ionSelect)="selectedViewType('Favourites')" >
+	        Favourites
+	    </ion-segment-button>
+	    <ion-segment-button value="Library" (ionSelect)="selectedViewType('Library')" >
+	        Library
+	    </ion-segment-button>
+	</ion-segment>
+	 <ion-list *ngIf="resourceType == 'properties'">
+	    	<fl-property *ngFor="let res of resources"  [resource]="res" ></fl-property>
+	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'units'">
+	    	<fl-unit *ngFor="let res of resources"  [resource]="res" ></fl-unit>
+	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'globals'">
+	    	<fl-global *ngFor="let res of resources"  [resource]="res" ></fl-global>
+	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'formulas'">
+	    	<fl-formula *ngFor="let res of resources"  [resource]="res" ></fl-formula>
+	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'varvals'">
+		 	<fl-formula [resource]="formula"></fl-formula>
+			<ion-item-divider>
+                    History
+            </ion-item-divider>
+	    	<fl-varval *ngFor="let res of resources"  [resource]="res" ></fl-varval>
+	 </ion-list>
+	 <ion-list *ngIf="resourceType == 'categories'">
+	    	<fl-category *ngFor="let res of resources"  [resource]="res" ></fl-category>
+	 </ion-list>
+</ion-content>

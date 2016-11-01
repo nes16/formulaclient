@@ -1,0 +1,96 @@
+<ion-header>
+    <fl-nav-bar [title]="title"  (onClose)="onClose($event)" [closeButton]="false"  [searchButton]="false" [moreButton]="false"></fl-nav-bar>
+</ion-header>
+<ion-content>
+    <div [ngSwitch]="option">
+        <template [ngSwitchCase]="'login'">
+            <form  [formGroup]="formLogin" (submit)="login($event, login.value)">
+                <ion-list>
+                    <div class="logo">
+                        <img src="../assets/img/appicon.png">
+                    </div>
+                    <ion-item>
+                        <ion-label stacked>Emailid</ion-label>
+                        <ion-input type="text" formControlName="emailId"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label stacked>Password</ion-label>
+                        <ion-input type="password" formControlName="pwd" ></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <button ion-button type="submit" [disabled]="!formLogin.valid">Login</button>
+                        <button ion-button (click)="option='forgot'">Forgot Password</button>
+                    </ion-item>
+                </ion-list>
+            </form>
+            <ion-list>
+                <ion-item>
+                    <button ion-button full  (click)="option ='signup'">signup</button>
+                </ion-item>
+                <ion-item>
+                    <button ion-button full (click)="oauthlogin('facebook')"><ion-icon large name="logo-facebook"></ion-icon>Facebook Login</button>
+                </ion-item>
+                <ion-item>
+                    <button ion-button full (click)="oauthlogin('google')"><ion-icon large name="logo-google"></ion-icon>Google Login</button>
+                </ion-item>
+            </ion-list>
+        </template>
+
+        <template [ngSwitchCase]="'signup'">
+            <form [formGroup]="formSignup" (submit)="signup($event, signup.value)">
+                <ion-item>
+                    <ion-label stacked>Emailid</ion-label>
+                    <ion-input type="text" formControlName="emailId" ></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label stacked>Password</ion-label>
+                    <ion-input type="password" formControlName="pwd"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button ion-button block type="submit" [disabled]="!formSignup.valid">Sign Up</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchCase]="'forgot'">
+            <form [formGroup]="formForgot" (submit)="forgot($event, forgot.value)">
+                <ion-item>
+                    <ion-label stacked>Emailid</ion-label>
+                    <ion-input type="text" formControlName="emailId"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button ion-button block type="submit" [disabled]="!formForgot.valid">Submit</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchCase]="'chpwd'">
+            <form [formGroup]="formChpwd" (submit)="chpwd($event, chpwd.value)">
+                <ion-item>
+                    <ion-label stacked>Password</ion-label>
+                    <ion-input type="password" formControlName="pwd"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button ion-button block type="submit" [disabled]="!formChpwd.valid">Submit</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchCase]="'setup'">
+            <form [formGroup]="formSetup" (submit)="setup($event, settings.value)">
+                <ion-item>
+                    <ion-label stacked>Default System</ion-label>
+                    <ion-input type="text" formControlName="system"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <button ion-button block type="submit" [disabled]="!formSetup.valid">Submit</button>
+                </ion-item>
+            </form>
+        </template>
+        <template [ngSwitchCase]="'about'">
+            <ion-card>
+                <p>
+                    TestLab is an application for create, edit, browse standard and custom formulas with units. The formulas can be input with values to find the result.
+                </p>
+            </ion-card>
+        </template>
+        
+    </div>
+</ion-content>

@@ -1,4 +1,0 @@
-import 'jquery';
-
-window.jQuery = $;
-

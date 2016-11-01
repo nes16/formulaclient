@@ -1,0 +1,36 @@
+<div [ngSwitch]="mode">
+    <template [ngSwitchCase]="'list'">
+            <ion-row (click)="onClick($event)">
+                <ion-col >
+                    <span>{{resource.name}}</span>
+                </ion-col>
+                <ion-col >
+                    <span><mathq [(ngModel)]="resource.symbol"></mathq></span>
+                </ion-col>
+                <ion-col>
+                    <fl-unit-sel [(ngModel)]="resource.Measure" [mode]="'list'"></fl-unit-sel>
+                </ion-col>
+            </ion-row>
+    </template>
+    <template [ngSwitchCase]="'edit'">
+        <form [formGroup]="form" (submit)="edit($event, form.value)">
+            <ion-list>
+                <ion-item>
+                    <ion-label>Name</ion-label>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Symbol</ion-label>
+                    <mathq  item-right formControlName="symbol" [(ngModel)]="resource.symbol"></mathq>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Measure</ion-label>
+                    <fl-unit-sel  item-right formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
+                </ion-item>
+                <ion-item>
+                    <button ion-button (click)="edit($event)" [disabled]="!form.valid">{{submitButtonName}}</button>
+                </ion-item>
+            </ion-list>
+        </form>
+    </template>
+</div>
