@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import 'jquery'
+import '../lib/globals';
 import '../assets/mathquill-0.10.1/mathquill'
-
-declare var $: any;
+declare var jQuery: any;
 declare var MathQuill: any;
 
 @Injectable()
@@ -22,7 +21,7 @@ export class MQService  {
     }
 
 	getHtml(latex){
-		return this.MQ.StaticMath($('<span>' + latex + '</span>')[0]).html();
+		return this.MQ.StaticMath(jQuery('<span>' + latex + '</span>')[0]).html();
 	}
 
     setKeyboard(flag:boolean){

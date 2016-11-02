@@ -2,7 +2,7 @@
     <template [ngSwitchCase]="'list'">
         <ion-item [ngStyle]="getStyle()" (dbltap)="showChildren($event)" (click)="onClick($event)">
             <ion-buttons right>
-                <a (click)="onExpand($event)">
+                <a *ngIf="this.resource.children.length > 0" (click)="onExpand($event)">
                     <a (click)="onExpand($event)"><ion-icon royal [name]="expand ? 'arrow-down' : 'arrow-up'"></ion-icon></a>
                 </a>
                 <a *ngIf="!filter" (click)="onAddCategory($event)">

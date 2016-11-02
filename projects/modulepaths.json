@@ -1261,6 +1261,8 @@
   "/projects/node_modules/angular2-uuid/index.js",
   "/projects/src/providers/data-service.ts",
   "/projects/node_modules/jquery/dist/jquery.js",
+  "\u0000commonjs-proxy:/projects/node_modules/jquery/dist/jquery.js",
+  "/projects/src/lib/globals.js",
   "/projects/src/assets/mathquill-0.10.1/mathquill.js",
   "/projects/src/providers/mq-service.ts",
   "/projects/src/pages/detail/detail.ts",

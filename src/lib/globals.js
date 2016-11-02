@@ -1,3 +1,3 @@
 "use strict";
-require('jquery');
-window.jQuery = $;
+var jQuery = require('jquery')
+window.jQuery = jQuery;

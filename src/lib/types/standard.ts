@@ -707,7 +707,7 @@ export class Formula extends BaseResource {
     parsed:boolean = false;
     rootNode:MathNode = null;
 
-    constructor(state: any = {}) {
+    constructor(state: any = null) {
         super(state);
         this._variables = [];
         this._globals = [];
@@ -717,11 +717,12 @@ export class Formula extends BaseResource {
             this.setDefault();
     }
     setDefault() {
-        this.latex = "";
+        this.latex = "x+y";
         this.name = "New Formula"
         this.symbol = "f"
         this.property_id = null;
         this.unit_id = null;
+        
     }
 
     init(info: any) {
@@ -948,10 +949,11 @@ export class Varval extends BaseResource implements ValueProvider{
     }
 
     getState() {
+        this.variables = JSON.stringify(this._formula.Variables.map(v => this._values[v.symbol].input));
         return Object.assign(
             super.getState(), {
                 formula_id: this._formula.id,
-                variables: this.replaceSpecialChar('DB',JSON.stringify(this._formula.Variables.map(v => this._values[v.symbol].input))),
+                variables: this.replaceSpecialChar('DB',this.variables),
                 result:this._result.asString()
             });
     }
@@ -980,6 +982,8 @@ export class Varval extends BaseResource implements ValueProvider{
             Varval.ps.setValueProviderForVarNodes(this._rootNode, this);
             this._rootNode.type() as number;
             this._result.setValue(this._rootNode.val.toString());
+            //to update variable
+            this.getState();
         }
         catch(exp){
             throw exp;

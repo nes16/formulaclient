@@ -168,7 +168,8 @@ export class BaseComponent {
 		if (this.uiStateService.inSelectMode) {
 			var type = UIStateService.event_types.resource_selected;
 			this.uiStateService.or.next({ status: 'success', type: type, resource: this.resource })
-			this.uiStateService.tabsPage.setDetailTab();
+			if(this.resource.getTable() != 'categories')
+				this.uiStateService.tabsPage.setDetailTab();
 			this.uiStateService.inSelectMode = false;
 			return true;
 		}
@@ -215,6 +216,7 @@ export class BaseComponent {
 				}, () => { })
 				}
 				subscribtion.unsubscribe();
+				this.nav.pop();
 			}
 		}, error=>{
 			ErrorHandler.handle(error, "Basecomponent::onCategory", true);
@@ -292,6 +294,13 @@ export class BaseComponent {
 				this.onRun(evt);
 			}
 		}
+
+		var historyButton = {
+			text: 'History',
+			handler: () => {
+				this.onHistory(evt);
+			}
+		}
 		
 		var catButton = {
 					text: "Set Category",
@@ -348,6 +357,7 @@ export class BaseComponent {
 		}
 		if (this.resource.getTable() == 'formulas'){
 			actionSheetItems.buttons.splice(0,0,runButton);
+			actionSheetItems.buttons.splice(0,0,historyButton);
 		}
 		if(this.resource.getTable() != 'categories'){
 			actionSheetItems.buttons.splice(0,0,catButton);
@@ -373,6 +383,6 @@ export class BaseComponent {
     }
 
 	dismissView(){
-		return null;
+		return Observable.empty().toPromise();
 	}
 }

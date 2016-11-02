@@ -17,6 +17,7 @@ export class CategoryPage implements  OnInit, OnDestroy {
     resources:Array<BaseResource> = new Array<BaseResource>();
     tabsPage;any;
     viewType:string = 'All'
+    filter:boolean = true;
     constructor(public navParams: NavParams
               , public dataService:DataService
               , public uiService:UIStateService

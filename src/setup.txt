@@ -1,0 +1,208 @@
+a)Jquery setup
+1.Add to package.json
+    "jquery": "2.2.3"
+
+In docker console
+docker run --privileged  -v `pwd`:/data  -i -t senthil/cordova_ripple:v11 bash
+
+
+b)npm install &
+
+
+c)Install android
+ionic platform add android &
+
+d)Add plugins
+ionic plugins add cordova-plugin-inappbrowser &
+ionic plugins add cordova-plugin-network-information &
+ionic plugins add cordova-sqlite-storage &
+
+
+
+e)Gulb task change add copy fonts from mathquill
+gulp.task('copyfonts', function() {
+  return gulp.src('app/lib/mathquill-0.10.0/font/*.+(eot|ttf|otf|svg|woff)')
+    .pipe(gulp.dest('www/build/fonts'));
+});
+
+f)change jquery.js  in node_modules/jquery/dist
+26c26
+< 			factory( global, true ) :
+---
+> 			factory( global, false ) :
+
+
+g)cordova android build
+=======================
+Graddle build files are downloaded each time. Change the distribution url to local
+path
+export CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL=/opt/sdks/gradle-2.2.1-all.zip
+
+sublime project setup:
+======================
+"folder_exclude_patterns": ["node_modules"]
+
+sublime text 3 theme setup
+==========================
+Prefrences=>BrowsePackage=>User=>
+paste the following into the file => 'Default.sublime-theme'
+If file not present create one.
+
+[
+    {
+        "class": "sidebar_label",
+        "color": [0, 0, 0],
+        "font.bold": false,
+        "font.size": 18
+    },
+	{
+    "class": "tabset_control",
+    "tab_height": 40,
+    "tab_min_width": 48
+	},
+	{
+    "class": "tab_label",
+    "font.size": 14,
+	},
+	{
+		"class":"tool_tip_label_control",
+		"font.size":20,
+	},
+	{
+		"class":"label_control",
+		"font.size":20,
+	},
+
+]
+
+sublime short-cut
+=================
+select word: Ctrl+D
+
+chrome short-cut:
+=================
+↑↓  = Navigate elements
+→←   = Expand/collapse
+Enter   = Edit attribute
+H   = Hide element
+F2   = Toggle edit as HTML
+Styles Pane
+===========
+TabShift + Tab	  =  Next/previous property
+↑  = Increment value
+↓  = Decrement value
+PageUpShift + ↑  = Increment by 10
+PageDownShift + ↓  = Decrement by 10
+Shift + PageUp  = Increment by 100
+Shift + PageDown  = Decrement by 100
+Alt + ↑  = Increment by 0.1
+Alt + ↓  = Decrement by 0.1
+Debugger
+========
+F8  = Ctrl + \  = Pause, / Continue
+F10  = Ctrl + '  = Step over
+F11  = Ctrl + ;  = Step into
+Shift + F11  = Ctrl + Shift + ;  = Step out
+Ctrl + .  = Ctrl + ,  = Next/previous call frame
+Ctrl + Shift + E  = Evaluate selection in console
+Ctrl + Shift + A  = Add selection to watch
+Ctrl + B  = Toggle breakpoint
+
+Console
+=======
+Ctrl + L  = Clear console
+TabAutocomplete common prefix
+→  = Accept suggestion
+Ctrl + U  = Clear console prompt
+↓↑  = Next/previous line
+Enter  = Execute command
+Text Editor
+===========
+Ctrl + Shift + P  = Go to member
+Ctrl + Space  = Autocompletion
+Ctrl + G  = Go to line
+Alt + -  = Jump to previous editing location
+Alt + +  = Jump to next editing location
+Ctrl + /  = Toggle comment
+Alt + ↑  = Increment CSS unit by 1
+Alt + ↓  = Decrement CSS unit by 1
+Alt + PageUp  = Increment CSS unit by 10
+Alt + PageDown  = Decrement CSS unit by 10
+Ctrl + D  = Select next occurrence
+Ctrl + U  = Soft undo
+Ctrl + M  = Go to matching bracket
+Alt + W  = Close editor tab
+Alt + O  = Switch between files with the same name and different extensions.
+Ctrl + B = Toggle Breakpoint
+
+Timeline Panel
+==============
+Ctrl + E  = Start/stop recording
+Ctrl + R  = Record page reload
+Ctrl + S  = Save timeline data
+Ctrl + O  = Load timeline data
+[]  = Jump to previous/next frame
+Profiles Panel
+==============
+Ctrl + E  = Start/stop recording
+
+All Panels
+==========
+Ctrl + [Ctrl + ]   = Go to the panel to the left/right
+Ctrl + Alt + [Ctrl + Alt + ]  = Go back/forward in panel history
+Ctrl + Tilde  = Show console
+Esc  = Toggle drawer
+Ctrl + Shift + M  = Toggle device mode
+Ctrl + Shift + D  = Toggle dock side
+Ctrl + F  = Search
+Ctrl + Shift + F  = Search across all sources
+Ctrl + Shift + C  = Select node to inspect
+Ctrl + P  = Go to source
+
+Ubuntu
+======
+Getting around the desktop = Alt+F4
+Close the current window. = Alt+F2
+Pop up command window (for quickly running commands) = Alt+Tab
+Quickly switch between windows. Hold down Shift for reverse order. = Alt+`
+Switch between windows from the same application, or from the selected application after Alt+Tab.
+
+This shortcut uses ` on US keyboards, where the ` key is above Tab. On all other keyboards, the shortcut is Alt plus whatever key is above Tab.
+Super+S
+Activate the workspace switcher. Zoom out on all workspaces.
+Super+W
+Activate "Expo" mode. Show all windows from current workspace.
+Ctrl+Alt+Arrow keys
+Switch between workspaces.
+Ctrl+Alt+Shift+Arrow keys
+Move the current window to a different workspace.
+Ctrl+Alt+Delete
+Log out.
+Ctrl+Super+D
+Hide all windows and show the desktop. Press the keys again to restore your windows.
+Ctrl+Alt+L
+Lock the screen.
+
+Common editing shortcuts
+=========================
+Ctrl+A
+Select all text or items in a list.
+Ctrl+X
+Cut (remove) selected text or items and place it on the clipboard.
+Ctrl+C
+Copy selected text or items to the clipboard.
+Ctrl+V
+Paste the contents of the clipboard.
+Ctrl+Z
+Undo the last action.
+Capturing from the screen
+Print Screen
+Take a screenshot.
+Alt+Print Screen
+Take a screenshot of a window.
+Shift+Print Screen
+Take a screenshot of an area of the screen. The pointer changes to a crosshair. Click and drag to select an area.
+
+you can switch between them using Alt + $ {tab_number} (*eg. Alt + 1 )
+
+
